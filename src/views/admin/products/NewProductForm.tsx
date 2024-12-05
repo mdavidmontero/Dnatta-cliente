@@ -12,6 +12,8 @@ import ProductForm from "../../../components/products/ProductForm";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Spinner from "../../../components/shared/spinner/Spinner";
+import GoBackButton from "../../../components/ui/GoBackButton";
+import { getImagePath } from "../../../utils";
 
 export default function NewProductForm() {
   const params = useParams();
@@ -112,41 +114,44 @@ export default function NewProductForm() {
   }
 
   return (
-    <div className="max-w-3xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md">
-      <legend className="text-2xl font-bold text-center text-slate-800">
-        {productId ? "Editar Producto" : "Crear Producto"}
-      </legend>
-      <form
-        className="space-y-5"
-        noValidate
-        onSubmit={handleSubmit(handleProductAction)}
-      >
-        <ProductForm
-          register={register}
-          errors={errors}
-          handleChange={handleChange}
-        />
+    <>
+      <GoBackButton />
+      <div className="max-w-3xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md">
+        <legend className="text-2xl font-bold text-center text-slate-800">
+          {productId ? "Editar Producto" : "Crear Producto"}
+        </legend>
+        <form
+          className="space-y-5"
+          noValidate
+          onSubmit={handleSubmit(handleProductAction)}
+        >
+          <ProductForm
+            register={register}
+            errors={errors}
+            handleChange={handleChange}
+          />
 
-        {mutationImage.isPending ? (
-          <div className="flex justify-center my-3">
-            <Spinner />
-          </div>
-        ) : (
-          <div className="flex justify-center my-3">
-            <img
-              src={data?.image}
-              alt="Imagen de producto"
-              className="object-contain w-56 h-56 rounded-xl"
-            />
-          </div>
-        )}
-        <input
-          disabled={mutationImage.isPending}
-          type="submit"
-          className="w-full p-3 mt-5 font-bold text-white bg-indigo-600 cursor-pointer disabled:opacity-50 hover:bg-indigo-800"
-          value={productId ? "Guardar Cambios" : "Registrar Producto"}
-        />
-      </form>
-    </div>
+          {mutationImage.isPending ? (
+            <div className="flex justify-center my-3">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="flex justify-center my-3">
+              <img
+                src={getImagePath(data!.image)}
+                alt="Imagen de producto"
+                className="object-contain w-56 h-56 rounded-xl"
+              />
+            </div>
+          )}
+          <input
+            disabled={mutationImage.isPending}
+            type="submit"
+            className="w-full p-3 mt-5 font-bold text-white bg-indigo-600 cursor-pointer disabled:opacity-50 hover:bg-indigo-800"
+            value={productId ? "Guardar Cambios" : "Registrar Producto"}
+          />
+        </form>
+      </div>
+    </>
   );
 }

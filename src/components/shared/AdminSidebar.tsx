@@ -5,9 +5,10 @@ export default function AdminSidebar() {
   const navigation = [
     { url: "/admin/orders", text: "Ordenes", blank: false },
     { url: "/products", text: "Productos", blank: false },
-    { url: "/admin/reports", text: "Reporte Día", blank: false },
+    { url: "/reports", text: "Reporte Diario", blank: false },
     { url: "/ventas/conosencillo", text: "Ver Local", blank: true },
     { url: "/profile", text: "Perfil", blank: false },
+    { url: "/points", text: "Puntos", blank: false },
     { url: "/admin/cash", text: "Caja", blank: false },
   ];
 
