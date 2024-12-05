@@ -7,9 +7,14 @@ import ErrorMessage from "../ErrorMessage";
 interface ProductFormProps {
   register: UseFormRegister<useNewProductForm>;
   errors: FieldErrors<useNewProductForm>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function ProductForm({ register, errors }: ProductFormProps) {
+export default function ProductForm({
+  register,
+  errors,
+  handleChange,
+}: ProductFormProps) {
   const { data } = useQuery({
     queryFn: getCategories,
     queryKey: ["categories"],
@@ -68,6 +73,18 @@ export default function ProductForm({ register, errors }: ProductFormProps) {
         {errors.categoryId && (
           <ErrorMessage>{errors.categoryId.message}</ErrorMessage>
         )}
+
+        <div className="grid grid-cols-1 gap-2">
+          <label htmlFor="handle">Imagen:</label>
+          <input
+            id="image"
+            type="file"
+            name="handle"
+            className="object-cover p-2 border-none rounded-lg bg-slate-100"
+            accept="image/*"
+            onChange={handleChange}
+          />
+        </div>
       </div>
     </>
   );

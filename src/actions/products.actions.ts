@@ -60,6 +60,32 @@ export const editProduct = async ({ formData, productId }: ProductApiType) => {
   }
 };
 
+export const uploadImage = async ({
+  productId,
+  file,
+}: {
+  productId: number;
+  file: File;
+}) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const {
+      data: { image },
+    }: { data: { image: string } } = await api.post(
+      `/products/upload-image/${productId}`,
+      formData
+    );
+    return image;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to upload image");
+    }
+    throw new Error("Unexpected error during image upload");
+  }
+};
+
 export const getProduct = async (id: Product["id"]) => {
   try {
     const { data } = await api.get(`/products/product/${id}`);

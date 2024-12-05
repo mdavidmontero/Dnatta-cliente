@@ -6,7 +6,7 @@ export default function AuthLayout() {
   const { data, isLoading } = useAuth();
   if (isLoading) return "Cargando...";
   if (data) {
-    return <Navigate to="/" />;
+    return <Navigate to="/products" />;
   }
   return (
     <>

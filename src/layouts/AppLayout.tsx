@@ -8,7 +8,7 @@ export default function AppLayout() {
 
   if (isLoading) return "Cargando...";
   if (isError) {
-    return <Navigate to="/auth/login" />;
+    return <Navigate to="/" />;
   }
   if (data)
     return (

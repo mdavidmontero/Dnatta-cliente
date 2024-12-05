@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const authSchema = z.object({
   name: z.string(),
-  email: z.string().email(),
+  email: z.string(),
   password: z.string(),
   password_confirmation: z.string(),
   token: z.string(),
@@ -10,6 +10,16 @@ export const authSchema = z.object({
 });
 
 type Auth = z.infer<typeof authSchema>;
+
+export const userSchemas = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string().email(),
+  confirmed: z.boolean(),
+  role: z.enum(["USER", "ADMIN"]),
+  image: z.string().nullable(),
+  token: z.string(),
+});
 
 export const userSchema = authSchema
   .pick({
@@ -20,7 +30,7 @@ export const userSchema = authSchema
     id: z.number(),
     confirmed: z.boolean(),
     role: z.string(),
-    image: z.string(),
+    image: z.string().nullable(),
   });
 export type User = z.infer<typeof userSchema>;
 
@@ -31,6 +41,8 @@ export type UserRegisterForm = Pick<
   Auth,
   "name" | "email" | "password" | "password_confirmation"
 >;
+export type ConfirmToken = Pick<Auth, "token">;
+export type CheckPasswordForm = Pick<Auth, "password">;
 
 export const CategorySchema = z.object({
   id: z.number(),

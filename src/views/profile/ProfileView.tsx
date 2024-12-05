@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProfile, uploadImage } from "../../actions/auth.actions";
 import { toast } from "sonner";
 import ErrorMessage from "../../components/ErrorMessage";
+import Spinner from "../../components/shared/spinner/Spinner";
 
 export default function ProfileView() {
   const queryClient = useQueryClient();
@@ -104,7 +105,11 @@ export default function ProfileView() {
           onChange={handleChange}
         />
       </div>
-      {
+      {updateImageMutation.isPending ? (
+        <div className="flex justify-center my-3">
+          <Spinner />
+        </div>
+      ) : (
         <div className="flex justify-center my-3">
           <img
             src={data.image}
@@ -112,11 +117,11 @@ export default function ProfileView() {
             className="object-cover w-56 h-56 rounded-lg"
           />
         </div>
-      }
+      )}
 
       <input
         type="submit"
-        className="w-full p-2 text-lg font-bold uppercase rounded-lg cursor-pointer bg-cyan-400 text-slate-600"
+        className="w-full p-2 text-lg font-bold text-white uppercase transition-colors bg-indigo-600 rounded-lg cursor-pointer hover:bg-indigo-800 "
         value="Guardar Cambios"
       />
     </form>

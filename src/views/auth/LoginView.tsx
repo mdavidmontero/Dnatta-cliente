@@ -18,7 +18,7 @@ export default function LoginView() {
       toast.error(error.message);
     },
     onSuccess: () => {
-      navigate("/");
+      navigate("/products");
     },
   });
 

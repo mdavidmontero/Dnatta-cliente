@@ -30,7 +30,7 @@ export default function RegisterView() {
     },
     onSuccess: (data) => {
       toast.success(data);
-      navigate("/auth/login");
+      navigate("/auth/confirm-account");
       reset();
     },
   });
@@ -43,10 +43,10 @@ export default function RegisterView() {
 
   return (
     <>
-      <h1 className="text-4xl text-white font-bold">Crear Cuenta</h1>
+      <h1 className="text-4xl font-bold text-white">Crear Cuenta</h1>
       <form
         onSubmit={handleSubmit(handleRegister)}
-        className="bg-white px-5 py-20 rounded-lg space-y-10 mt-10"
+        className="px-5 py-20 mt-10 space-y-10 bg-white rounded-lg"
       >
         <div className="grid grid-cols-1 space-y-3">
           <label htmlFor="name" className="text-2xl text-slate-500">
@@ -56,7 +56,7 @@ export default function RegisterView() {
             id="name"
             type="text"
             placeholder="Tu Nombre"
-            className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
+            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
             {...register("name", {
               required: "El nombre es obligatorio",
             })}
@@ -71,7 +71,7 @@ export default function RegisterView() {
             id="email"
             type="email"
             placeholder="Email de Registro"
-            className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
+            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
             {...register("email", {
               required: "El Email es obligatorio",
               pattern: {
@@ -91,7 +91,7 @@ export default function RegisterView() {
             id="password"
             type="password"
             placeholder="Password de Registro"
-            className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
+            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
             {...register("password", {
               required: "El Password es obligatorio",
               minLength: {
@@ -116,7 +116,7 @@ export default function RegisterView() {
             id="password_confirmation"
             type="password"
             placeholder="Repetir Password"
-            className="bg-slate-100 border-none p-3 rounded-lg placeholder-slate-400"
+            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
             {...register("password_confirmation", {
               required: "Repetir Password es obligatorio",
               validate: (value) =>
@@ -131,14 +131,14 @@ export default function RegisterView() {
 
         <input
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold cursor-pointer"
+          className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 cursor-pointer hover:bg-indigo-800"
           value="Crear Cuenta"
         />
       </form>
 
       <nav className="mt-10">
         <Link
-          className="text-center text-amber-500 text-lg block"
+          className="block text-lg text-center text-amber-500"
           to="/auth/login"
         >
           ¿Ya tienes una cuenta? Inicia Sesión

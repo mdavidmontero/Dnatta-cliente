@@ -12,9 +12,10 @@ export const useAuth = () => {
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
   useEffect(() => {
     if (data) {
-      setUser(data); // Guarda el usuario en Zustand
+      setUser(data);
     }
   }, [data, setUser]);
 

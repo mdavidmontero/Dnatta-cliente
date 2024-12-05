@@ -9,18 +9,23 @@ import NewProductForm from "./views/admin/products/NewProductForm";
 import VentasLayout from "./layouts/VentasLayout";
 import HomeVentasScreen from "./views/admin/ventas/HomeVentasScreen";
 import ProfileView from "./views/profile/ProfileView";
+import ConfirmAccountView from "./views/auth/ConfirmAccount";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomeView />} />
         <Route element={<AuthLayout />}>
           <Route path="/auth/login" element={<LoginView />} />
           <Route path="/auth/register" element={<RegisterView />} />
+          <Route
+            path="/auth/confirm-account"
+            element={<ConfirmAccountView />}
+          />
         </Route>
 
         <Route element={<AppLayout />}>
-          <Route path="/" element={<HomeView />} />
           <Route path="/products" element={<ProductView />} />
           <Route path="/new-product" element={<NewProductForm />} />
           <Route path="/edit-product/:id" element={<NewProductForm />} />
