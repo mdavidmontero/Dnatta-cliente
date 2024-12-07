@@ -2,11 +2,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { UserLoginForm } from "../../types";
 import ErrorMessage from "../../components/ErrorMessage";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { login } from "../../actions/auth.actions";
 import { toast } from "sonner";
+import SelectPoint from "../../components/SelectPoint";
+import { getPoints } from "../../actions/point.actions";
+import { useState } from "react";
+import { useStorePoint } from "../../store/userStore";
 export default function LoginView() {
   const navigate = useNavigate();
+
+  const [userType, setUserType] = useState("admin");
+  const setPoint = useStorePoint((state) => state.setPoint);
+  const point = useStorePoint((state) => state.point);
   const initialValues: UserLoginForm = {
     email: "",
     password: "",
@@ -20,6 +28,10 @@ export default function LoginView() {
     onSuccess: () => {
       navigate("/products");
     },
+  });
+  const { data: pointsData } = useQuery({
+    queryFn: getPoints,
+    queryKey: ["points"],
   });
 
   const handleLogin = async (formData: UserLoginForm) => {
@@ -42,6 +54,36 @@ export default function LoginView() {
         className="px-5 py-10 mt-10 space-y-10 bg-white rounded-lg"
         noValidate
       >
+        <div className="flex flex-col gap-2">
+          <p className="text-xl font-semibold text-slate-500">
+            Tipo de Usuario
+          </p>
+          <select
+            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <option value="admin">Administrador</option>
+            <option value="vendedor">Vendedor</option>
+          </select>
+        </div>
+
+        {userType === "vendedor" && (
+          <div className="grid grid-cols-1 space-y-3">
+            <label
+              htmlFor="local"
+              className="text-xl font-semibold text-slate-500"
+            >
+              Seleccionar Punto:
+            </label>
+            <SelectPoint
+              pointsData={pointsData}
+              setPoint={setPoint}
+              pointselect={point}
+            />
+          </div>
+        )}
+
         <div className="grid grid-cols-1 space-y-3">
           <label htmlFor="email" className="text-2xl text-slate-500">
             E-mail

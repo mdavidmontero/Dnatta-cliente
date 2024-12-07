@@ -1,16 +1,42 @@
+import { userAuthStore } from "../../store/useAuthStore";
 import FotoPerfil from "./FotoPerfil";
 import Navegacion from "./Navegacion";
 
 export default function AdminSidebar() {
   const navigation = [
-    { url: "/admin/orders", text: "Ordenes", blank: false },
-    { url: "/products", text: "Productos", blank: false },
-    { url: "/reports", text: "Reporte Diario", blank: false },
-    { url: "/ventas/conosencillo", text: "Ver Local", blank: true },
-    { url: "/profile", text: "Perfil", blank: false },
-    { url: "/points", text: "Puntos", blank: false },
-    { url: "/admin/cash", text: "Caja", blank: false },
+    { url: "/admin/orders", text: "Ordenes", blank: false, admin: false },
+    { url: "/products", text: "Productos", blank: false, admin: true },
+    { url: "/reports", text: "Reporte Diario", blank: false, admin: false },
+    {
+      url: "/reports-dias/vendedora",
+      text: "Reporte Diario vendedora",
+      blank: false,
+      admin: false,
+    },
+    {
+      url: "/report-mes",
+      text: "Reporte Mes",
+      blank: false,
+      admin: false,
+    },
+    {
+      url: "/ventas/conosencillo",
+      text: "Ver Local",
+      blank: true,
+      admin: false,
+    },
+    { url: "/profile", text: "Perfil", blank: false, admin: false },
+    { url: "/points", text: "Puntos", blank: false, admin: false },
+    { url: "/admin/cash", text: "Caja", blank: false, admin: true },
   ];
+
+  const user = userAuthStore((state) => state.user);
+
+  const filteredNavigation = navigation.filter((nav) => {
+    if (user?.role === "ADMIN") return true;
+    if (user?.role === "USER") return !nav.admin;
+    return false;
+  });
 
   return (
     <>
@@ -20,7 +46,7 @@ export default function AdminSidebar() {
           Navegación
         </p>
         <nav className="flex flex-col">
-          {navigation.map((nav) => (
+          {filteredNavigation.map((nav) => (
             <Navegacion key={nav.url} link={nav} />
           ))}
         </nav>

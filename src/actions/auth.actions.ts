@@ -5,6 +5,7 @@ import {
   User,
   UserLoginForm,
   UserRegisterForm,
+  userSchemaget,
   userSchemas,
 } from "../types";
 
@@ -23,6 +24,7 @@ export const login = async (formData: UserLoginForm) => {
 export const createAccount = async (formData: UserRegisterForm) => {
   try {
     const { data } = await api.post<string>("/auth/create-account", formData);
+
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -47,6 +49,20 @@ export async function getUser() {
   try {
     const { data } = await api("/auth/user");
     const response = userSchemas.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function getUsers() {
+  try {
+    const { data } = await api("/auth/users");
+    const response = userSchemaget.safeParse(data);
     if (response.success) {
       return response.data;
     }

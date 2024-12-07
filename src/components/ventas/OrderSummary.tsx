@@ -5,14 +5,20 @@ import { formatCurrency } from "../../utils";
 import { userAuthStore } from "../../store/useAuthStore";
 import { toast } from "sonner";
 import { createOrder } from "../../actions/ventas.actions";
+import { useStorePoint } from "../../store/userStore";
+import ModalMoney from "../ModalMoney";
 
 export default function OrderSummary() {
   const saleDetails = useStore((state) => state.order);
   const clearOrder = useStore((state) => state.clearOrder);
-  // const point = useStorePoint((state) => state.point);
+  const point = useStorePoint((state) => state.point);
   const user = userAuthStore((state) => state.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("efectivo");
-  // const [selectedTransfer, setSelectedTransfer] = useState("otro");
+  const [selectedTransfer, setSelectedTransfer] = useState("otro");
+  const [selectedBill, setSelectedBill] = useState(0);
+  const [amountPaid, setAmountPaid] = useState(0);
+
   const totalAmount = useMemo(
     () =>
       saleDetails.reduce(
@@ -21,6 +27,7 @@ export default function OrderSummary() {
       ),
     [saleDetails]
   );
+
   const handleCreateOrder = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -28,14 +35,17 @@ export default function OrderSummary() {
     const data = {
       totalAmount,
       paymentType: paymentMethod === "efectivo" ? "efectivo" : "transferencia",
-      transferPlatform: "nequi",
+      transferPlatform: selectedTransfer ? selectedTransfer : "otro",
       userId: user!.id,
-      pointId: 1,
+      pointId: +point,
       saleDetails,
     };
     await createOrder(data);
-    setPaymentMethod("");
-    // setSelectedTransfer("");
+    setPaymentMethod("efectivo");
+    setSelectedTransfer("otro");
+    setIsModalOpen(!isModalOpen);
+    setSelectedBill(0);
+    setAmountPaid(0);
     toast.success("Pedido Realizado Correctamente");
     clearOrder();
   };
@@ -49,35 +59,31 @@ export default function OrderSummary() {
           {saleDetails.map((item) => (
             <ProductsDetails key={item.id} item={item} />
           ))}
-          {/* <p className="mt-5 text-xl text-start">{session?.user.name}</p> */}
+
           <p className="mt-5 text-xl text-right">
             Total a Pagar: {""}
             <span className="font-bold">{formatCurrency(totalAmount)}</span>
           </p>
-          <form className="w-full mt-10 space-y-5">
-            {/* <input
-              type="text"
-              placeholder="Tu nombre"
-              className="w-full p-2 bg-white border boder-gray-100"
-              name="name"
-            /> */}
 
-            {/* <ModalMoney
-            amount={totalAmount}
-            paymentMethod={paymentMethod}
-            setPaymentMethod={setPaymentMethod}
-            selectedTransfer={selectedTransfer}
-            setSelectedTransfer={setSelectedTransfer}
-          >
-            <button onClick={handleCreateOrde}>Confirmar Pago</button>
-          </ModalMoney> */}
-            <button onClick={handleCreateOrder} className="p-5 bg-blue-500">
-              Confirmar Pago
-            </button>
-            <span></span>
-          </form>
+          <button type="button" onClick={() => setIsModalOpen(true)}>
+            Confirmar Pago
+          </button>
         </div>
       )}
+      <ModalMoney
+        amount={totalAmount}
+        paymentMethod={paymentMethod}
+        setPaymentMethod={setPaymentMethod}
+        selectedTransfer={selectedTransfer}
+        setSelectedTransfer={setSelectedTransfer}
+        handleCreateOrder={handleCreateOrder}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setSelectedBill={setSelectedBill}
+        selectedBill={selectedBill}
+        amountPaid={amountPaid}
+        setAmountPaid={setAmountPaid}
+      />
     </aside>
   );
 }

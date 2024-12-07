@@ -10,15 +10,19 @@ export default function HomeVentasScreen() {
     queryFn: () => getProductByCategory(slug!),
     queryKey: ["products", slug],
   });
+
   if (data)
     return (
-      <>
-        <Heading>Elige y Personaliza tu Pedido a Continuación</Heading>
-        <div className="grid items-start grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+      <div className="container px-4 mx-auto">
+        <div className="flex flex-col items-center justify-between gap-4 mb-8 md:flex-row">
+          <Heading>Elige y Personaliza tu Pedido a Continuación</Heading>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {data.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
-      </>
+      </div>
     );
 }

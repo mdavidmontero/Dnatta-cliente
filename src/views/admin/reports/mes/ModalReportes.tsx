@@ -1,26 +1,23 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
-import { GeneratePdf } from "../../../components/reports/day/Report";
-import { ReportArray } from "../../../types";
+import { GroupedReports } from "../../../../types/schemas/ventas";
+import SalesReportPDF from "./SalesReportMes";
 
 interface ModalReportesProps {
   isOpen: boolean;
   onClose: () => void;
-  data: ReportArray | undefined;
-  totalAmountSold: number;
+  groupedReports: GroupedReports;
 }
 
-export default function ModalReportes({
+export default function ModalReportesMes({
   isOpen,
   onClose,
-  data,
-  totalAmountSold,
+  groupedReports,
 }: ModalReportesProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
-        {/* Fondo oscuro con transición */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -48,12 +45,12 @@ export default function ModalReportes({
                 Reporte en PDF
               </Dialog.Title>
               <Dialog.Description className="mt-4 mb-6 text-center text-gray-700">
-                Reporte generado en PDF para el día seleccionado.
+                Reporte generado en PDF.
               </Dialog.Description>
 
-              {data && (
+              {groupedReports && (
                 <PDFViewer style={{ width: "100%", height: "500px" }}>
-                  <GeneratePdf ordenes={data} totalday={totalAmountSold} />
+                  <SalesReportPDF groupedReports={groupedReports} />
                 </PDFViewer>
               )}
 

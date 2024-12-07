@@ -9,13 +9,17 @@ import { formatCurrency } from "../../../utils";
 import { SaleDetails } from "../../../components/ventas/SaleDetails";
 import { ReportArray } from "../../../types";
 import ModalReportes from "./ModalReportes";
+import { userAuthStore } from "../../../store/useAuthStore";
+import { useStorePoint } from "../../../store/userStore";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDay() {
   const [value, setValue] = useState<Value>(new Date());
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = userAuthStore((state) => state.user);
+  const point = useStorePoint((state) => state.point);
 
   const selectedDate = value instanceof Date ? startOfDay(value) : null;
 
@@ -23,7 +27,7 @@ export default function ReportDay() {
     queryKey: ["report", selectedDate],
     queryFn: () =>
       selectedDate
-        ? getReportDiario(selectedDate.toISOString(), 2, 1)
+        ? getReportDiario(selectedDate.toISOString(), +user!.id, +point)
         : Promise.resolve([]),
     enabled: !!selectedDate,
   });

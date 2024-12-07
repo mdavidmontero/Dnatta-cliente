@@ -13,6 +13,9 @@ import ConfirmAccountView from "./views/auth/ConfirmAccount";
 import PointsViews from "./views/admin/point/PointsView";
 import PointsView from "./views/admin/point/PointView";
 import ReportDay from "./views/admin/reports/ReportDay";
+import ReportDayVendedora from "./views/admin/reports/day/ReportDayVendedora";
+import ReportMonth from "./views/admin/reports/mes/ReportMes";
+import ReportYear from "./views/admin/reports/anual/ReportMes";
 
 export default function Router() {
   return (
@@ -38,6 +41,12 @@ export default function Router() {
           <Route path="/new-point" element={<PointsView />} />
           <Route path="/edit-point/:id" element={<PointsView />} />
           <Route path="/reports" element={<ReportDay />} />
+          <Route path="/report-mes" element={<ReportMonth />} />
+          <Route path="/report-anual" element={<ReportYear />} />
+          <Route
+            path="/reports-dias/vendedora"
+            element={<ReportDayVendedora />}
+          />
         </Route>
         <Route element={<VentasLayout />}>
           <Route path="/ventas/:slug" element={<HomeVentasScreen />} />

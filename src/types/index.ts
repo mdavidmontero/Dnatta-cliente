@@ -21,6 +21,22 @@ export const userSchemas = z.object({
   token: z.string(),
 });
 
+export const UserGet = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+  confirmed: z.boolean(),
+  role: z.enum(["USER", "ADMIN"]),
+  token: z.string(),
+  image: z.string().nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+export const userSchemaget = z.array(UserGet);
+export type UserGet = z.infer<typeof UserGet>;
+
 export const userSchema = authSchema
   .pick({
     name: true,
