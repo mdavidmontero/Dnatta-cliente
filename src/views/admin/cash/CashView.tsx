@@ -14,15 +14,6 @@ export default function CashRegisterView() {
   const point = useStorePoint((state) => state.point);
   const queryClient = useQueryClient();
 
-  // useEffect(() => {
-  //   if (data) {
-  //     reset({
-  //       name: data.name,
-  //       ubicacion: data.ubicacion,
-  //     });
-  //   }
-  // }, [data, reset]);
-
   const useCreateRegisterCash = useMutation({
     mutationFn: cashRegister,
     onError: (error) => {
@@ -45,7 +36,6 @@ export default function CashRegisterView() {
       totalventaHelados: 0,
       userId: user?.id,
       pointId: +point,
-      totalTransactions: 0,
       closingAmount: 0,
       totalAmount: 0,
       isClosed: false,

@@ -18,6 +18,7 @@ import ReportMonth from "./views/admin/reports/mes/ReportMes";
 import ReportYear from "./views/admin/reports/anual/ReportMes";
 import HomeCashView from "./views/admin/cash/HomeCashView";
 import CashRegisterView from "./views/admin/cash/CashView";
+import CashEditView from "./views/admin/cash/CashEditView";
 
 export default function Router() {
   return (
@@ -39,6 +40,7 @@ export default function Router() {
           <Route path="/edit-product/:id" element={<NewProductForm />} />
           <Route path="/cash-register" element={<HomeCashView />} />
           <Route path="/cash-new" element={<CashRegisterView />} />
+          <Route path="/cash-edit/:id/edit" element={<CashEditView />} />
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/points" element={<PointsViews />} />
           {/* <Route path="/points/:id" element={<ProductView />} /> */}

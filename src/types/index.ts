@@ -198,7 +198,20 @@ export type CashRegister = {
   totalventaHelados: number;
   pointId: number;
   userId: number;
-  totalTransactions: number;
   totalAmount: number;
   isClosed: boolean;
 };
+
+export interface TotalAmountCash {
+  _sum: Sum;
+}
+
+export interface Sum {
+  totalAmount: number;
+}
+
+export const TotalAmountResponse = z.object({
+  _sum: z.object({
+    totalAmount: z.number(),
+  }),
+});

@@ -8,7 +8,6 @@ export const CashregisterSchema = z.object({
   totalventaHelados: z.number(),
   userId: z.number(),
   pointId: z.number(),
-  totalTransactions: z.number(),
   totalAmount: z.number(),
   isClosed: z.boolean(),
 });

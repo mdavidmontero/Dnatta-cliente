@@ -54,7 +54,7 @@ export default function CashTable({ cash }: CashTableProps) {
 
                   <td className="relative flex gap-2 py-4 pr-3 text-sm font-medium text-center whitespace-nowrap sm:pr-0">
                     <Link
-                      to={`/admin/cash/FormEditregisterCash/${cash.id}/edit`}
+                      to={`/cash-edit/${cash.id}/edit`}
                       className="text-indigo-600 hover:text-indigo-800"
                     >
                       Editar

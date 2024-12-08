@@ -1,6 +1,11 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
-import { CashRegister, CategoriasProductosSchema, SaleOrder } from "../types";
+import {
+  CashRegister,
+  CategoriasProductosSchema,
+  SaleOrder,
+  TotalAmountResponse,
+} from "../types";
 import { CashregisterSchema } from "../types/schemas/cash";
 
 export const getProductByCategory = async (slug: string) => {
@@ -39,6 +44,24 @@ export const cashRegister = async (formData: CashRegister) => {
   }
 };
 
+export const cashClosed = async ({
+  cashId,
+  formData,
+}: {
+  cashId: number;
+  formData: CashRegister;
+}) => {
+  try {
+    const { data } = await api.put(`/ventas/closed-cash/${cashId}`, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+    throw new Error("Unexpected error occurred");
+  }
+};
+
 export const statusCashRegister = async (userId: number, pointId: number) => {
   try {
     const { data } = await api.get(
@@ -64,11 +87,45 @@ export const statusCashRegisterOneClosed = async (
     const { data } = await api.get(
       `/ventas/status/cash/?userId=${userId}&pointId=${pointId}`
     );
-    console.log(data);
     const response = CashregisterSchema.safeParse(data);
     if (response.success) {
       return response.data;
     }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+  }
+};
+
+export const getCashDay = async (cashId: number) => {
+  try {
+    const { data } = await api.get(`/ventas/cash/${cashId}`);
+    const response = CashregisterSchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+  }
+};
+
+export const getCashDayTotalAmount = async (
+  userId: number,
+  pointId: number
+) => {
+  try {
+    const { data } = await api.get(
+      `/ventas/total-cash/vendedora/?userId=${userId}&pointId=${pointId}`
+    );
+    console.log(data);
+    const response = TotalAmountResponse.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+    return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error || "Failed to fetch products");
