@@ -13,3 +13,8 @@ export function getImagePath(imagePath: string) {
     return `/products/${imagePath}.png`;
   }
 }
+
+export const formatDate = (date: string) => {
+  const fecha = new Date(date).toLocaleDateString();
+  return fecha;
+};

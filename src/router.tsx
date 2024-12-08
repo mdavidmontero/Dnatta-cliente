@@ -16,6 +16,8 @@ import ReportDay from "./views/admin/reports/ReportDay";
 import ReportDayVendedora from "./views/admin/reports/day/ReportDayVendedora";
 import ReportMonth from "./views/admin/reports/mes/ReportMes";
 import ReportYear from "./views/admin/reports/anual/ReportMes";
+import HomeCashView from "./views/admin/cash/HomeCashView";
+import CashRegisterView from "./views/admin/cash/CashView";
 
 export default function Router() {
   return (
@@ -35,9 +37,11 @@ export default function Router() {
           <Route path="/products" element={<ProductView />} />
           <Route path="/new-product" element={<NewProductForm />} />
           <Route path="/edit-product/:id" element={<NewProductForm />} />
+          <Route path="/cash-register" element={<HomeCashView />} />
+          <Route path="/cash-new" element={<CashRegisterView />} />
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/points" element={<PointsViews />} />
-          <Route path="/points/:id" element={<ProductView />} />
+          {/* <Route path="/points/:id" element={<ProductView />} /> */}
           <Route path="/new-point" element={<PointsView />} />
           <Route path="/edit-point/:id" element={<PointsView />} />
           <Route path="/reports" element={<ReportDay />} />

@@ -191,3 +191,14 @@ export const ReportArraySchema = z.array(ReportSchema);
 
 export type Report = z.infer<typeof ReportSchema>;
 export type ReportArray = z.infer<typeof ReportArraySchema>;
+
+export type CashRegister = {
+  baseAmount: number;
+  closingAmount: number | null;
+  totalventaHelados: number;
+  pointId: number;
+  userId: number;
+  totalTransactions: number;
+  totalAmount: number;
+  isClosed: boolean;
+};

@@ -17,7 +17,7 @@ export default function AdminSidebar() {
       url: "/report-mes",
       text: "Reporte Mes",
       blank: false,
-      admin: false,
+      admin: true,
     },
     {
       url: "/ventas/conosencillo",
@@ -26,8 +26,8 @@ export default function AdminSidebar() {
       admin: false,
     },
     { url: "/profile", text: "Perfil", blank: false, admin: false },
-    { url: "/points", text: "Puntos", blank: false, admin: false },
-    { url: "/admin/cash", text: "Caja", blank: false, admin: true },
+    { url: "/points", text: "Puntos", blank: false, admin: true },
+    { url: "/cash-register", text: "Caja", blank: false, admin: false },
   ];
 
   const user = userAuthStore((state) => state.user);
