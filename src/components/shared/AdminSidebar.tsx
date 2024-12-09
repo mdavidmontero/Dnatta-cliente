@@ -41,6 +41,7 @@ export default function AdminSidebar() {
   return (
     <>
       <FotoPerfil />
+      <p className="mt-5 font-bold text-center">{user?.name}</p>
       <div className="space-y-3">
         <p className="mt-10 text-sm font-bold text-center text-gray-600 uppercase">
           Navegación

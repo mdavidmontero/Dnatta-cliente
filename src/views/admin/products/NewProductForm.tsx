@@ -137,11 +137,15 @@ export default function NewProductForm() {
             </div>
           ) : (
             <div className="flex justify-center my-3">
-              <img
-                src={getImagePath(data!.image)}
-                alt="Imagen de producto"
-                className="object-contain w-56 h-56 rounded-xl"
-              />
+              {data && data.image ? (
+                <img
+                  src={getImagePath(data.image)}
+                  alt="Imagen de producto"
+                  className="object-contain w-56 h-56 rounded-xl"
+                />
+              ) : (
+                <span className="text-gray-500">Sin imagen disponible</span>
+              )}
             </div>
           )}
           <input

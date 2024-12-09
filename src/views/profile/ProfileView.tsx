@@ -5,7 +5,6 @@ import { updateProfile, uploadImage } from "../../actions/auth.actions";
 import { toast } from "sonner";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../components/shared/spinner/Spinner";
-import GoBackButton from "../../components/ui/GoBackButton";
 
 export default function ProfileView() {
   const queryClient = useQueryClient();
@@ -60,34 +59,39 @@ export default function ProfileView() {
   };
   return (
     <>
-      <GoBackButton />
       <form
-        className="max-w-3xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md"
+        className="max-w-3xl px-5 py-10 mx-auto mt-10 space-y-5 bg-white rounded-md shadow-md"
         onSubmit={handleSubmit(handleUserProfileForm)}
       >
         <legend className="text-2xl font-bold text-center text-slate-800">
           Editar Perfil
         </legend>
         <div className="grid grid-cols-1 gap-2">
-          <label htmlFor="handle">Handle:</label>
+          <label htmlFor="handle" className="text-sm font-bold uppercase">
+            Nombre
+          </label>
           <input
             type="text"
             className="p-2 border-none rounded-lg bg-slate-100"
-            placeholder="handle o Nombre de Usuario"
+            placeholder="Nombre"
             {...register("name", {
-              required: "El nombre de usuario es obligatorio",
+              required: "El nombre es obligatorio",
             })}
           />
           {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
         </div>
 
         <div className="grid grid-cols-1 gap-2">
-          <label htmlFor="description">Descripción:</label>
-          <textarea
-            className="p-2 border-none rounded-lg bg-slate-100"
-            placeholder="Tu Descripción"
+          <label htmlFor="description" className="text-sm font-bold uppercase">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email de Registro"
+            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
             {...register("email", {
-              required: "El email  esobligatorio",
+              required: "El Email es obligatorio",
               pattern: {
                 value: /\S+@\S+\.\S+/,
                 message: "E-mail no válido",
@@ -98,7 +102,9 @@ export default function ProfileView() {
         </div>
 
         <div className="grid grid-cols-1 gap-2">
-          <label htmlFor="handle">Imagen:</label>
+          <label htmlFor="handle" className="text-sm font-bold uppercase">
+            Imagen
+          </label>
           <input
             id="image"
             type="file"
@@ -114,11 +120,13 @@ export default function ProfileView() {
           </div>
         ) : (
           <div className="flex justify-center my-3">
-            <img
-              src={data.image!}
-              alt="Imagen de perfil"
-              className="object-cover w-56 h-56 rounded-lg"
-            />
+            {data.image && (
+              <img
+                src={data.image!}
+                alt="Imagen de perfil"
+                className="object-cover w-56 h-56 rounded-lg"
+              />
+            )}
           </div>
         )}
 

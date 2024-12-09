@@ -9,6 +9,9 @@ export default {
       backgroundSize: {
         "home-xl": "50%",
       },
+      colors: {
+        "bg-primary": "#3C6997",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

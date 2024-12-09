@@ -19,6 +19,15 @@ import ReportYear from "./views/admin/reports/anual/ReportMes";
 import HomeCashView from "./views/admin/cash/HomeCashView";
 import CashRegisterView from "./views/admin/cash/CashView";
 import CashEditView from "./views/admin/cash/CashEditView";
+import ForgotPasswordView from "./views/auth/ForgotPasswordView";
+import NewPasswordView from "./views/auth/NewPasswordView";
+import RequestNewCodeView from "./views/auth/RequestNewCodeView";
+import NotFound from "./views/404/NotFound";
+import ProfileLayout from "./layouts/ProfileLayout";
+import ChangePasswordView from "./views/profile/ChangePasswordView";
+import Gestionlayout from "./layouts/GestionLayout";
+import CategoriesView from "./views/admin/categories/CategoriesView";
+import NewCategories from "./views/admin/categories/NewCategories";
 
 export default function Router() {
   return (
@@ -32,16 +41,27 @@ export default function Router() {
             path="/auth/confirm-account"
             element={<ConfirmAccountView />}
           />
+          <Route
+            path="/auth/forgot-password"
+            element={<ForgotPasswordView />}
+          />
+          <Route path="/auth/new-password" element={<NewPasswordView />} />
+          <Route path="/auth/request-code" element={<RequestNewCodeView />} />
         </Route>
 
         <Route element={<AppLayout />}>
-          <Route path="/products" element={<ProductView />} />
-          <Route path="/new-product" element={<NewProductForm />} />
-          <Route path="/edit-product/:id" element={<NewProductForm />} />
+          <Route element={<Gestionlayout />}>
+            <Route path="/products" element={<ProductView />} />
+            <Route path="/new-product" element={<NewProductForm />} />
+            <Route path="/edit-product/:id" element={<NewProductForm />} />
+            <Route path="/categories" element={<CategoriesView />} />
+            <Route path="/new-categories" element={<NewCategories />} />
+            <Route path="/edit-categories/:id" element={<NewCategories />} />
+          </Route>
           <Route path="/cash-register" element={<HomeCashView />} />
           <Route path="/cash-new" element={<CashRegisterView />} />
           <Route path="/cash-edit/:id/edit" element={<CashEditView />} />
-          <Route path="/profile" element={<ProfileView />} />
+          {/* <Route path="/profile" element={<ProfileView />} /> */}
           <Route path="/points" element={<PointsViews />} />
           {/* <Route path="/points/:id" element={<ProductView />} /> */}
           <Route path="/new-point" element={<PointsView />} />
@@ -53,9 +73,19 @@ export default function Router() {
             path="/reports-dias/vendedora"
             element={<ReportDayVendedora />}
           />
+
+          {/* Profile */}
+          <Route element={<ProfileLayout />}>
+            <Route path="/profile" element={<ProfileView />} />
+            <Route path="/profile/password" element={<ChangePasswordView />} />
+          </Route>
         </Route>
         <Route element={<VentasLayout />}>
           <Route path="/ventas/:slug" element={<HomeVentasScreen />} />
+        </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

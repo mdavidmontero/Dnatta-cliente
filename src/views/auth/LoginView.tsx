@@ -18,6 +18,7 @@ export default function LoginView() {
   const initialValues: UserLoginForm = {
     email: "",
     password: "",
+    role: "",
   };
 
   const useLoginMutation = useMutation({
@@ -35,7 +36,11 @@ export default function LoginView() {
   });
 
   const handleLogin = async (formData: UserLoginForm) => {
-    useLoginMutation.mutate(formData);
+    const data = {
+      ...formData,
+      role: userType === "admin" ? "ADMIN" : "USER",
+    };
+    useLoginMutation.mutate(data);
   };
 
   const {
@@ -129,10 +134,17 @@ export default function LoginView() {
       </form>
       <nav className="mt-10">
         <Link
-          className="block text-lg text-center text-amber-500"
+          className="block text-lg text-center text-white"
           to="/auth/register"
         >
           ¿No tienes una cuenta? Crea una aquí
+        </Link>
+        <Link
+          to={"/auth/forgot-password"}
+          className="block font-normal text-center text-white text-md"
+        >
+          ¿Olvidaste tu contraseña?{" "}
+          <span className="italic underline text-amber-500">Reestablecer</span>
         </Link>
       </nav>
     </>

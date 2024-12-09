@@ -6,10 +6,18 @@ export const authSchema = z.object({
   password: z.string(),
   password_confirmation: z.string(),
   token: z.string(),
-  currentPassword: z.string(),
+  current_password: z.string(),
+  role: z.string(),
 });
 
 type Auth = z.infer<typeof authSchema>;
+export type ForgotPasswordForm = Pick<Auth, "email">;
+export type RequestConfirmationCodeForm = Pick<Auth, "email">;
+export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;
+export type UpdateCurrentUserPasswordForm = Pick<
+  Auth,
+  "current_password" | "password" | "password_confirmation"
+>;
 
 export const userSchemas = z.object({
   id: z.number(),
@@ -52,7 +60,7 @@ export type User = z.infer<typeof userSchema>;
 
 export type UserProfileForm = Pick<User, "name" | "email">;
 
-export type UserLoginForm = Pick<Auth, "email" | "password">;
+export type UserLoginForm = Pick<Auth, "email" | "password" | "role">;
 export type UserRegisterForm = Pick<
   Auth,
   "name" | "email" | "password" | "password_confirmation"
@@ -66,7 +74,11 @@ export const CategorySchema = z.object({
   slug: z.string(),
 });
 
+export type Category = z.infer<typeof CategorySchema>;
+export type CategorieNewForm = Pick<Category, "name" | "slug">;
+
 export type Categories = z.infer<typeof CategorySchema>;
+
 export const CategoriesSchema = z.array(CategorySchema);
 
 export const ProductSchema = z.object({

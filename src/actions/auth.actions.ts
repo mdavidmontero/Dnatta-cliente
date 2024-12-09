@@ -2,6 +2,10 @@ import { isAxiosError } from "axios";
 import api from "../lib/axios";
 import {
   ConfirmToken,
+  ForgotPasswordForm,
+  NewPasswordForm,
+  RequestConfirmationCodeForm,
+  UpdateCurrentUserPasswordForm,
   User,
   UserLoginForm,
   UserRegisterForm,
@@ -36,6 +40,59 @@ export const createAccount = async (formData: UserRegisterForm) => {
 export async function confirmAccount(formData: ConfirmToken) {
   try {
     const url = "/auth/confirm-account";
+    const { data } = await api.post<string>(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+export async function forgotPassword(formData: ForgotPasswordForm) {
+  const url = "/auth/forgot-password";
+  try {
+    const { data } = await api.post<string>(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function requestConfirmationCode(
+  formData: RequestConfirmationCodeForm
+) {
+  try {
+    const url = "/auth/request-code";
+    const { data } = await api.post<string>(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+export async function validateToken(formData: ConfirmToken) {
+  try {
+    const url = "/auth/validate-token";
+    const { data } = await api.post<string>(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+export async function updatePasswordWithToken({
+  formData,
+  token,
+}: {
+  formData: NewPasswordForm;
+  token: ConfirmToken["token"];
+}) {
+  try {
+    const url = `/auth/update-password/${token}`;
     const { data } = await api.post<string>(url, formData);
     return data;
   } catch (error) {
@@ -97,5 +154,16 @@ export async function uploadImage(file: File) {
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
+  }
+}
+
+export async function changePassword(formData: UpdateCurrentUserPasswordForm) {
+  try {
+    const { data } = await api.post<string>("/auth/update-password", formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
   }
 }

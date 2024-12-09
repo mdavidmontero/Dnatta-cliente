@@ -1,11 +1,12 @@
-import { Link } from "react-router-dom";
-import { formatCurrency } from "../../utils";
-import { Product } from "../../types";
-import EditEstado from "../ui/EdiEstado";
-type ProductTableProps = {
-  products: Product[];
+import { Link, useNavigate } from "react-router-dom";
+import { Categories } from "../../types";
+
+type CategoriesTableProps = {
+  categories: Categories[];
+  handleDeleteCategory: (id: Categories["id"]) => void;
 };
-export default function ProductTable({ products }: ProductTableProps) {
+export default function CategoriesTable({ categories }: CategoriesTableProps) {
+  const navigate = useNavigate();
   return (
     <div className="px-4 mt-20 sm:px-6 lg:px-8">
       <div className="flow-root mt-8 ">
@@ -16,28 +17,17 @@ export default function ProductTable({ products }: ProductTableProps) {
                 <tr>
                   <th
                     scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
-                    Producto
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
-                    Estado
-                  </th>
-                  <th
-                    scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Precio
+                    Nombre
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
                   >
-                    Categoría
+                    slug
                   </th>
+
                   <th
                     scope="col"
                     className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-0"
@@ -47,30 +37,34 @@ export default function ProductTable({ products }: ProductTableProps) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
-                  <tr key={product.id}>
+                {categories.map((category) => (
+                  <tr key={category.id}>
                     <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0">
-                      {product.name}
+                      {category.name}
                     </td>
-                    <td className="py-4 pl-4 pr-3 whitespace-nowrap sm:pl-0">
-                      <EditEstado
-                        productos={product.id}
-                        estado={product.estado}
-                      />
-                    </td>
+
                     <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                      {formatCurrency(product.price)}
-                    </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
-                      {product.category.name}
+                      {category.name}
                     </td>
                     <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-center whitespace-nowrap sm:pr-0">
                       <Link
-                        to={`/edit-product/${product.id}`}
+                        to={`/edit-categories/${category.id}`}
                         className="text-indigo-600 hover:text-indigo-800"
                       >
-                        Editar<span className="sr-only">{product.name}</span>
+                        Editar<span className="sr-only">{category.name}</span>
                       </Link>
+                    </td>
+                    <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-center whitespace-nowrap sm:pr-0">
+                      <button
+                        onClick={() =>
+                          navigate(
+                            location.pathname + `?handleDelete=${category.id}`
+                          )
+                        }
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        Eliminar
+                      </button>
                     </td>
                   </tr>
                 ))}
