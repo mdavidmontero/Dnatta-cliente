@@ -37,9 +37,9 @@ export default function HomeMovementsView() {
 
   if (isLoadingCashRegister) return "Cargando...";
 
-  if (movementsData)
-    return (
-      <>
+  return (
+    <>
+      {movementsData ? (
         <div className="container px-4 py-4 mx-auto">
           <div className="flex flex-col gap-5 mb-6 lg:gap-0 lg:flex-row lg:justify-between">
             {!cashRegisterData?.id && (
@@ -47,7 +47,7 @@ export default function HomeMovementsView() {
             )}
           </div>
 
-          {cashRegisterData ? (
+          {cashRegisterData && (
             <>
               <div className="flex items-center justify-between mb-4">
                 <Heading>Registro de Movimientos</Heading>
@@ -77,14 +77,16 @@ export default function HomeMovementsView() {
                 </div>
               )}
             </>
-          ) : (
-            <div className="py-4 text-xl text-center ">
-              No has abierto caja el día de hoy.
-            </div>
           )}
         </div>
-        <EditTaskData />
-        <AddMovementModal />
-      </>
-    );
+      ) : (
+        <div className="py-4 text-xl text-center ">
+          No has abierto caja el día de hoy.
+        </div>
+      )}
+
+      <EditTaskData />
+      <AddMovementModal />
+    </>
+  );
 }

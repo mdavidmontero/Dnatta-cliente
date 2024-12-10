@@ -67,7 +67,6 @@ export const statusCashRegister = async (userId: number, pointId: number) => {
     const { data } = await api.get(
       `/ventas/status/cash/?userId=${userId}&pointId=${pointId}`
     );
-    console.log(data);
     const response = CashregisterSchema.safeParse(data);
     if (response.success) {
       return response.data;

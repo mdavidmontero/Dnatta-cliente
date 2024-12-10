@@ -31,6 +31,8 @@ import NewCategories from "./views/admin/categories/NewCategories";
 import CajaLayout from "./layouts/CajaLayout";
 import HomeMovementsView from "./views/admin/movements/HomeMovementsView";
 import MoneyQuantityCashView from "./views/admin/cashMoney/MoneQuantityCash";
+import HomeReportCash from "./views/admin/cash/reports/HomeReportCash";
+import CashDetail from "./views/admin/cash/reports/CashDetail";
 
 export default function Router() {
   return (
@@ -72,6 +74,9 @@ export default function Router() {
               element={<MoneyQuantityCashView />}
             />
           </Route>
+          {/* Reportes generales de caja */}
+          <Route path="/report-caja" element={<HomeReportCash />} />
+          <Route path="/cash-detail/:id" element={<CashDetail />} />
           {/* <Route path="/profile" element={<ProfileView />} /> */}
           <Route path="/points" element={<PointsViews />} />
           {/* <Route path="/points/:id" element={<ProductView />} /> */}

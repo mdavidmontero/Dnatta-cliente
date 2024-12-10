@@ -25,6 +25,12 @@ export default function AdminSidebar() {
       blank: true,
       admin: false,
     },
+    {
+      url: "/report-caja",
+      text: "Reportes Caja",
+      blank: false,
+      admin: false,
+    },
     { url: "/profile", text: "Perfil", blank: false, admin: false },
     { url: "/points", text: "Puntos", blank: false, admin: true },
     { url: "/cash-register", text: "Caja", blank: false, admin: false },

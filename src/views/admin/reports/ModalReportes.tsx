@@ -20,7 +20,6 @@ export default function ModalReportes({
   return (
     <Transition show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
-        {/* Fondo oscuro con transición */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

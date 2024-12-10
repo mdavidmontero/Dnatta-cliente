@@ -64,7 +64,6 @@ export const getMovementById = async (id: number) => {
   try {
     const { data } = await api.get(`/movements/cash-movement/${id}`);
     const response = MovementSchema.safeParse(data);
-    console.log(response.data);
     if (response.success) {
       return response.data;
     }

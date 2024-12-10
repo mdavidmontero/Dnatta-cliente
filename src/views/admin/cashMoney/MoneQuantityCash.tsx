@@ -48,7 +48,7 @@ export default function MoneyQuantityCashView() {
             </button>
           )}
         </div>
-        {moneyCashday ? (
+        {moneyCashday?.length ? (
           <>
             <p className="font-bold">
               Total Suma Billetes:{" "}
