@@ -30,6 +30,27 @@ export const cashDetailSchema = z
   })
   .optional();
 
+// Sale detail
+
+export const ProductSchemaI = z.object({
+  id: z.number(),
+  name: z.string(),
+  price: z.number(),
+  image: z.string(),
+  estado: z.boolean(),
+  categoryId: z.number(),
+});
+
+export const saleDetailSchema = z
+  .object({
+    id: z.number(),
+    saleId: z.number(),
+    productId: z.number(),
+    quantity: z.number(),
+    unitPrice: z.number(),
+    product: ProductSchemaI.optional(),
+  })
+  .optional();
 // Sale Schema
 export const saleSchema = z
   .object({
@@ -40,6 +61,7 @@ export const saleSchema = z
     transferPlatform: z.string(),
     userId: z.number(),
     pointId: z.number(),
+    saleDetails: z.array(saleDetailSchema).optional(),
   })
   .optional();
 
@@ -82,6 +104,8 @@ export const cashMovementSchema = z
     tipo: z.string(),
   })
   .optional();
+
+// Report cashdetails
 
 // CashReport Schema
 export const cashReportSchema = z.object({

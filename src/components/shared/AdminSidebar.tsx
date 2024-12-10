@@ -4,14 +4,13 @@ import Navegacion from "./Navegacion";
 
 export default function AdminSidebar() {
   const navigation = [
-    { url: "/admin/orders", text: "Ordenes", blank: false, admin: false },
     { url: "/products", text: "Productos", blank: false, admin: false },
     { url: "/reports", text: "Reporte Diario", blank: false, admin: false },
     {
       url: "/reports-dias/vendedora",
       text: "Reporte Diario vendedora",
       blank: false,
-      admin: false,
+      admin: true,
     },
     {
       url: "/report-mes",
@@ -29,7 +28,7 @@ export default function AdminSidebar() {
       url: "/report-caja",
       text: "Reportes Caja",
       blank: false,
-      admin: false,
+      admin: true,
     },
     { url: "/profile", text: "Perfil", blank: false, admin: false },
     { url: "/points", text: "Puntos", blank: false, admin: true },

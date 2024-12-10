@@ -119,7 +119,7 @@ export const getCashDayTotalAmount = async (
     const { data } = await api.get(
       `/ventas/total-cash/vendedora/?userId=${userId}&pointId=${pointId}`
     );
-    console.log(data);
+
     const response = TotalAmountResponse.safeParse(data);
     if (response.success) {
       return response.data;

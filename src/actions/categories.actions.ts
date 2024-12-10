@@ -7,7 +7,6 @@ export const getCategories = async () => {
   try {
     const { data } = await api.get("/categories");
     const response = CategoriesSchema.safeParse(data);
-    console.log(data);
     if (response.success) {
       return response.data;
     }
