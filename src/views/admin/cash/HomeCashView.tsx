@@ -9,9 +9,12 @@ import {
 import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 
+import HomeMoneyCash from "../cashMoney/HomeCashMoney";
+
 export default function HomeCashView() {
   const user = userAuthStore((state) => state.user);
   const point = useStorePoint((state) => state.point);
+
   const cashregisterOneClosed = useQuery({
     queryFn: () => statusCashRegisterOneClosed(+user!.id, +point),
     queryKey: ["cashregister"],
@@ -23,23 +26,26 @@ export default function HomeCashView() {
 
   if (isLoading) return "Cargando...";
   return (
-    <div className="container px-4 py-4 mx-auto">
-      <div className="flex flex-col gap-5 mb-6 lg:gap-0 lg:flex-row lg:justify-between">
-        {!cashregisterOneClosed.data && (
-          <ButtonNavigate label="Abrir Caja" toUrl="/cash-new" />
+    <>
+      <div className="container px-4 py-4 mx-auto">
+        <div className="flex flex-col gap-5 mb-6 lg:gap-0 lg:flex-row lg:justify-between">
+          {!cashregisterOneClosed.data && (
+            <ButtonNavigate label="Abrir Caja" toUrl="/cash-new" />
+          )}
+        </div>
+        {data ? (
+          <>
+            <Heading>Gestión de Caja</Heading>
+
+            <CashTable cash={data} />
+          </>
+        ) : (
+          <div className="py-4 text-xl text-center ">
+            No has Abierto caja el dia de hoy
+          </div>
         )}
       </div>
-      {data ? (
-        <>
-          <Heading>Gestión de Caja</Heading>
-
-          <CashTable cash={data} />
-        </>
-      ) : (
-        <div className="py-4 text-xl text-center ">
-          No has Abierto caja el dia de hoy
-        </div>
-      )}
-    </div>
+      <HomeMoneyCash />
+    </>
   );
 }

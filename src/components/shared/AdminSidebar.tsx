@@ -5,7 +5,7 @@ import Navegacion from "./Navegacion";
 export default function AdminSidebar() {
   const navigation = [
     { url: "/admin/orders", text: "Ordenes", blank: false, admin: false },
-    { url: "/products", text: "Productos", blank: false, admin: true },
+    { url: "/products", text: "Productos", blank: false, admin: false },
     { url: "/reports", text: "Reporte Diario", blank: false, admin: false },
     {
       url: "/reports-dias/vendedora",

@@ -28,6 +28,9 @@ import ChangePasswordView from "./views/profile/ChangePasswordView";
 import Gestionlayout from "./layouts/GestionLayout";
 import CategoriesView from "./views/admin/categories/CategoriesView";
 import NewCategories from "./views/admin/categories/NewCategories";
+import CajaLayout from "./layouts/CajaLayout";
+import HomeMovementsView from "./views/admin/movements/HomeMovementsView";
+import MoneyQuantityCashView from "./views/admin/cashMoney/MoneQuantityCash";
 
 export default function Router() {
   return (
@@ -58,9 +61,17 @@ export default function Router() {
             <Route path="/new-categories" element={<NewCategories />} />
             <Route path="/edit-categories/:id" element={<NewCategories />} />
           </Route>
-          <Route path="/cash-register" element={<HomeCashView />} />
-          <Route path="/cash-new" element={<CashRegisterView />} />
-          <Route path="/cash-edit/:id/edit" element={<CashEditView />} />
+          <Route element={<CajaLayout />}>
+            <Route path="/cash-register" element={<HomeCashView />} />
+            <Route path="/cash-new" element={<CashRegisterView />} />
+            <Route path="/cash-edit/:id/edit" element={<CashEditView />} />
+            {/* Movements */}
+            <Route path="/register-movements" element={<HomeMovementsView />} />
+            <Route
+              path="/register-money-quantity"
+              element={<MoneyQuantityCashView />}
+            />
+          </Route>
           {/* <Route path="/profile" element={<ProfileView />} /> */}
           <Route path="/points" element={<PointsViews />} />
           {/* <Route path="/points/:id" element={<ProductView />} /> */}
