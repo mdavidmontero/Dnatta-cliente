@@ -175,17 +175,15 @@ export default function ReportDetail({ data, totalTrasferencias }: Props) {
             <Text style={styles.column}>Total</Text>
           </View>
           {data.cashDetails?.map((cash, index) => (
-            <>
-              <View style={styles.tableRow} key={index}>
-                <Text style={styles.column}>{cash!.denomination}</Text>
-                <Text style={styles.column}>
-                  {formatCurrency(cash!.quantity)}
-                </Text>
-                <Text style={styles.column}>
-                  {formatCurrency(cash!.totalDenomination)}
-                </Text>
-              </View>
-            </>
+            <View style={styles.tableRow} key={index}>
+              <Text style={styles.column}>{cash!.denomination}</Text>
+              <Text style={styles.column}>
+                {formatCurrency(cash!.quantity)}
+              </Text>
+              <Text style={styles.column}>
+                {formatCurrency(cash!.totalDenomination)}
+              </Text>
+            </View>
           ))}
         </View>
 

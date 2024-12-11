@@ -60,6 +60,8 @@ export default function HomeMoneyCash() {
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
+      queryClient.invalidateQueries({ queryKey: ["cashmoneyday"] });
+      navigate(location.pathname, { replace: true });
       reset();
     },
   });

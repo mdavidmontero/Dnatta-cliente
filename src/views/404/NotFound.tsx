@@ -8,7 +8,7 @@ export default function NotFound() {
       </h1>
       <p className="mt-10 text-center text-white">
         Tal vez quieras volver a{" "}
-        <Link className=" text-fuchsia-500" to={"/products"}>
+        <Link className=" text-bg-primary" to={"/products"}>
           Ventas
         </Link>
       </p>

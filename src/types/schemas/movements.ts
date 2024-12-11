@@ -36,6 +36,21 @@ export const registerFormSchema = z.object({
     .min(1, "Debes agregar al menos una denominación"),
 });
 
+export const updateDenominationSchema = z.object({
+  id: z.number(),
+  denomination: z.string(),
+  quantity: z.number(),
+  cashRegisterId: z.number(),
+  totalDenomination: z.number(),
+});
+
+export type FormUpdateSchema = z.infer<typeof updateDenominationSchema>;
+
+export type FormUpdateMoney = Pick<
+  FormUpdateSchema,
+  "denomination" | "quantity" | "totalDenomination"
+>;
+
 // Tipo TypeScript para inferir el tipo del formulario
 export type RegisterFormMoney = z.infer<typeof registerFormSchema>;
 export type MoneyCashDaySchema = z.infer<typeof denominationSchema>;

@@ -11,7 +11,7 @@ export default function CategoryIcon({ category }: CategoryIconProps) {
     <Link to={`/ventas/${category.slug}`} className="text-xl font-bold">
       <div
         className={` ${
-          category.slug === params.category ? "bg-[#BBCFC3]" : ""
+          category.slug === params.slug ? "bg-[#BBCFC3]" : ""
         } flex items-center gap-4 w-full border-t border-gray-300 p-3 last-of-type:border-b  `}
       >
         <div className="relative w-16 h-16">

@@ -9,6 +9,7 @@ import SelectPoint from "../../components/SelectPoint";
 import { getPoints } from "../../actions/point.actions";
 import { useState } from "react";
 import { useStorePoint } from "../../store/userStore";
+
 export default function LoginView() {
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ export default function LoginView() {
       navigate("/products");
     },
   });
+
   const { data: pointsData } = useQuery({
     queryFn: getPoints,
     queryKey: ["points"],
@@ -48,21 +50,24 @@ export default function LoginView() {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
+
   return (
     <>
-      <h1 className="text-4xl font-black text-white">Iniciar Sesión</h1>
-      <p className="text-white">
-        Para registrar un pedido debes iniciar sesión
+      <h1 className="text-4xl font-black text-center text-gray-800">
+        Iniciar Sesión
+      </h1>
+      <p className="mb-6 font-semibold text-gray-600">
+        Para registrar ventas debes Iniciar sesión
       </p>
       <form
         onSubmit={handleSubmit(handleLogin)}
-        className="px-5 py-10 mt-10 space-y-10 bg-white rounded-lg"
+        className="max-w-lg px-6 py-12 mx-auto mt-8 space-y-8 bg-white rounded-lg"
         noValidate
       >
-        <div className="flex flex-col gap-2">
-          <p className="text-xl font-semibold text-slate-500">
+        <div className="flex flex-col gap-3">
+          <label className="text-xl font-semibold text-slate-500">
             Tipo de Usuario
-          </p>
+          </label>
           <select
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={userType}
@@ -97,7 +102,7 @@ export default function LoginView() {
             id="email"
             type="email"
             placeholder="Email de Registro"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("email", {
               required: "El Email es obligatorio",
               pattern: {
@@ -108,6 +113,7 @@ export default function LoginView() {
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </div>
+
         <div className="grid grid-cols-1 space-y-3">
           <label htmlFor="password" className="text-2xl text-slate-500">
             Password
@@ -116,7 +122,7 @@ export default function LoginView() {
             id="password"
             type="password"
             placeholder="Password de Registro"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("password", {
               required: "El Password es obligatorio",
             })}
@@ -128,23 +134,22 @@ export default function LoginView() {
 
         <input
           type="submit"
-          className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800"
+          className="w-full p-3 mt-6 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800"
           value="Iniciar Sesión"
         />
       </form>
-      <nav className="mt-10">
-        <Link
-          className="block text-lg text-center text-white"
-          to="/auth/register"
-        >
-          ¿No tienes una cuenta? Crea una aquí
+
+      <nav className="mt-8 text-center">
+        <Link className="block text-lg text-slate-700" to="/auth/register">
+          ¿No tienes una cuenta?{" "}
+          <span className="italic text-amber-600">Crea una aquí</span>
         </Link>
         <Link
           to={"/auth/forgot-password"}
-          className="block font-normal text-center text-white text-md"
+          className="block mt-3 font-normal text-slate-700 text-md"
         >
           ¿Olvidaste tu contraseña?{" "}
-          <span className="italic underline text-amber-500">Reestablecer</span>
+          <span className="italic text-amber-600">Reestablecer</span>
         </Link>
       </nav>
     </>

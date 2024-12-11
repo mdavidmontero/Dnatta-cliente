@@ -12,13 +12,16 @@ import { formatCurrency } from "../../../../utils";
 import ModalReportes from "../ModalReportes";
 import { getPoints } from "../../../../actions/point.actions";
 import { getUsers } from "../../../../actions/auth.actions";
+import { useAuth } from "@/hook/useAuth";
+import { Navigate, useNavigate } from "react-router-dom";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDayVendedora() {
+  const navigate = useNavigate();
+  const { data: userdata } = useAuth();
   const [value, setValue] = useState<Value>(new Date());
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [point, setPoint] = useState(0);
   const [user, setUser] = useState(0);
   const [fetchData, setFetchData] = useState(false);
@@ -45,6 +48,11 @@ export default function ReportDayVendedora() {
     queryFn: () => getUsers(),
     enabled: true,
   });
+  // Solo sacar los que son diferente a admin
+  const userVendedoras = usersData?.data?.filter(
+    (user) => user.role !== "ADMIN"
+  );
+  console.log(userVendedoras);
 
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;
@@ -68,9 +76,6 @@ export default function ReportDayVendedora() {
   const totalAmountSold =
     data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const executeQuery = () => {
     if (selectedDate && point && user) {
       setFetchData(true);
@@ -78,12 +83,13 @@ export default function ReportDayVendedora() {
       alert("Selecciona fecha, local y usuario antes de buscar.");
     }
   };
+  if (userdata?.role !== "ADMIN") return <Navigate to="/404" />;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-end">
         <button
-          onClick={openModal}
+          onClick={() => navigate(location.pathname + "?reportcashone=true")}
           className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
         >
           Ver en PDF
@@ -121,7 +127,7 @@ export default function ReportDayVendedora() {
               value={user}
             >
               <option value="">Seleccione un usuario</option>
-              {usersData.data?.map((user) => (
+              {userVendedoras?.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.name}
                 </option>
@@ -181,14 +187,7 @@ export default function ReportDayVendedora() {
         </div>
       </div>
 
-      {isModalOpen && (
-        <ModalReportes
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          data={data}
-          totalAmountSold={totalAmountSold}
-        />
-      )}
+      <ModalReportes data={data} totalAmountSold={totalAmountSold} />
     </div>
   );
 }

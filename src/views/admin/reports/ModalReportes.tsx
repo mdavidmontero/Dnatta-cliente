@@ -3,23 +3,29 @@ import { Fragment } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { GeneratePdf } from "../../../components/reports/day/Report";
 import { ReportArray } from "../../../types";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface ModalReportesProps {
-  isOpen: boolean;
-  onClose: () => void;
   data: ReportArray | undefined;
   totalAmountSold: number;
 }
 
 export default function ModalReportes({
-  isOpen,
-  onClose,
   data,
   totalAmountSold,
 }: ModalReportesProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const modalresportcash = queryParams.get("reportcashone");
+  const show = modalresportcash ? true : false;
   return (
-    <Transition show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+    <Transition show={show} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => navigate(location.pathname, { replace: true })}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -55,15 +61,6 @@ export default function ModalReportes({
                   <GeneratePdf ordenes={data} totalday={totalAmountSold} />
                 </PDFViewer>
               )}
-
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={onClose}
-                  className="px-6 py-2 text-white bg-gray-600 rounded-lg hover:bg-gray-700"
-                >
-                  Cerrar
-                </button>
-              </div>
             </Dialog.Panel>
           </Transition.Child>
         </div>

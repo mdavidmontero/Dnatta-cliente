@@ -1,10 +1,12 @@
 import { reportsCash } from "@/actions/reportsCash.actions";
 import { SidebarAdminCash } from "@/components/reporscash/Sidebar";
+import { useAuth } from "@/hook/useAuth";
 
 import { useQuery } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useState } from "react";
 import Calendar from "react-calendar";
+import { Navigate } from "react-router-dom";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -12,6 +14,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 export default function HomeReportCash() {
   const [value, setValue] = useState<Value>(new Date());
   const selectedDate = value instanceof Date ? startOfDay(value) : null;
+  const { data: user, isLoading: isLoadingUser } = useAuth();
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;
     setValue(date || null);
@@ -26,8 +29,9 @@ export default function HomeReportCash() {
     enabled: !!selectedDate,
   });
 
-  if (isLoading) return <div>Cargando...</div>;
-  if (isError) return <div>Error al cargar los datos</div>;
+  if (isLoading && isLoadingUser) return "Cargando...";
+  if (user?.role !== "ADMIN") return <Navigate to="/404" />;
+  if (isError) return <Navigate to="/404" />;
 
   if (data)
     return (

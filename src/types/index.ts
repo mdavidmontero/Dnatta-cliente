@@ -11,6 +11,16 @@ export const authSchema = z.object({
 });
 
 type Auth = z.infer<typeof authSchema>;
+export const ForSchemaTokens = z.object({
+  token: z.string().optional(),
+  name: z.string().optional(),
+  email: z.string().optional(),
+});
+
+export const schemaUserTokens = z.array(ForSchemaTokens);
+
+export type formTokens = z.infer<typeof ForSchemaTokens>;
+
 export type ForgotPasswordForm = Pick<Auth, "email">;
 export type RequestConfirmationCodeForm = Pick<Auth, "email">;
 export type NewPasswordForm = Pick<Auth, "password" | "password_confirmation">;

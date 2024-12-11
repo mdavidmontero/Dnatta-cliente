@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { formatCurrency } from "../../utils";
 
-// Define the structure of product sales summary
 type ProductSalesSummary = {
   productName: string;
   quantitySold: number;

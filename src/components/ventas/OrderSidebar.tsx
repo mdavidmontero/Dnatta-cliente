@@ -23,7 +23,6 @@ export default function OrderSidebar() {
             <CategoryIcon key={category.id} category={category} />
           ))}
         </nav>
-        {/* <Logout /> */}
       </aside>
     );
 }

@@ -2,80 +2,79 @@ import { Link } from "react-router-dom";
 import { formatCurrency } from "../../utils";
 import { Product } from "../../types";
 import EditEstado from "../ui/EdiEstado";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 type ProductTableProps = {
   products: Product[];
 };
+
 export default function ProductTable({ products }: ProductTableProps) {
   return (
     <div className="px-4 mt-20 sm:px-6 lg:px-8">
-      <div className="flow-root mt-8 ">
+      <div className="flow-root mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full p-5 py-2 align-middle bg-white sm:px-6 lg:px-8 ">
-            <table className="min-w-full divide-y divide-gray-300 ">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
+          <div className="inline-block min-w-full overflow-hidden align-middle bg-white rounded-lg shadow-md">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="py-4 pl-6 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Producto
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
+                  </TableHead>
+                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Estado
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
+                  </TableHead>
+                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Precio
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                  >
+                  </TableHead>
+                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Categoría
-                  </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 sm:pl-0"
-                  >
+                  </TableHead>
+                  <TableHead className="py-4 pr-6 text-sm font-semibold tracking-wider text-center text-gray-800 uppercase border-b-2">
                     Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {products.map((product) => (
-                  <tr key={product.id}>
-                    <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-0">
+                  <TableRow
+                    key={product.id}
+                    className="transition-all duration-200 ease-in-out hover:bg-gray-50"
+                  >
+                    <TableCell className="py-4 pl-6 text-sm font-medium text-gray-900 whitespace-nowrap">
                       {product.name}
-                    </td>
-                    <td className="py-4 pl-4 pr-3 whitespace-nowrap sm:pl-0">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 whitespace-nowrap">
                       <EditEstado
                         productos={product.id}
                         estado={product.estado}
                       />
-                    </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                       {formatCurrency(product.price)}
-                    </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                       {product.category.name}
-                    </td>
-                    <td className="relative py-4 pl-3 pr-4 text-sm font-medium text-center whitespace-nowrap sm:pr-0">
+                    </TableCell>
+                    <TableCell className="py-4 pr-6 text-sm font-medium text-center whitespace-nowrap">
                       <Link
                         to={`/edit-product/${product.id}`}
-                        className="text-indigo-600 hover:text-indigo-800"
+                        className="text-indigo-600 transition-colors hover:text-indigo-800"
                       >
-                        Editar<span className="sr-only">{product.name}</span>
+                        Editar
+                        <span className="sr-only">{product.name}</span>
                       </Link>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>

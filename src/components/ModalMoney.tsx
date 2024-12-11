@@ -98,12 +98,12 @@ export default function ModalMoney({
             >
               <Dialog.Panel className="w-full max-w-4xl p-16 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                 <Dialog.Title as="h3" className="my-5 text-4xl font-black">
-                  Nueva Tarea
+                  Confirmar Venta
                 </Dialog.Title>
 
                 <p className="text-xl font-bold">
-                  Llena el formulario y crea {""}
-                  <span className="text-fuchsia-600">una tarea</span>
+                  Completa los campos y crea
+                  <span className="text-bg-primary">una nueva venta</span>
                 </p>
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-wrap items-center justify-center gap-4">

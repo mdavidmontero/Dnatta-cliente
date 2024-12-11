@@ -1,6 +1,9 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
 import {
+  FormUpdateMoney,
+  FormUpdateSchema,
+  MoneyCashDaySchema,
   MoneyCashDaySchemaI,
   MoneyCashDaySchemas,
   MovementSchema,
@@ -90,9 +93,47 @@ export const registerMoneyInCash = async (formData: RegisterFormMoney) => {
   }
 };
 
+type updateMoneyCashType = {
+  id: FormUpdateSchema["id"];
+  formData: FormUpdateMoney;
+};
+export const updateMoneyCash = async ({
+  id,
+  formData,
+}: updateMoneyCashType) => {
+  try {
+    const { data } = await api.patch(
+      `/movements/update-money-cash/${id}`,
+      formData
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+    throw error;
+  }
+};
+
+export const getMoneyOne = async (id: number) => {
+  try {
+    const { data } = await api.get(`/movements/money-cashone/${id}`);
+    const response = MoneyCashDaySchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+    throw error;
+  }
+};
+
 export const getMoneyCashDay = async (cashId: MoneyCashDaySchemaI["id"]) => {
   try {
     const { data } = await api.get(`/movements/money-cash/${cashId}`);
+    console.log(data);
     const response = MoneyCashDaySchemas.safeParse(data);
     if (response.success) {
       return response.data;

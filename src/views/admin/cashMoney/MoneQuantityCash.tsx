@@ -4,11 +4,12 @@ import { statusCashRegister } from "../../../actions/ventas.actions";
 import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
-import HomeMoneyCash from "../cashMoney/HomeCashMoney";
+
 import MoneyTable from "../../../components/cash/MoneyTable";
 import { getMoneyCashDay } from "../../../actions/movements.actions";
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils";
+import HomeMoneyCash from "./HomeCashMoney";
 
 export default function MoneyQuantityCashView() {
   const user = userAuthStore((state) => state.user);

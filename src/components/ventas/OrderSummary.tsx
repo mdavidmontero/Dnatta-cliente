@@ -51,7 +51,7 @@ export default function OrderSummary() {
   };
   return (
     <aside className="p-5 lg:h-screen lg:overflow-y-scroll md:w-64 lg:w-64 ">
-      <h1 className="text-4xl font-black text-center">Mi Pedido</h1>
+      <h1 className="text-4xl font-black text-center">Pedido</h1>
       {saleDetails.length === 0 ? (
         <p className="my-10 text-center">El Pedido esta vacio</p>
       ) : (
@@ -65,7 +65,11 @@ export default function OrderSummary() {
             <span className="font-bold">{formatCurrency(totalAmount)}</span>
           </p>
 
-          <button type="button" onClick={() => setIsModalOpen(true)}>
+          <button
+            className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800 disabled:opacity-50"
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+          >
             Confirmar Pago
           </button>
         </div>

@@ -5,13 +5,19 @@ export default {
   theme: {
     extend: {
       backgroundSize: {
-        "home-xl": "50%",
+        "home-xl": "46%",
       },
       backgroundImage: {
         home: "url('/bg.jpg')",
       },
       colors: {
         "bg-primary": "#3C6997",
+        "bg-primary-bg": "#F1E3A5",
+        "bg-violeta": "#672450",
+        "bg-violeta-hover": "#902450",
+        // Colores de botones
+        "btn-primary": "#D4774B",
+        "btn-secondary": "#BBCFC3",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

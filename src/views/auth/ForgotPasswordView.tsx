@@ -36,8 +36,10 @@ export default function ForgotPasswordView() {
 
   return (
     <div>
-      <h1 className="text-4xl font-black text-white">Restablecer Password</h1>
-      <p className="text-white">
+      <h1 className="text-4xl font-black text-center text-gray-700">
+        Restablecer Password
+      </h1>
+      <p className="mb-6 font-semibold text-gray-600">
         ¿Olvidaste tu password? Coloca tu email{" "}
         <span> y restablece tu contraseña</span>
       </p>
@@ -53,7 +55,7 @@ export default function ForgotPasswordView() {
             id="email"
             type="email"
             placeholder="Email de Registro"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("email", {
               required: "El Email es obligatorio",
               pattern: {
@@ -70,19 +72,18 @@ export default function ForgotPasswordView() {
           value="Restablecer Contraseña"
         />
       </form>
-      <nav className="flex flex-col mt-10 space-y-4">
-        <Link
-          to="/auth/login"
-          className="font-normal text-center text-gray-300"
-        >
-          ¿Ya tienes cuenta? Iniciar Sesión
+      <nav className="mt-8 text-center">
+        <Link to="/auth/login" className="block text-lg text-slate-700">
+          ¿Ya tienes cuenta?{" "}
+          <span className="italic text-amber-600">Iniciar Sesión</span>
         </Link>
 
         <Link
-          to="/auth/register"
-          className="font-normal text-center text-gray-300"
+          to="/auth/confirm-account"
+          className="block mt-3 text-slate-700 text-md"
         >
-          ¿No tienes cuenta? Crea una
+          ¿Cuenta sin confirmar?{" "}
+          <span className="italic text-amber-600">Confirmala Aqui</span>
         </Link>
       </nav>
     </div>

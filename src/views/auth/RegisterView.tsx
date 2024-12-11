@@ -43,12 +43,14 @@ export default function RegisterView() {
 
   return (
     <>
-      <h1 className="text-4xl font-bold text-white">Crear Cuenta</h1>
+      <h1 className="text-4xl font-black text-center text-gray-800">
+        Crear Cuenta
+      </h1>
       <form
         onSubmit={handleSubmit(handleRegister)}
-        className="px-5 py-20 mt-10 space-y-10 bg-white rounded-lg"
+        className="max-w-lg px-6 py-12 mx-auto mt-8 space-y-8 bg-white rounded-lg"
       >
-        <div className="grid grid-cols-1 space-y-3">
+        <div className="flex flex-col gap-3">
           <label htmlFor="name" className="text-2xl text-slate-500">
             Nombre
           </label>
@@ -56,14 +58,14 @@ export default function RegisterView() {
             id="name"
             type="text"
             placeholder="Tu Nombre"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("name", {
               required: "El nombre es obligatorio",
             })}
           />
           {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
         </div>
-        <div className="grid grid-cols-1 space-y-3">
+        <div className="flex flex-col gap-3">
           <label htmlFor="email" className="text-2xl text-slate-500">
             E-mail
           </label>
@@ -71,7 +73,7 @@ export default function RegisterView() {
             id="email"
             type="email"
             placeholder="Email de Registro"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("email", {
               required: "El Email es obligatorio",
               pattern: {
@@ -83,7 +85,7 @@ export default function RegisterView() {
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </div>
 
-        <div className="grid grid-cols-1 space-y-3">
+        <div className="flex flex-col gap-3">
           <label htmlFor="password" className="text-2xl text-slate-500">
             Password
           </label>
@@ -91,7 +93,7 @@ export default function RegisterView() {
             id="password"
             type="password"
             placeholder="Password de Registro"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("password", {
               required: "El Password es obligatorio",
               minLength: {
@@ -105,7 +107,7 @@ export default function RegisterView() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 space-y-3">
+        <div className="flex flex-col gap-3">
           <label
             htmlFor="password_confirmation"
             className="text-2xl text-slate-500"
@@ -116,7 +118,7 @@ export default function RegisterView() {
             id="password_confirmation"
             type="password"
             placeholder="Repetir Password"
-            className="p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("password_confirmation", {
               required: "Repetir Password es obligatorio",
               validate: (value) =>
@@ -131,17 +133,18 @@ export default function RegisterView() {
 
         <input
           type="submit"
-          className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 cursor-pointer hover:bg-indigo-800"
+          className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800"
           value="Crear Cuenta"
         />
       </form>
 
       <nav className="mt-10">
         <Link
-          className="block text-lg text-center text-amber-500"
+          className="block text-lg text-center text-slate-700"
           to="/auth/login"
         >
-          ¿Ya tienes una cuenta? Inicia Sesión
+          ¿Ya tienes una cuenta?{" "}
+          <span className="italic text-amber-600">Inicia Sesión</span>
         </Link>
       </nav>
     </>

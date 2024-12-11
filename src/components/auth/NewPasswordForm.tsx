@@ -48,7 +48,7 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
     <>
       <form
         onSubmit={handleSubmit(handleNewPassword)}
-        className="p-10 mt-10 space-y-8 bg-white"
+        className="max-w-lg px-6 py-12 mx-auto mt-8 space-y-8 bg-white rounded-lg"
         noValidate
       >
         <div className="flex flex-col gap-5">
@@ -57,7 +57,7 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
           <input
             type="password"
             placeholder="Password de Registro"
-            className="w-full p-3 border border-gray-300"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("password", {
               required: "El Password es obligatorio",
               minLength: {
@@ -71,14 +71,14 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
           )}
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 space-y-3">
           <label className="text-2xl font-normal">Repetir Password</label>
 
           <input
             id="password_confirmation"
             type="password"
             placeholder="Repite Password de Registro"
-            className="w-full p-3 border border-gray-300"
+            className="p-3 border border-gray-300 rounded-md bg-slate-100 placeholder-slate-400 focus:outline-none"
             {...register("password_confirmation", {
               required: "Repetir Password es obligatorio",
               validate: (value) =>
@@ -94,7 +94,7 @@ export default function NewPasswordForm({ token }: NewPasswordFormProps) {
         <input
           type="submit"
           value="Establecer Password"
-          className="w-full p-3 text-xl font-black text-white cursor-pointer bg-fuchsia-600 hover:bg-fuchsia-700"
+          className="w-full p-3 mt-6 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800"
         />
       </form>
     </>

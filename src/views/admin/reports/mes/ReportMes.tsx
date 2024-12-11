@@ -5,13 +5,16 @@ import { formatCurrency } from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesMes from "./ModalReportes";
+import { useAuth } from "@/hook/useAuth";
+import { Navigate } from "react-router-dom";
 
 export default function ReportMonth() {
+  const { data: user } = useAuth();
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear()
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [point, setPoint] = useState<number>(0); // Point ID
+  const [point, setPoint] = useState<number>(0);
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
 
   const { data, isLoading, isError } = useQuery({
@@ -56,6 +59,7 @@ export default function ReportMonth() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  if (user?.role !== "ADMIN") return <Navigate to="/404" />;
   if (isLoading)
     return <div className="py-4 text-xl text-center">Cargando reportes...</div>;
 

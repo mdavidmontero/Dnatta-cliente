@@ -5,6 +5,7 @@ import {
   ForgotPasswordForm,
   NewPasswordForm,
   RequestConfirmationCodeForm,
+  schemaUserTokens,
   UpdateCurrentUserPasswordForm,
   User,
   UserLoginForm,
@@ -68,6 +69,7 @@ export async function requestConfirmationCode(
     const { data } = await api.post<string>(url, formData);
     return data;
   } catch (error) {
+    console.log(error);
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
     }
@@ -161,6 +163,21 @@ export async function changePassword(formData: UpdateCurrentUserPasswordForm) {
   try {
     const { data } = await api.post<string>("/auth/update-password", formData);
     return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function getTokensConfirmUsers() {
+  try {
+    const { data } = await api.get("/auth/tokens");
+
+    const response = schemaUserTokens.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);

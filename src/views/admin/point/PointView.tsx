@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { PointsI } from "../../../types";
 import { toast } from "sonner";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import {
   createPoint,
@@ -11,13 +11,15 @@ import {
 } from "../../../actions/point.actions";
 import PointForm from "../../../components/point/PointForm";
 import GoBackButton from "../../../components/ui/GoBackButton";
+import { useAuth } from "@/hook/useAuth";
 
 export default function PointsView() {
+  const { data: user } = useAuth();
   const params = useParams();
   const pointId = +params.id!;
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: () => getPoint(pointId),
     queryKey: ["points", pointId],
     enabled: !!pointId,
@@ -84,10 +86,13 @@ export default function PointsView() {
       usecreatePointMutation.mutate(adjustedFormData);
     }
   };
+  if (user?.role !== "ADMIN") return <Navigate to="/" />;
 
   if (isLoading) {
     return <p>Cargando...</p>;
   }
+
+  if (isError) return <Navigate to="/points" />;
 
   return (
     <>
