@@ -1,3 +1,6 @@
+import forms from "@tailwindcss/forms";
+import animate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -15,7 +18,6 @@ export default {
         "bg-primary-bg": "#F1E3A5",
         "bg-violeta": "#672450",
         "bg-violeta-hover": "#902450",
-        // Colores de botones
         "btn-primary": "#D4774B",
         "btn-secondary": "#BBCFC3",
         sidebar: {
@@ -36,5 +38,5 @@ export default {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("tailwindcss-animate")],
+  plugins: [forms, animate],
 };
