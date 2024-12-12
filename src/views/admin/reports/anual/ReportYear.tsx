@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
@@ -6,7 +7,14 @@ import { getReportsAnual } from "../../../../actions/reports.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesAnual from "./ModalReportes";
 import { useAuth } from "@/hook/useAuth";
-import { Navigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function ReportYear() {
   const [selectedYear, setSelectedYear] = useState<number>(
@@ -81,12 +89,12 @@ export default function ReportYear() {
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-end mb-6">
-        <button
+        <Button
           onClick={openModal}
           className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
         >
           Ver en PDF
-        </button>
+        </Button>
       </div>
 
       <div className="mb-6">
@@ -95,35 +103,37 @@ export default function ReportYear() {
         </h1>
       </div>
       <div className="flex flex-wrap gap-4 mb-6">
-        <select
-          value={selectedYear}
-          onChange={(e) => handleYearChange(Number(e.target.value))}
-          className="w-full p-3 bg-gray-100 border border-gray-300 rounded-md shadow-sm sm:w-1/3"
+        <Select
+          onValueChange={(value) => handleYearChange(+value)}
+          value={selectedYear.toString()}
         >
-          {Array.from(
-            { length: 5 },
-            (_, index) => new Date().getFullYear() - index
-          ).map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un año" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from(
+              { length: 5 },
+              (_, index) => new Date().getFullYear() - index
+            ).map((year) => (
+              <SelectItem key={year} value={year.toString()}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <select
-          name="local"
-          id="local"
-          onChange={(e) => setPoint(parseInt(e.target.value))}
-          className="w-full p-3 border border-gray-300 rounded-md md:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={point}
-        >
-          <option value={0}>Seleccione un local</option>
-          {pointsData?.map((point) => (
-            <option key={point.id} value={point.id}>
-              {point.name}
-            </option>
-          ))}
-        </select>
+        <Select onValueChange={(e) => setPoint(+e)} value={point.toString()}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un local" />
+          </SelectTrigger>
+          <SelectContent>
+            {pointsData?.map((point) => (
+              <SelectItem key={point.id} value={point.id.toString()}>
+                {point.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-6">
         <p className="text-lg font-semibold text-gray-700">

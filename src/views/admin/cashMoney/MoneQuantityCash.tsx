@@ -10,6 +10,7 @@ import { getMoneyCashDay } from "../../../actions/movements.actions";
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils";
 import HomeMoneyCash from "./HomeCashMoney";
+import { Button } from "@/components/ui/button";
 
 export default function MoneyQuantityCashView() {
   const user = userAuthStore((state) => state.user);
@@ -37,36 +38,41 @@ export default function MoneyQuantityCashView() {
 
   return (
     <>
-      <div className="container px-4 py-4 mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <Heading>Registro dinero en Caja</Heading>
-          {!moneyCashday?.length && (
-            <button
-              className="py-2 font-bold text-white bg-green-600 rounded-full hover:bg-green-700 px-9"
-              onClick={() => navigate(location.pathname + "?newMoney=true")}
-            >
-              Registrar Dinero en Caja
-            </button>
+      {!data?.id ? (
+        <p className="text-xl text-center">No has Abierto caja el dia de hoy</p>
+      ) : (
+        <div className="container px-4 py-4 mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <Heading>Registro dinero en Caja</Heading>
+            {!moneyCashday?.length && (
+              <Button
+                className="py-2 font-bold text-white bg-[#2d547c] rounded-full hover:bg-[#44719e] px-9"
+                onClick={() => navigate(location.pathname + "?newMoney=true")}
+              >
+                Registrar Dinero en Caja
+              </Button>
+            )}
+          </div>
+          {moneyCashday?.length ? (
+            <>
+              <p className="font-bold">
+                Total Suma Billetes:{" "}
+                <span className="font-semibold">
+                  {formatCurrency(totalBilletes)} Pesos
+                </span>
+              </p>
+              <MoneyTable money={moneyCashday} />
+            </>
+          ) : (
+            <>
+              <p className="text-xl text-center">
+                No has registrado dinero en caja el dia de hoy
+              </p>
+            </>
           )}
         </div>
-        {moneyCashday?.length ? (
-          <>
-            <p className="font-bold">
-              Total Suma Billetes:{" "}
-              <span className="font-semibold">
-                {formatCurrency(totalBilletes)} Pesos
-              </span>
-            </p>
-            <MoneyTable money={moneyCashday} />
-          </>
-        ) : (
-          <>
-            <p className="text-xl text-center">
-              No has registrado dinero en caja el dia de hoy
-            </p>
-          </>
-        )}
-      </div>
+      )}
+
       <HomeMoneyCash />
     </>
   );

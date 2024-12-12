@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect } from "react";
 
 import { formatCurrency } from "../utils";
+import { Button } from "./ui/button";
 
 interface ModalMoneyProps {
   amount: number;
-
   paymentMethod: string;
   setPaymentMethod: Dispatch<SetStateAction<string>>;
   selectedTransfer: string;
@@ -41,15 +41,32 @@ export default function ModalMoney({
     { id: "nequi", name: "Nequi" },
     { id: "bancolombia", name: "Bancolombia" },
     { id: "trasfiya", name: "Trasfiya" },
+    { id: "otro", name: "Otro" },
   ];
   const metodosDePago = [
     { id: "efectivo", name: "Efectivo" },
     { id: "transferencia", name: "Transferencia" },
   ];
 
+  // Resetear selección cuando cambia el método de pago
+  useEffect(() => {
+    if (paymentMethod === "efectivo") {
+      // Resetear selección de billetes para efectivo
+      setSelectedBill(0);
+      setAmountPaid(0);
+    } else if (paymentMethod === "transferencia") {
+      // Resetear selección de billetes para transferencia
+      setSelectedBill(0);
+      setAmountPaid(amount); // Establecer monto pagado como el total para transferencia
+    }
+  }, [paymentMethod, isModalOpen]);
+
   const handleBillSelection = (bill: number) => {
-    setSelectedBill(bill);
-    setAmountPaid(bill);
+    // Solo permitir selección de billetes si es método efectivo
+    if (paymentMethod === "efectivo") {
+      setSelectedBill(bill);
+      setAmountPaid(bill);
+    }
   };
 
   const calculateChange = (amountDue: number) => {
@@ -60,9 +77,11 @@ export default function ModalMoney({
   };
 
   const validarCantidad = (amount: number) => {
-    if (amount > amountPaid) {
-      return false;
+    // Para efectivo, validar que el monto pagado sea suficiente
+    if (paymentMethod === "efectivo") {
+      return amountPaid >= amount;
     }
+    // Para transferencia, siempre es válido
     return true;
   };
 
@@ -102,51 +121,58 @@ export default function ModalMoney({
                 </Dialog.Title>
 
                 <p className="text-xl font-bold">
-                  Completa los campos y crea
+                  Completa los campos y crea{" "}
                   <span className="text-bg-primary">una nueva venta</span>
                 </p>
                 <div className="flex flex-col space-y-4">
-                  <div className="flex flex-wrap items-center justify-center gap-4">
-                    {bills.map((bill) => (
-                      <button
-                        key={bill}
-                        className={`border rounded-lg p-4 text-center shadow-md transition hover:scale-105 focus:outline-none ${
-                          selectedBill === bill
-                            ? "bg-[#3e709f] text-white"
-                            : "bg-white"
-                        }`}
-                        onClick={() => handleBillSelection(bill)}
-                      >
-                        <img
-                          src={`/billetes/${bill}.jpg`}
-                          alt={`Billete de ${bill}`}
-                          className="w-auto h-20 mx-auto"
-                          width={200}
-                          height={200}
-                        />
-                      </button>
-                    ))}
-                  </div>
+                  {/* Billetes solo para efectivo */}
+                  {paymentMethod === "efectivo" && (
+                    <div className="flex flex-wrap items-center justify-center gap-4">
+                      {bills.map((bill) => (
+                        <button
+                          key={bill}
+                          className={`border rounded-lg p-4 text-center shadow-md transition hover:scale-105 focus:outline-none ${
+                            selectedBill === bill
+                              ? "bg-[#3e709f] text-white"
+                              : "bg-white"
+                          }`}
+                          onClick={() => handleBillSelection(bill)}
+                        >
+                          <img
+                            src={`/billetes/${bill}.jpg`}
+                            alt={`Billete de ${bill}`}
+                            className="w-auto h-20 mx-auto"
+                            width={200}
+                            height={200}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="mt-4">
                     <label
                       htmlFor="payment-method"
-                      className="block my-2 text-sm font-medium"
+                      className="block my-2 text-sm font-medium text-gray-700"
                     >
                       Método de pago:
                     </label>
-                    <select
-                      value={paymentMethod}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      name="payment-method"
-                      className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      {metodosDePago.map((method) => (
-                        <option key={method.id} value={method.id}>
-                          {method.name}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        name="payment-method"
+                        className="block w-full p-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        {metodosDePago.map((method) => (
+                          <option key={method.id} value={method.id}>
+                            {method.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
+
                   {paymentMethod === "transferencia" && (
                     <div className="mt-4">
                       <label
@@ -159,7 +185,7 @@ export default function ModalMoney({
                         value={selectedTransfer}
                         onChange={(e) => setSelectedTransfer(e.target.value)}
                         name="payment-method"
-                        className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="block w-full p-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                       >
                         {paymentMethods.map((method) => (
                           <option key={method.id} value={method.id}>
@@ -170,6 +196,7 @@ export default function ModalMoney({
                     </div>
                   )}
                 </div>
+
                 {paymentMethod === "efectivo" && (
                   <>
                     <p className="mt-4 text-lg font-semibold">
@@ -178,30 +205,34 @@ export default function ModalMoney({
                         {formatCurrency(amount)}
                       </span>
                     </p>
-                    <p className="mt-4 text-lg font-semibold">
-                      Cambio a devolver: $
-                      <span className="font-normal">
-                        {calculateChange(amount).toLocaleString()}
-                      </span>
-                    </p>
+                    {selectedBill > 0 && (
+                      <p className="mt-4 text-lg font-semibold">
+                        Cambio a devolver: $
+                        <span className="font-normal">
+                          {calculateChange(amount).toLocaleString()}
+                        </span>
+                      </p>
+                    )}
                   </>
                 )}
+
                 <div className="flex flex-row gap-2">
-                  <button
+                  <Button
                     onClick={() => setIsModalOpen(false)}
-                    className="w-full p-3 mt-5 font-bold text-white uppercase bg-red-600 rounded cursor-pointer hover:bg-red-800"
+                    className="w-full p-5 mt-5 font-bold text-white uppercase bg-red-600 rounded cursor-pointer hover:bg-red-800"
                   >
                     Cancelar
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     disabled={
-                      !validarCantidad(amount) && paymentMethod === "efectivo"
+                      !validarCantidad(amount) ||
+                      (paymentMethod === "efectivo" && selectedBill === 0)
                     }
                     onClick={handleCreateOrder}
-                    className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800 disabled:opacity-50"
+                    className="w-full p-5 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800 disabled:opacity-50"
                   >
                     Confirmar
-                  </button>
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

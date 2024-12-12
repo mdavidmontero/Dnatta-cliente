@@ -13,6 +13,7 @@ export default function AdminSidebar() {
       admin: true,
     },
     { url: "/report-mes", text: "Reporte Mes", blank: false, admin: true },
+    { url: "/report-anual", text: "Reporte Anual", blank: false, admin: true },
     {
       url: "/ventas/conosencillo",
       text: "Ver Local",
@@ -35,18 +36,24 @@ export default function AdminSidebar() {
 
   return (
     <>
-      <FotoPerfil />
-      <p className="mt-5 font-bold text-center">{user?.name}</p>
-      <div className="space-y-3">
-        <p className="mt-10 text-sm font-bold text-center text-gray-600 uppercase">
-          Navegación
-        </p>
-        <nav className="flex flex-col">
-          {filteredNavigation.map((nav) => (
-            <Navegacion key={nav.url} link={nav} />
-          ))}
-        </nav>
-      </div>
+      <aside className="flex flex-col bg-white md:w-72 md:h-screen">
+        {/* Parte fija: imagen y nombre del usuario */}
+        <div className="flex flex-col items-center flex-none p-5">
+          <FotoPerfil />
+          <p className="mt-5 font-bold text-center">{user?.name}</p>
+        </div>
+        {/* Parte con scroll: navegación */}
+        <div className="flex-1 space-y-3 overflow-y-auto">
+          <p className="mt-5 text-sm font-bold text-center text-gray-600 uppercase">
+            Navegación
+          </p>
+          <nav className="flex flex-col">
+            {filteredNavigation.map((nav) => (
+              <Navegacion key={nav.url} link={nav} />
+            ))}
+          </nav>
+        </div>
+      </aside>
     </>
   );
 }

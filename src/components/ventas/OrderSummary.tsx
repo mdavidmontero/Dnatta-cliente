@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { createOrder } from "../../actions/ventas.actions";
 import { useStorePoint } from "../../store/userStore";
 import ModalMoney from "../ModalMoney";
+import { useMutation } from "@tanstack/react-query";
 
 export default function OrderSummary() {
   const saleDetails = useStore((state) => state.order);
@@ -28,27 +29,38 @@ export default function OrderSummary() {
     [saleDetails]
   );
 
+  const mutationCreateOrder = useMutation({
+    mutationFn: createOrder,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      setPaymentMethod("efectivo");
+      setSelectedTransfer("otro");
+      setIsModalOpen(false);
+      setSelectedBill(0);
+      setAmountPaid(0);
+      toast.success(data);
+      clearOrder();
+    },
+  });
+
   const handleCreateOrder = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     const data = {
       totalAmount,
-      paymentType: paymentMethod === "efectivo" ? "efectivo" : "transferencia",
-      transferPlatform: selectedTransfer ? selectedTransfer : "otro",
+      paymentType: paymentMethod,
+      transferPlatform:
+        paymentMethod === "transferencia" ? selectedTransfer : "otro",
       userId: user!.id,
       pointId: +point,
       saleDetails,
     };
-    await createOrder(data);
-    setPaymentMethod("efectivo");
-    setSelectedTransfer("otro");
-    setIsModalOpen(!isModalOpen);
-    setSelectedBill(0);
-    setAmountPaid(0);
-    toast.success("Pedido Realizado Correctamente");
-    clearOrder();
+    mutationCreateOrder.mutate(data);
   };
+
   return (
     <aside className="p-5 lg:h-screen lg:overflow-y-scroll md:w-64 lg:w-64 ">
       <h1 className="text-4xl font-black text-center">Pedido</h1>

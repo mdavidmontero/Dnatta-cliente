@@ -133,7 +133,6 @@ export const getMoneyOne = async (id: number) => {
 export const getMoneyCashDay = async (cashId: MoneyCashDaySchemaI["id"]) => {
   try {
     const { data } = await api.get(`/movements/money-cash/${cashId}`);
-    console.log(data);
     const response = MoneyCashDaySchemas.safeParse(data);
     if (response.success) {
       return response.data;

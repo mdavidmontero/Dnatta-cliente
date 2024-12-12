@@ -17,7 +17,7 @@ export default function ModalReportes({
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const modalresportcash = queryParams.get("reportcashone");
+  const modalresportcash = queryParams.get("reportcasday");
   const show = modalresportcash ? true : false;
   return (
     <Transition show={show} as={Fragment}>

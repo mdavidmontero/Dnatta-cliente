@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "../ui/button";
 
 type ProductTableProps = {
   products: Product[];
@@ -63,12 +64,14 @@ export default function ProductTable({ products }: ProductTableProps) {
                       {product.category.name}
                     </TableCell>
                     <TableCell className="py-4 pr-6 text-sm font-medium text-center whitespace-nowrap">
-                      <Link
-                        to={`/edit-product/${product.id}`}
-                        className="text-indigo-600 transition-colors hover:text-indigo-800"
-                      >
-                        Editar
-                        <span className="sr-only">{product.name}</span>
+                      <Link to={`/edit-product/${product.id}`}>
+                        <Button
+                          variant="link"
+                          className="text-indigo-600 transition-colors hover:text-indigo-800"
+                        >
+                          Editar
+                          <span className="sr-only">{product.name}</span>
+                        </Button>
                       </Link>
                     </TableCell>
                   </TableRow>

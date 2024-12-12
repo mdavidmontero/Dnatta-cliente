@@ -1,8 +1,8 @@
+import { Navigate, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-
 import { startOfDay } from "date-fns";
 import { getReportDiario } from "../../../../actions/reports.actions";
 import Spinner from "../../../../components/shared/spinner/Spinner";
@@ -13,7 +13,14 @@ import ModalReportes from "../ModalReportes";
 import { getPoints } from "../../../../actions/point.actions";
 import { getUsers } from "../../../../actions/auth.actions";
 import { useAuth } from "@/hook/useAuth";
-import { Navigate, useNavigate } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -48,11 +55,9 @@ export default function ReportDayVendedora() {
     queryFn: () => getUsers(),
     enabled: true,
   });
-  // Solo sacar los que son diferente a admin
   const userVendedoras = usersData?.data?.filter(
     (user) => user.role !== "ADMIN"
   );
-  console.log(userVendedoras);
 
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;
@@ -88,12 +93,12 @@ export default function ReportDayVendedora() {
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={() => navigate(location.pathname + "?reportcashone=true")}
-          className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
+          className="bg-[#2d547c] hover:bg-[#44719e] text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
         >
           Ver en PDF
-        </button>
+        </Button>
       </div>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-4xl font-extrabold text-gray-800">
@@ -106,7 +111,7 @@ export default function ReportDayVendedora() {
         </div>
         <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
           <div className="flex items-center gap-4 mb-6">
-            <select
+            {/* <select
               name="local"
               id="local"
               onChange={(e) => setPoint(parseInt(e.target.value))}
@@ -119,9 +124,34 @@ export default function ReportDayVendedora() {
                   {point.name}
                 </option>
               ))}
-            </select>
+            </select> */}
 
-            <select
+            <Select onValueChange={(value) => setPoint(+value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Seleccione un local" />
+              </SelectTrigger>
+              <SelectContent>
+                {pointsData.data?.map((point) => (
+                  <SelectItem key={point.id} value={point.id.toString()}>
+                    {point.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select onValueChange={(value) => setUser(+value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Seleccione un usuario" />
+              </SelectTrigger>
+              <SelectContent>
+                {userVendedoras?.map((user) => (
+                  <SelectItem key={user.id} value={user.id.toString()}>
+                    {user.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {/* <select
               className="w-full p-3 border border-gray-300 rounded-md md:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setUser(parseInt(e.target.value))}
               value={user}
@@ -132,14 +162,14 @@ export default function ReportDayVendedora() {
                   {user.name}
                 </option>
               ))}
-            </select>
+            </select> */}
 
-            <button
+            <Button
               onClick={executeQuery}
-              className="w-full px-6 py-3 text-white transition-colors bg-blue-600 rounded-md md:w-auto hover:bg-blue-700"
+              className="w-full px-6 py-3 text-white transition-colors rounded-md bg-bg-primary md:w-auto hover:bg-[#44719e]"
             >
               Buscar
-            </button>
+            </Button>
           </div>
 
           {isLoading && (

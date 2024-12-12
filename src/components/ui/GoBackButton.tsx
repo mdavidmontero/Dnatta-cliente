@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { Button } from "./button";
 export default function GoBackButton() {
   const navigation = useNavigate();
   return (
-    <button
+    <Button
       onClick={() => navigation(-1)}
-      className="bg-[#3C6997] text-white w-full lg:w-auto text-xl px-10 py-3 text-center font-bold cursor-pointer"
+      className="w-full px-10 py-2 mt-2 text-xl font-bold text-center text-white cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"
     >
       Volver
-    </button>
+    </Button>
   );
 }

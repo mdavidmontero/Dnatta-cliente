@@ -15,7 +15,7 @@ import PointsView from "./views/admin/point/PointView";
 import ReportDay from "./views/admin/reports/ReportDay";
 import ReportDayVendedora from "./views/admin/reports/day/ReportDayVendedora";
 import ReportMonth from "./views/admin/reports/mes/ReportMes";
-import ReportYear from "./views/admin/reports/anual/ReportMes";
+import ReportYear from "./views/admin/reports/anual/ReportYear";
 import HomeCashView from "./views/admin/cash/HomeCashView";
 import CashRegisterView from "./views/admin/cash/CashView";
 import CashEditView from "./views/admin/cash/CashEditView";

@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStorePoint } from "../store/userStore";
 import { MessagesPopover } from "@/views/admin/message/MessagesPopover";
 import { getTokensConfirmUsers } from "@/actions/auth.actions";
+import { Button } from "@/components/ui/button";
 
 export default function AppLayout() {
   const queryClient = useQueryClient();
@@ -41,12 +42,12 @@ export default function AppLayout() {
                 {data.role === "ADMIN" && (
                   <MessagesPopover tokens={tokensConfirm} />
                 )}
-                <button
+                <Button
                   onClick={handleLogout}
-                  className="w-full px-10 py-2 text-xl font-bold text-center text-white rounded-lg cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"
+                  className="w-full px-10 py-5 text-xl font-bold text-center text-white rounded-lg cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"
                 >
                   Cerrar Sesión
-                </button>
+                </Button>
               </div>
 
               <Outlet />

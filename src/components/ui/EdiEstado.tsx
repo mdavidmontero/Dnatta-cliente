@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateEstado } from "../../actions/products.actions";
 import { toast } from "sonner";
+import { Button } from "./button";
 
 interface EditEstadoProps {
   productos: number;
@@ -26,7 +27,7 @@ const EditEstado = ({ productos, estado }: EditEstadoProps) => {
   };
 
   return (
-    <button
+    <Button
       onClick={handleEstado}
       className={
         estado
@@ -35,7 +36,7 @@ const EditEstado = ({ productos, estado }: EditEstadoProps) => {
       }
     >
       {estado ? "Disponible" : "No disponible"}
-    </button>
+    </Button>
   );
 };
 

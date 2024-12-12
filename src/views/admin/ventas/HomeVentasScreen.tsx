@@ -1,24 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
 import Heading from "../../../components/shared/Heading";
 import { getProductByCategory } from "../../../actions/ventas.actions";
 import { useParams } from "react-router-dom";
 import ProductCard from "../../../components/ventas/ProductCard";
-import { useState } from "react";
-import { ArchiveBoxXMarkIcon } from "@heroicons/react/24/outline";
 
 export default function HomeVentasScreen() {
   const { slug } = useParams();
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: products, isLoading } = useQuery({
     queryFn: () => getProductByCategory(slug!),
     queryKey: ["products", slug],
+    staleTime: 1000 * 60 * 5, // Caché de 5 minutos
   });
 
-  const filteredProducts = products?.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filtrado en memoria usando useMemo para optimizar rendimiento
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [products, searchTerm]);
 
   const handleClearSearch = () => {
     setSearchTerm("");
@@ -47,7 +51,7 @@ export default function HomeVentasScreen() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {filteredProducts?.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

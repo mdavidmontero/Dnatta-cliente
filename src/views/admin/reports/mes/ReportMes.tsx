@@ -7,6 +7,14 @@ import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesMes from "./ModalReportes";
 import { useAuth } from "@/hook/useAuth";
 import { Navigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ReportMonth() {
   const { data: user } = useAuth();
@@ -39,6 +47,10 @@ export default function ReportMonth() {
 
   const handleMonthChange = (month: number) => {
     setSelectedMonth(month);
+  };
+
+  const handlePointChange = (value: string) => {
+    setPoint(Number(value));
   };
 
   const reports = data?.reports || [];
@@ -83,66 +95,69 @@ export default function ReportMonth() {
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-end mb-6">
-        <button
+        <Button
           onClick={openModal}
           className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
         >
           Ver en PDF
-        </button>
+        </Button>
       </div>
 
       <div className="mb-6">
         <h1 className="text-3xl font-extrabold text-gray-800">
-          Reportes de Ventas
+          Reportes de Ventas Mensual
         </h1>
       </div>
       <div className="flex flex-wrap gap-4 mb-6">
-        <select
-          value={selectedYear}
-          onChange={(e) => handleYearChange(Number(e.target.value))}
-          className="w-full p-3 bg-gray-100 border border-gray-300 rounded-md shadow-sm sm:w-1/3"
+        <Select
+          onValueChange={(value) => handleYearChange(+value)}
+          value={selectedYear.toString()}
         >
-          {Array.from(
-            { length: 5 },
-            (_, index) => new Date().getFullYear() - index
-          ).map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un año" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from(
+              { length: 5 },
+              (_, index) => new Date().getFullYear() - index
+            ).map((year) => (
+              <SelectItem key={year} value={year.toString()}>
+                {year}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        {selectedYear && (
-          <select
-            value={selectedMonth}
-            onChange={(e) => handleMonthChange(Number(e.target.value))}
-            className="w-full p-3 bg-gray-100 border border-gray-300 rounded-md shadow-sm sm:w-1/3"
-          >
-            <option value={0}>Seleccionar Mes</option>
+        <Select
+          onValueChange={(e) => handleMonthChange(+e)}
+          value={selectedMonth.toString()}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un mes" />
+          </SelectTrigger>
+          <SelectContent>
             {Array.from({ length: 12 }, (_, index) => index + 1).map(
               (month) => (
-                <option key={month} value={month}>
+                <SelectItem key={month} value={month.toString()}>
                   {month < 10 ? `0${month}` : month}
-                </option>
+                </SelectItem>
               )
             )}
-          </select>
-        )}
+          </SelectContent>
+        </Select>
 
-        <select
-          name="local"
-          id="local"
-          onChange={(e) => setPoint(parseInt(e.target.value))}
-          className="w-full p-3 border border-gray-300 rounded-md md:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={point}
-        >
-          <option value={0}>Seleccione un local</option>
-          {pointsData?.map((point) => (
-            <option key={point.id} value={point.id}>
-              {point.name}
-            </option>
-          ))}
-        </select>
+        <Select onValueChange={handlePointChange} value={point.toString()}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un local" />
+          </SelectTrigger>
+          <SelectContent>
+            {pointsData?.map((point) => (
+              <SelectItem key={point.id} value={point.id.toString()}>
+                {point.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-6">
         <p className="text-lg font-semibold text-gray-700">
@@ -170,11 +185,6 @@ export default function ReportMonth() {
                       {formatCurrency(dailyReport.totalAmount)}
                     </span>
                   </p>
-                  {/* <p className="text-g">
-                    <span className="font-semibold">
-                      {JSON.stringify(dailyReport.reports.user.map(user))}
-                    </span>
-                  </p> */}
                 </div>
               );
             })

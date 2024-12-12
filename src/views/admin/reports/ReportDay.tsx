@@ -11,13 +11,15 @@ import { ReportArray } from "../../../types";
 import ModalReportes from "./ModalReportes";
 import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDay() {
+  const navigation = useNavigate();
   const [value, setValue] = useState<Value>(new Date());
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = userAuthStore((state) => state.user);
   const point = useStorePoint((state) => state.point);
 
@@ -54,20 +56,16 @@ export default function ReportDay() {
   const totalAmountSold =
     data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
 
-  const openModal = () => setIsModalOpen(true);
-
-  const closeModal = () => setIsModalOpen(false);
-
   if (data)
     return (
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-end">
-          <button
-            onClick={openModal}
+          <Button
+            onClick={() => navigation(location.pathname + "?reportcasday=true")}
             className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
           >
             Ver en PDF
-          </button>
+          </Button>
         </div>
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-extrabold text-gray-800">
@@ -124,15 +122,7 @@ export default function ReportDay() {
           </div>
         </div>
 
-        {/* Modal de reportes */}
-        {isModalOpen && (
-          <ModalReportes
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            data={data}
-            totalAmountSold={totalAmountSold}
-          />
-        )}
+        <ModalReportes data={data} totalAmountSold={totalAmountSold} />
       </div>
     );
 }
