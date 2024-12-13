@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 export const reportsCash = async (fecha: string) => {
   try {
     const { data } = await api.get(`/movements/report-cashs?fecha=${fecha}`);
+
     const response = CashReportSchema.safeParse(data);
 
     if (response.success) {

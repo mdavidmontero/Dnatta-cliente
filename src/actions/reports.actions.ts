@@ -12,6 +12,7 @@ export const getReportDiario = async (
     const { data } = await api.get(
       `/reports/diario?fecha=${fecha}&userId=${userId}&pointId=${pointId}`
     );
+    console.log(data);
     const result = ReportArraySchema.safeParse(data);
     if (result.success) {
       return result.data;

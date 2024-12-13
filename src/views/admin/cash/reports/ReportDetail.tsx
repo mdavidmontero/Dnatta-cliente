@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
 
 interface Props {
   data: cashReportSchemaI;
-  totalTrasferencias: {
-    totalTransferenciasUsuario: number | undefined;
-    totalEfectivoUsuario: number | undefined;
+  totals: {
+    totalEfectivo: number;
+    totalTransferencia: number;
     transferPlatformTotals: Record<string, number>;
-  }[];
+  };
 }
 
-export default function ReportDetail({ data, totalTrasferencias }: Props) {
+export default function ReportDetail({ data, totals }: Props) {
   const formattedDate = new Date(data.date).toLocaleDateString("es-ES");
 
   const groupedProducts = data.point?.sales
@@ -106,18 +106,13 @@ export default function ReportDetail({ data, totalTrasferencias }: Props) {
       return acc;
     }, {} as Record<string, { name: string; totalQuantity: number; totalPrice: number }>);
 
-  const groupedProductArray = Object.values(
-    groupedProducts as unknown as Record<
-      string,
-      { name: string; totalQuantity: number; totalPrice: number }
-    >
-  );
+  const groupedProductArray = Object.values(groupedProducts!);
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.title}>Reporte de Ventas del Día</Text>
+          <Text style={styles.title}>Reporte de Caja</Text>
           <Text style={styles.subtitle}>Dnata Helados</Text>
           <Text style={styles.subtitle}>Fecha: {formattedDate}</Text>
           <Text style={styles.subtitle}>
@@ -192,23 +187,19 @@ export default function ReportDetail({ data, totalTrasferencias }: Props) {
             Total Ventas del Día: {formatCurrency(data.totalventaHelados || 0)}
           </Text>
           <Text style={styles.footerText}>
-            Total en Transferencias:{" "}
-            {formatCurrency(
-              totalTrasferencias?.[0]?.totalTransferenciasUsuario || 0
-            )}
+            Total en Transferencias: {formatCurrency(totals.totalTransferencia)}
           </Text>
           <Text style={styles.footerText}>
-            Total en Efectivo:{" "}
-            {formatCurrency(totalTrasferencias?.[0]?.totalEfectivoUsuario || 0)}
+            Total en Efectivo: {formatCurrency(totals.totalEfectivo)}
           </Text>
 
-          {Object.entries(
-            totalTrasferencias[0]?.transferPlatformTotals || {}
-          ).map(([platform, amount]) => (
-            <Text key={platform} style={styles.platformTotals}>
-              {platform.toLocaleUpperCase()}: {formatCurrency(amount)}
-            </Text>
-          ))}
+          {Object.entries(totals.transferPlatformTotals).map(
+            ([platform, amount]) => (
+              <Text key={platform} style={styles.platformTotals}>
+                {platform.toLocaleUpperCase()}: {formatCurrency(amount)}
+              </Text>
+            )
+          )}
         </View>
       </Page>
     </Document>

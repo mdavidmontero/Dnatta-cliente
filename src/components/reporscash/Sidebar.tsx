@@ -20,39 +20,31 @@ interface PropsSidebar {
 }
 
 export function SidebarAdminCash({ data }: PropsSidebar) {
-  const totalTrasferencias = data.map((item) => {
-    const totalTransferenciasUsuario = item.point?.sales?.reduce(
-      (acc, sale) => {
-        if (sale?.paymentType === "transferencia") {
-          return acc + (sale?.totalAmount || 0);
-        }
-        return acc;
-      },
-      0
-    );
-
-    const totalEfectivoUsuario = item.point?.sales?.reduce((acc, sale) => {
-      if (sale?.paymentType === "efectivo") {
-        return acc + (sale?.totalAmount || 0);
-      }
-      return acc;
-    }, 0);
-
+  const totals = data.map((item) => {
+    let totalEfectivo = 0;
+    let totalTransferencia = 0;
     const transferPlatformTotals: Record<string, number> = {};
 
     item.point?.sales?.forEach((sale) => {
-      if (sale?.paymentType === "transferencia" && sale?.transferPlatform) {
-        const platform = sale.transferPlatform;
-        if (!transferPlatformTotals[platform]) {
-          transferPlatformTotals[platform] = 0;
+      sale?.payments?.forEach((payment) => {
+        if (payment?.method === "efectivo") {
+          totalEfectivo += payment.amount || 0;
+        } else if (payment?.method === "transferencia") {
+          totalTransferencia += payment.amount || 0;
+          const platform = payment.transferPlatform || "otro";
+          if (!transferPlatformTotals[platform]) {
+            transferPlatformTotals[platform] = 0;
+          }
+          transferPlatformTotals[platform] += payment.amount || 0;
         }
-        transferPlatformTotals[platform] += sale.totalAmount || 0;
-      }
+      });
     });
+    console.log(totalEfectivo, totalTransferencia);
+    console.log(transferPlatformTotals);
 
     return {
-      totalTransferenciasUsuario,
-      totalEfectivoUsuario,
+      totalEfectivo,
+      totalTransferencia,
       transferPlatformTotals,
     };
   });
@@ -80,7 +72,7 @@ export function SidebarAdminCash({ data }: PropsSidebar) {
                 <DetailReportCashOneDay
                   key={item.id}
                   item={item}
-                  totalTrasferencias={totalTrasferencias}
+                  totals={totals[index]}
                   index={index}
                 />
               ))}

@@ -17,9 +17,19 @@ export default function OrderSummary() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("efectivo");
   const [selectedTransfer, setSelectedTransfer] = useState("otro");
+  const [cashAmount, setCashAmount] = useState(0);
+
+  const [sumaPagos, setSumaPagos] = useState(0);
+  const [selecttrasferCombinado, setSelecttrasferCombinado] =
+    useState("efectivo");
   const [selectedBill, setSelectedBill] = useState(0);
   const [amountPaid, setAmountPaid] = useState(0);
-
+  const [transferAmounts, setTransferAmounts] = useState<{
+    [key: string]: number;
+  }>({});
+  const [payments, setPayments] = useState<
+    { method: string; transferPlatform: string; amount: number }[]
+  >([]);
   const totalAmount = useMemo(
     () =>
       saleDetails.reduce(
@@ -28,6 +38,18 @@ export default function OrderSummary() {
       ),
     [saleDetails]
   );
+  const resetPaymentState = () => {
+    setPaymentMethod("efectivo");
+    setSelectedTransfer("otro");
+    setPayments([]);
+    setIsModalOpen(false);
+    setTransferAmounts({});
+    setSelecttrasferCombinado("efectivo");
+    setSelectedBill(0);
+    setAmountPaid(0);
+    setCashAmount(0);
+    setSumaPagos(0);
+  };
 
   const mutationCreateOrder = useMutation({
     mutationFn: createOrder,
@@ -35,11 +57,7 @@ export default function OrderSummary() {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      setPaymentMethod("efectivo");
-      setSelectedTransfer("otro");
-      setIsModalOpen(false);
-      setSelectedBill(0);
-      setAmountPaid(0);
+      resetPaymentState();
       toast.success(data);
       clearOrder();
     },
@@ -49,16 +67,14 @@ export default function OrderSummary() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    const data = {
+    const orderData = {
       totalAmount,
-      paymentType: paymentMethod,
-      transferPlatform:
-        paymentMethod === "transferencia" ? selectedTransfer : "otro",
+      payments,
+      saleDetails,
       userId: user!.id,
       pointId: +point,
-      saleDetails,
     };
-    mutationCreateOrder.mutate(data);
+    mutationCreateOrder.mutate(orderData);
   };
 
   return (
@@ -99,6 +115,16 @@ export default function OrderSummary() {
         selectedBill={selectedBill}
         amountPaid={amountPaid}
         setAmountPaid={setAmountPaid}
+        transferAmounts={transferAmounts}
+        setTransferAmounts={setTransferAmounts}
+        payments={payments}
+        setPayments={setPayments}
+        setSelecttrasferCombinado={setSelecttrasferCombinado}
+        selecttrasferCombinado={selecttrasferCombinado}
+        cashAmount={cashAmount}
+        setCashAmount={setCashAmount}
+        sumaPagos={sumaPagos}
+        setSumaPagos={setSumaPagos}
       />
     </aside>
   );

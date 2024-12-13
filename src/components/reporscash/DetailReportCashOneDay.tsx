@@ -6,18 +6,17 @@ import ReportDetail from "@/views/admin/cash/reports/ReportDetail";
 
 interface DetailReportCashOneDayProps {
   item: cashReportSchemaI;
-  totalTrasferencias: {
-    totalTransferenciasUsuario: number | undefined;
-    totalEfectivoUsuario: number | undefined;
+  totals: {
+    totalEfectivo: number;
+    totalTransferencia: number;
     transferPlatformTotals: Record<string, number>;
-  }[];
+  };
   index: number;
 }
 
 export default function DetailReportCashOneDay({
   item,
-  totalTrasferencias,
-  index,
+  totals,
 }: DetailReportCashOneDayProps) {
   const navigate = useNavigate();
   return (
@@ -47,12 +46,7 @@ export default function DetailReportCashOneDay({
             </div>
             <div className="flex">
               <PDFDownloadLink
-                document={
-                  <ReportDetail
-                    data={item}
-                    totalTrasferencias={totalTrasferencias}
-                  />
-                }
+                document={<ReportDetail data={item} totals={totals} />}
                 fileName={`Reporte de ${item.user?.name}`}
               >
                 <button className="text-sm font-semibold text-blue-600 hover:underline text-end">
@@ -100,22 +94,19 @@ export default function DetailReportCashOneDay({
             Transferencias
           </h3>
           <p className="text-gray-700">
-            Total Transferencias:{" "}
-            {formatCurrency(
-              totalTrasferencias[index].totalTransferenciasUsuario!
-            )}
+            Total Transferencias: {formatCurrency(totals.totalTransferencia)}
           </p>
           <ul className="pl-4 mt-2 text-gray-600 list-disc">
-            {Object.entries(
-              totalTrasferencias[index].transferPlatformTotals
-            ).map(([platform, amount]) => (
-              <li key={platform}>
-                <span className="font-medium">
-                  {platform.toLocaleUpperCase()}:
-                </span>{" "}
-                {formatCurrency(amount)}
-              </li>
-            ))}
+            {Object.entries(totals.transferPlatformTotals).map(
+              ([platform, amount]) => (
+                <li key={platform}>
+                  <span className="font-medium">
+                    {platform.toLocaleUpperCase()}:
+                  </span>{" "}
+                  {formatCurrency(amount)}
+                </li>
+              )
+            )}
           </ul>
         </div>
 
@@ -124,8 +115,7 @@ export default function DetailReportCashOneDay({
             Efectivo
           </h3>
           <p className="text-gray-700">
-            Total en Efectivo:{" "}
-            {formatCurrency(totalTrasferencias[index].totalEfectivoUsuario!)}
+            Total en Efectivo: {formatCurrency(totals.totalEfectivo)}
           </p>
 
           <div className="p-4 mt-4 rounded-lg bg-gray-50">
