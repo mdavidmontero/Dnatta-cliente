@@ -33,6 +33,7 @@ import HomeMovementsView from "./views/admin/movements/HomeMovementsView";
 import MoneyQuantityCashView from "./views/admin/cashMoney/MoneQuantityCash";
 import HomeReportCash from "./views/admin/cash/reports/HomeReportCash";
 import CashDetail from "./views/admin/cash/reports/CashDetail";
+import NotFoundLayout from "./layouts/NotFound404";
 
 export default function Router() {
   return (
@@ -100,7 +101,7 @@ export default function Router() {
           <Route path="/ventas/:slug" element={<HomeVentasScreen />} />
         </Route>
 
-        <Route element={<AuthLayout />}>
+        <Route element={<NotFoundLayout />}>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

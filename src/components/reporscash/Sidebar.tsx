@@ -39,8 +39,6 @@ export function SidebarAdminCash({ data }: PropsSidebar) {
         }
       });
     });
-    console.log(totalEfectivo, totalTransferencia);
-    console.log(transferPlatformTotals);
 
     return {
       totalEfectivo,

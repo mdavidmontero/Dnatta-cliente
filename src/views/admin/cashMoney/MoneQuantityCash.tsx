@@ -4,13 +4,15 @@ import { statusCashRegister } from "../../../actions/ventas.actions";
 import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
-
+import animationData from "../../../assets/vacioverde.json";
+import animationDataMoney from "../../../assets/Money.json";
 import MoneyTable from "../../../components/cash/MoneyTable";
 import { getMoneyCashDay } from "../../../actions/movements.actions";
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils";
 import HomeMoneyCash from "./HomeCashMoney";
 import { Button } from "@/components/ui/button";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 export default function MoneyQuantityCashView() {
   const user = userAuthStore((state) => state.user);
@@ -39,7 +41,12 @@ export default function MoneyQuantityCashView() {
   return (
     <>
       {!data?.id ? (
-        <p className="text-xl text-center">No has Abierto caja el dia de hoy</p>
+        <div>
+          <LottieAnimation animationData={animationData} />
+          <p className="text-xl text-center">
+            No has Abierto caja el dia de hoy
+          </p>
+        </div>
       ) : (
         <div className="container px-4 py-4 mx-auto">
           <div className="flex items-center justify-between mb-4">
@@ -65,9 +72,16 @@ export default function MoneyQuantityCashView() {
             </>
           ) : (
             <>
-              <p className="text-xl text-center">
-                No has registrado dinero en caja el dia de hoy
-              </p>
+              <div>
+                <LottieAnimation
+                  animationData={animationDataMoney}
+                  width={200}
+                  height={200}
+                />
+                <p className="text-xl text-center">
+                  No has registrado dinero en caja el dia de hoy
+                </p>
+              </div>
             </>
           )}
         </div>
