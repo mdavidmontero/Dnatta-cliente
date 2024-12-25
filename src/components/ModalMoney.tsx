@@ -1,10 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction, useEffect } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 
 import { formatCurrency } from "../utils";
 import { Button } from "./ui/button";
 import { metodosDePago, paymentMethods, paymentMethodsCombinado } from "@/data";
 import { toast } from "sonner";
+import TickeSale from "./cash/TickerSale";
+import { PDFViewer } from "@react-pdf/renderer";
+import { PrinterIcon } from "@heroicons/react/24/outline";
+import { useStore } from "@/store/store";
+import { userAuthStore } from "@/store/useAuthStore";
 
 interface ModalMoneyProps {
   amount: number;
@@ -76,6 +81,9 @@ export default function ModalMoney({
   setSumaPagos,
 }: ModalMoneyProps) {
   const bills = [5000, 10000, 20000, 50000, 100000];
+  const [viewTicked, setViewTicked] = useState(false);
+  const sales = useStore((state) => state.order);
+  const user = userAuthStore((state) => state.user);
 
   useEffect(() => {
     if (paymentMethod === "efectivo" || paymentMethod === "transferencia") {
@@ -231,6 +239,27 @@ export default function ModalMoney({
                 </p>
 
                 <div className="flex flex-col space-y-4">
+                  <button
+                    onClick={() => setViewTicked(!viewTicked)}
+                    className="self-end p-2 transition duration-200 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
+                  >
+                    <PrinterIcon className="w-6 h-6 text-indigo-600" />
+                  </button>
+                  {viewTicked && (
+                    <div className="w-full max-w-3xl mx-auto">
+                      <PDFViewer
+                        width="100%"
+                        height="270px"
+                        className="rounded-lg shadow-lg"
+                      >
+                        <TickeSale
+                          sale={sales}
+                          paymentMethod={paymentMethod}
+                          user={user}
+                        />
+                      </PDFViewer>
+                    </div>
+                  )}
                   {paymentMethod === "efectivo" && (
                     <div className="flex flex-wrap items-center justify-center gap-6">
                       {bills.map((bill) => (

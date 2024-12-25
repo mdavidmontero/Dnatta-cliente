@@ -59,6 +59,7 @@ export default function OrderSummary() {
     onSuccess: (data) => {
       resetPaymentState();
       toast.success(data);
+
       clearOrder();
     },
   });

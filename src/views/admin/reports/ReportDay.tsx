@@ -61,7 +61,9 @@ export default function ReportDay() {
       <div className="p-6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-end">
           <Button
-            onClick={() => navigation(location.pathname + "?reportcasday=true")}
+            onClick={() =>
+              navigation(location.pathname + "?reportcashone=true")
+            }
             className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
           >
             Ver en PDF
