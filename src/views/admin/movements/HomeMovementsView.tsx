@@ -11,6 +11,9 @@ import MovementsTable from "../../../components/movements/MovementsTable";
 import EditTaskData from "../../../components/movements/EditTaskData";
 import { useMemo } from "react";
 import { formatCurrency } from "../../../utils/index";
+import LottieAnimation from "@/components/ui/LottieAnimation";
+import animationData from "../../../assets/vacioverde.json";
+import animationMovements from "../../../assets/Movements.json";
 
 export default function HomeMovementsView() {
   const user = userAuthStore((state) => state.user);
@@ -72,8 +75,15 @@ export default function HomeMovementsView() {
                   <MovementsTable movementsData={movementsData} />
                 </>
               ) : (
-                <div className="text-center text-gray-500">
-                  No hay movimientos registrados para este día.
+                <div>
+                  <LottieAnimation
+                    animationData={animationMovements}
+                    width={150}
+                    height={150}
+                  />
+                  <p className="text-center text-gray-500">
+                    No hay movimientos registrados para este día.
+                  </p>
                 </div>
               )}
             </>
@@ -81,7 +91,8 @@ export default function HomeMovementsView() {
         </div>
       ) : (
         <div className="py-4 text-xl text-center ">
-          No has abierto caja el día de hoy.
+          <LottieAnimation animationData={animationData} />
+          <p>No has abierto caja el dia de hoy</p>
         </div>
       )}
 

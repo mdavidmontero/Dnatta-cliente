@@ -109,23 +109,8 @@ export default function ReportDayVendedora() {
         <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3">
           <Calendar value={value} onChange={handleChange} />
         </div>
-        <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
-          <div className="flex items-center gap-4 mb-6">
-            {/* <select
-              name="local"
-              id="local"
-              onChange={(e) => setPoint(parseInt(e.target.value))}
-              className="w-full p-3 border border-gray-300 rounded-md md:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={point}
-            >
-              <option value="">Seleccione un local</option>
-              {pointsData.data?.map((point) => (
-                <option key={point.id} value={point.id}>
-                  {point.name}
-                </option>
-              ))}
-            </select> */}
-
+        <div className="p-2 space-y-5 md:w-1/2 lg:w-2/3">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
             <Select onValueChange={(value) => setPoint(+value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Seleccione un local" />
@@ -151,18 +136,6 @@ export default function ReportDayVendedora() {
                 ))}
               </SelectContent>
             </Select>
-            {/* <select
-              className="w-full p-3 border border-gray-300 rounded-md md:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={(e) => setUser(parseInt(e.target.value))}
-              value={user}
-            >
-              <option value="">Seleccione un usuario</option>
-              {userVendedoras?.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
-            </select> */}
 
             <Button
               onClick={executeQuery}

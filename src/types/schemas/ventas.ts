@@ -34,8 +34,6 @@ export const ReportSchema = z.object({
   id: z.number(),
   date: z.string().datetime(),
   totalAmount: z.number(),
-  paymentType: z.string(),
-  transferPlatform: z.string(),
   userId: z.number(),
   pointId: z.number(),
   saleDetails: z.array(SaleDetailSchema),

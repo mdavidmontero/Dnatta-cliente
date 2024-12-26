@@ -52,15 +52,25 @@ export const saleDetailSchema = z
   })
   .optional();
 // Sale Schema
+export const payments = z
+  .object({
+    id: z.number(),
+    saleId: z.number(),
+    method: z.string(),
+    transferPlatform: z.string(),
+    amount: z.number(),
+  })
+  .optional();
+export const paymentsSchema = z.array(payments);
+
 export const saleSchema = z
   .object({
     id: z.number(),
     date: z.string().datetime(), // Cambié `.date()` por `.datetime()` para una validación más precisa
     totalAmount: z.number(),
-    paymentType: z.string(),
-    transferPlatform: z.string(),
     userId: z.number(),
     pointId: z.number(),
+    payments: z.array(payments).optional(),
     saleDetails: z.array(saleDetailSchema).optional(),
   })
   .optional();
@@ -71,6 +81,7 @@ export const pointSchema = z
     id: z.number(),
     name: z.string(),
     ubicacion: z.string(),
+
     sales: z.array(saleSchema).optional(), // Ventas opcionales
   })
   .optional();

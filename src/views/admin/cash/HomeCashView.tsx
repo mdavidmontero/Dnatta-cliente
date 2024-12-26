@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import CashTable from "../../../components/cash/CashTable";
 import ButtonNavigate from "../../../components/shared/ButtonNavigate";
 import Heading from "../../../components/shared/Heading";
+import animationData from "../../../assets/vacioverde.json";
 import {
   statusCashRegister,
   statusCashRegisterOneClosed,
@@ -10,6 +11,7 @@ import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 
 import HomeMoneyCash from "../cashMoney/HomeCashMoney";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 
 export default function HomeCashView() {
   const user = userAuthStore((state) => state.user);
@@ -41,6 +43,7 @@ export default function HomeCashView() {
           </>
         ) : (
           <div className="py-4 text-xl text-center ">
+            <LottieAnimation animationData={animationData} />
             No has Abierto caja el dia de hoy
           </div>
         )}

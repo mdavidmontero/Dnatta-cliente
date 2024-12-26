@@ -1,12 +1,13 @@
+import { Navigate } from "react-router-dom";
 import { reportsCash } from "@/actions/reportsCash.actions";
 import { SidebarAdminCash } from "@/components/reporscash/Sidebar";
+import LottieAnimation from "@/components/ui/LottieAnimation";
 import { useAuth } from "@/hook/useAuth";
-
 import { useQuery } from "@tanstack/react-query";
 import { startOfDay } from "date-fns";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import { Navigate } from "react-router-dom";
+import animationData from "../../../../assets/vaciorojo.json";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -42,8 +43,11 @@ export default function HomeReportCash() {
             <SidebarAdminCash data={data} />
           </>
         ) : (
-          <div className="text-center text-gray-500">
-            No hay datos disponibles para esta fecha.
+          <div>
+            <LottieAnimation animationData={animationData} />
+            <p className="text-center text-gray-500">
+              No hay datos disponibles para esta fecha.
+            </p>
           </div>
         )}
       </>

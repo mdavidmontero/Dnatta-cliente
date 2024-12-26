@@ -90,17 +90,14 @@ export default function EditMoneyDay({ moneyId }: EditMoneyDayProps) {
     }
   };
 
-  // Cargando estado mientras se obtiene data
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  // Manejo de error en caso de fallo al cargar los datos
   if (isError) {
     return <div>Error al cargar los datos.</div>;
   }
 
-  // Caso cuando no hay datos
   if (!data) {
     return <div>No se encontraron datos.</div>;
   }

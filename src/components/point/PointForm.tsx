@@ -21,7 +21,7 @@ export default function PointForm({ register, errors }: ProductFormProps) {
             required: "El nombre es obligatorio",
           })}
           className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
-          placeholder="Nombre Producto"
+          placeholder="Nombre punto de Venta"
         />
         {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
       </div>

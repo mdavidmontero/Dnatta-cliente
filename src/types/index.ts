@@ -155,8 +155,13 @@ export type OrderItem = Pick<Product, "id" | "name" | "price"> & {
 // Ventas
 export const SaleSchema = z.object({
   totalAmount: z.number().min(0, "Hay errores en la orden"),
-  paymentType: z.string(),
-  transferPlatform: z.string(),
+  payments: z.array(
+    z.object({
+      method: z.string(),
+      transferPlatform: z.string(),
+      amount: z.number(),
+    })
+  ),
   saleDetails: z.array(
     z.object({
       id: z.number(),
@@ -186,8 +191,6 @@ export const ReportSchema = z.object({
   id: z.number(),
   date: z.string().datetime(),
   totalAmount: z.number(),
-  paymentType: z.string(),
-  transferPlatform: z.string(),
   userId: z.number(),
   pointId: z.number(),
   saleDetails: z.array(
