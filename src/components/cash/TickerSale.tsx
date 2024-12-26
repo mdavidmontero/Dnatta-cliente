@@ -6,37 +6,27 @@ import { useMemo } from "react";
 const styles = StyleSheet.create({
   page: {
     width: "58mm",
-    padding: "1mm",
+    padding: "2mm",
     backgroundColor: "white",
   },
   header: {
     textAlign: "center",
-    marginBottom: "2mm",
   },
   businessName: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
-    marginBottom: "1mm",
   },
   businessInfo: {
     fontSize: 8,
-    marginBottom: "0.5mm",
   },
   divider: {
     borderBottom: "0.5px solid black",
-    marginVertical: "2mm",
-  },
-  section: {
-    marginVertical: "2mm",
-  },
-  table: {
-    marginVertical: "2mm",
+    margin: "1mm 0",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     fontSize: 8,
-    marginBottom: "1mm",
   },
   boldText: {
     fontWeight: "bold",
@@ -44,20 +34,20 @@ const styles = StyleSheet.create({
   total: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: "3mm",
     fontSize: 10,
     fontWeight: "bold",
+    margin: "1mm 0",
   },
   persontext: {
     fontSize: 8,
-    marginBottom: "0.5mm",
   },
   footer: {
-    marginTop: "4mm",
     fontSize: 8,
     textAlign: "center",
+    marginTop: "1mm",
   },
 });
+
 interface Props {
   sale: OrderItem[];
   paymentMethod: string;
@@ -71,74 +61,75 @@ interface Props {
   } | null;
 }
 
-const TickeSale = ({ sale, paymentMethod, user }: Props) => {
+const TicketSale = ({ sale, paymentMethod, user }: Props) => {
   const totalAmount = useMemo(
     () => sale.reduce((total, item) => total + item.quantity * item.price, 0),
     [sale]
   );
+
+  // Calcular la altura aproximada basada en el contenido
+  const approximateHeight = Math.max(
+    // Altura base para el contenido fijo
+    100 +
+      // Altura adicional por cada item (aproximadamente 10 unidades por item)
+      sale.length * 10
+  );
+
   return (
-    <>
-      <Document>
-        <Page size={[164, "auto"]} style={styles.page}>
-          <View style={styles.header}>
-            <Text style={styles.businessName}>DNATA</Text>
-            <Text style={styles.businessInfo}>Tel: 3206180237</Text>
-            <Text style={styles.businessInfo}>Comprobante de entrega</Text>
-          </View>
+    <Document>
+      <Page size={[164, approximateHeight]} style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.businessName}>DNATA</Text>
+          <Text style={styles.businessInfo}>Tel: 3206180237</Text>
+          <Text style={styles.businessInfo}>Comprobante de entrega</Text>
+        </View>
 
-          <View style={styles.divider} />
+        <View style={styles.divider} />
 
-          <View style={styles.section}>
-            <Text style={styles.businessInfo}>
-              Fecha: {new Date().toLocaleDateString()} - Hora:{" "}
-              {new Date().toLocaleTimeString()}
-            </Text>
-            <Text style={styles.businessInfo}>
-              Ticket #: {Math.floor(1000 + Math.random() * 9000).toString()}
-            </Text>
-            <Text style={styles.businessInfo}>
-              Medio de Pago: {paymentMethod}
-            </Text>
-            <Text style={styles.businessInfo}>
-              Artículos Vendidos: {sale.length}
-            </Text>
-          </View>
+        <View>
+          <Text style={styles.businessInfo}>
+            {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}
+          </Text>
+          <Text style={styles.businessInfo}>
+            #{Math.floor(1000 + Math.random() * 9000).toString()}
+          </Text>
+          <Text style={styles.businessInfo}>{paymentMethod}</Text>
+        </View>
 
-          <View style={styles.divider} />
-          <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.boldText}>PRODUCTO</Text>
-              <Text style={styles.boldText}>CANT</Text>
-              <Text style={styles.boldText}>SUBTOTAL</Text>
-            </View>
+        <View style={styles.divider} />
+
+        <View>
+          <View style={styles.row}>
+            <Text style={styles.boldText}>PROD</Text>
+            <Text style={styles.boldText}>CANT</Text>
+            <Text style={styles.boldText}>SUBT</Text>
           </View>
           {sale.map((item) => (
-            <View style={styles.table} key={item.id}>
-              <View style={styles.row}>
-                <Text>{item.name}</Text>
-                <Text>{item.quantity}</Text>
-                <Text>{item.subtotal}</Text>
-              </View>
+            <View style={styles.row} key={item.id}>
+              <Text>{item.name}</Text>
+              <Text>{item.quantity}</Text>
+              <Text>{item.subtotal}</Text>
             </View>
           ))}
+        </View>
 
-          <View style={styles.divider} />
+        <View style={styles.divider} />
 
-          <View style={styles.total}>
-            <Text>Total:</Text>
-            <Text>{formatCurrency(totalAmount)}</Text>
-          </View>
-          <View style={styles.persontext}>
-            <Text>Atendido por: {user?.name}</Text>
-          </View>
+        <View style={styles.total}>
+          <Text>Total:</Text>
+          <Text>{formatCurrency(totalAmount)}</Text>
+        </View>
 
-          <View style={styles.footer}>
-            <Text>¡Gracias por su preferencia!</Text>
-          </View>
-        </Page>
-      </Document>
-    </>
+        <View style={styles.persontext}>
+          <Text>Atendido por: {user?.name}</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <Text>¡Gracias por su preferencia!</Text>
+        </View>
+      </Page>
+    </Document>
   );
 };
 
-export default TickeSale;
+export default TicketSale;

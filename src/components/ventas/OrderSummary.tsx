@@ -126,6 +126,7 @@ export default function OrderSummary() {
         setCashAmount={setCashAmount}
         sumaPagos={sumaPagos}
         setSumaPagos={setSumaPagos}
+        mutationPending={mutationCreateOrder.isPending}
       />
     </aside>
   );

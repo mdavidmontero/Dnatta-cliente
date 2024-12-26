@@ -54,6 +54,7 @@ interface ModalMoneyProps {
   setCashAmount: React.Dispatch<React.SetStateAction<number>>;
   sumaPagos: number;
   setSumaPagos: React.Dispatch<React.SetStateAction<number>>;
+  mutationPending: boolean;
 }
 
 export default function ModalMoney({
@@ -79,6 +80,7 @@ export default function ModalMoney({
   setCashAmount,
   sumaPagos,
   setSumaPagos,
+  mutationPending,
 }: ModalMoneyProps) {
   const bills = [5000, 10000, 20000, 50000, 100000];
   const [viewTicked, setViewTicked] = useState(false);
@@ -441,7 +443,8 @@ export default function ModalMoney({
                     disabled={
                       !validarCantidad(amount) ||
                       (paymentMethod === "efectivo" && selectedBill === 0) ||
-                      (paymentMethod === "combinado" && sumaPagos < amount)
+                      (paymentMethod === "combinado" && sumaPagos < amount) ||
+                      mutationPending
                     }
                     onClick={handleCreateOrder}
                     className="w-full p-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-800 disabled:opacity-50"
