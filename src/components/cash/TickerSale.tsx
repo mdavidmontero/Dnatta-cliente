@@ -6,27 +6,32 @@ import { useMemo } from "react";
 const styles = StyleSheet.create({
   page: {
     width: "58mm",
+    minHeight: "auto",
     padding: "2mm",
     backgroundColor: "white",
   },
   header: {
+    marginBottom: "2mm",
     textAlign: "center",
   },
   businessName: {
     fontSize: 12,
     fontWeight: "bold",
+    marginBottom: "1mm",
   },
   businessInfo: {
     fontSize: 8,
+    marginBottom: "0.5mm",
   },
   divider: {
     borderBottom: "0.5px solid black",
-    margin: "1mm 0",
+    marginVertical: "1mm",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     fontSize: 8,
+    marginVertical: "0.5mm",
   },
   boldText: {
     fontWeight: "bold",
@@ -36,15 +41,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     fontSize: 10,
     fontWeight: "bold",
-    margin: "1mm 0",
+    marginVertical: "1mm",
   },
   persontext: {
     fontSize: 8,
+    marginTop: "2mm",
   },
   footer: {
     fontSize: 8,
     textAlign: "center",
-    marginTop: "1mm",
+    marginTop: "2mm",
+    marginBottom: "1mm",
   },
 });
 
@@ -67,17 +74,9 @@ const TicketSale = ({ sale, paymentMethod, user }: Props) => {
     [sale]
   );
 
-  // Calcular la altura aproximada basada en el contenido
-  const approximateHeight = Math.max(
-    // Altura base para el contenido fijo
-    100 +
-      // Altura adicional por cada item (aproximadamente 10 unidades por item)
-      sale.length * 10
-  );
-
   return (
     <Document>
-      <Page size={[164, approximateHeight]} style={styles.page}>
+      <Page size={[164, "auto"]} style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.businessName}>DNATA</Text>
           <Text style={styles.businessInfo}>Tel: 3206180237</Text>

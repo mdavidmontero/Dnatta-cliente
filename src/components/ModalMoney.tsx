@@ -251,7 +251,7 @@ export default function ModalMoney({
                     <div className="w-full max-w-3xl mx-auto">
                       <PDFViewer
                         width="100%"
-                        height="500px"
+                        height="380px"
                         className="rounded-lg shadow-lg"
                       >
                         <TickeSale
