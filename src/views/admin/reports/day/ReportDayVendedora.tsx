@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Calendar from "react-calendar";
@@ -12,7 +12,7 @@ import { formatCurrency } from "../../../../utils";
 import ModalReportes from "../ModalReportes";
 import { getPoints } from "../../../../actions/point.actions";
 import { getUsers } from "../../../../actions/auth.actions";
-import { useAuth } from "@/hook/useAuth";
+// import { useAuth } from "@/hook/useAuth";
 import {
   Select,
   SelectContent,
@@ -27,7 +27,7 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDayVendedora() {
   const navigate = useNavigate();
-  const { data: userdata } = useAuth();
+  // const { data: userdata } = useAuth();
   const [value, setValue] = useState<Value>(new Date());
   const [point, setPoint] = useState(0);
   const [user, setUser] = useState(0);
@@ -88,7 +88,7 @@ export default function ReportDayVendedora() {
       alert("Selecciona fecha, local y usuario antes de buscar.");
     }
   };
-  if (userdata?.role !== "ADMIN") return <Navigate to="/404" />;
+  // if (userdata?.role !== "ADMIN") return <Navigate to="/404" />;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">

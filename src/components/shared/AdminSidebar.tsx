@@ -10,7 +10,7 @@ export default function AdminSidebar() {
       url: "/reports-dias/vendedora",
       text: "Reporte Diario vendedora",
       blank: false,
-      admin: true,
+      admin: false,
     },
     { url: "/report-mes", text: "Reporte Mes", blank: false, admin: true },
     { url: "/report-anual", text: "Reporte Anual", blank: false, admin: true },

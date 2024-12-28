@@ -24,6 +24,23 @@ export const getReportDiario = async (
   }
 };
 
+export const getReportDiarioTotal = async (fecha: string, pointId: number) => {
+  try {
+    const { data } = await api.get(
+      `/reports/diariototal?fecha=${fecha}&pointId=${pointId}`
+    );
+    const result = ReportArraySchema.safeParse(data);
+    if (result.success) {
+      return result.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch reports");
+    }
+    throw error;
+  }
+};
+
 export const getReportMes = async (
   anio: number,
   mes: number | null,

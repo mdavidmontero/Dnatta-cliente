@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { getReportDiario } from "../../../actions/reports.actions";
+import {
+  getReportDiario,
+  getReportDiarioTotal,
+} from "../../../actions/reports.actions";
 import { startOfDay } from "date-fns";
 import Spinner from "../../../components/shared/spinner/Spinner";
 import { formatCurrency } from "../../../utils";
@@ -55,6 +58,32 @@ export default function ReportDay() {
 
   const totalAmountSold =
     data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
+
+  const reportetotal = useQuery<ReportArray | undefined>({
+    queryKey: ["reportsfinales", selectedDate],
+    queryFn: () =>
+      selectedDate
+        ? getReportDiarioTotal(selectedDate.toISOString(), +point)
+        : Promise.resolve([]),
+    enabled: !!selectedDate,
+  });
+
+  const productSalesSummaryTotal =
+    reportetotal.data?.flatMap((report) =>
+      report.saleDetails.map((detail) => ({
+        productName: detail.product.name,
+        quantitySold: detail.quantity,
+        totalAmountSold: detail.unitPrice * detail.quantity,
+      }))
+    ) || [];
+
+  const totalQuantitySoldTotal = productSalesSummaryTotal.reduce(
+    (acc, product) => acc + product.quantitySold,
+    0
+  );
+
+  const totalAmountSoldTotal =
+    reportetotal.data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
 
   if (data)
     return (
@@ -111,6 +140,20 @@ export default function ReportDay() {
                       <SaleDetails
                         productSalesSummary={productSalesSummary}
                         totalQuantitySold={totalQuantitySold}
+                      />
+                      <hr />
+                      <p className="text-lg font-bold text-center text-gray-800">
+                        Ventas Totales del Día
+                      </p>
+                      <p className="text-2xl font-bold text-right">
+                        Total del día:
+                        <span className="ml-2 font-extrabold">
+                          {formatCurrency(totalAmountSoldTotal)}
+                        </span>{" "}
+                      </p>
+                      <SaleDetails
+                        productSalesSummary={productSalesSummaryTotal}
+                        totalQuantitySold={totalQuantitySoldTotal}
                       />
                     </>
                   ) : (
