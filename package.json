@@ -31,6 +31,7 @@
     "date-fns": "^4.1.0",
     "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
+    "file-saver": "^2.0.5",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
@@ -42,6 +43,7 @@
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.8",
     "zustand": "^5.0.1"
   },
@@ -49,6 +51,7 @@
     "@eslint/js": "^9.15.0",
     "@tailwindcss/forms": "^0.5.9",
     "@tanstack/eslint-plugin-query": "^5.62.1",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

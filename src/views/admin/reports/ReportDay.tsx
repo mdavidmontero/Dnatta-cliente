@@ -16,6 +16,7 @@ import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ProfessionalExcelReport } from "@/components/reports/day/ReportExcel";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -88,7 +89,7 @@ export default function ReportDay() {
   if (data)
     return (
       <div className="p-6 bg-white rounded-lg shadow-lg">
-        <div className="flex justify-end">
+        <div className="flex flex-wrap justify-between gap-2 mb-6">
           <Button
             onClick={() =>
               navigation(location.pathname + "?reportcashone=true")
@@ -97,6 +98,10 @@ export default function ReportDay() {
           >
             Ver en PDF
           </Button>
+          <ProfessionalExcelReport
+            ordenes={reportetotal.data}
+            totalday={totalAmountSoldTotal}
+          />
         </div>
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-4xl font-extrabold text-gray-800">

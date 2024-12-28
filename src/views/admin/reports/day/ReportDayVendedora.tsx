@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { ProfessionalExcelReport } from "@/components/reports/day/ReportExcel";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -38,8 +39,8 @@ export default function ReportDayVendedora() {
   const { data, isLoading, isError } = useQuery<ReportArray | undefined>({
     queryKey: ["report", selectedDate, point, user],
     queryFn: () =>
-      selectedDate && point && user
-        ? getReportDiario(selectedDate.toISOString(), user, point)
+      selectedDate && point
+        ? getReportDiario(selectedDate.toISOString(), user || 0, point)
         : Promise.resolve([]),
     enabled: fetchData,
   });
@@ -82,7 +83,7 @@ export default function ReportDayVendedora() {
     data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
 
   const executeQuery = () => {
-    if (selectedDate && point && user) {
+    if (selectedDate && point) {
       setFetchData(true);
     } else {
       alert("Selecciona fecha, local y usuario antes de buscar.");
@@ -92,13 +93,18 @@ export default function ReportDayVendedora() {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-between gap-2 mb-6">
         <Button
           onClick={() => navigate(location.pathname + "?reportcashone=true")}
           className="bg-[#2d547c] hover:bg-[#44719e] text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
         >
           Ver en PDF
         </Button>
+        <ProfessionalExcelReport
+          ordenes={data}
+          totalday={totalAmountSold}
+          companyName="Dnata Helados"
+        />
       </div>
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-4xl font-extrabold text-gray-800">
@@ -129,6 +135,9 @@ export default function ReportDayVendedora() {
                 <SelectValue placeholder="Seleccione un usuario" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem key="0" value="0">
+                  Todas
+                </SelectItem>
                 {userVendedoras?.map((user) => (
                   <SelectItem key={user.id} value={user.id.toString()}>
                     {user.name}
