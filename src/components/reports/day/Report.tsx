@@ -8,7 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import { ReportArray } from "../../../types";
-import { formatCurrency } from "../../../utils";
+import { formatCurrency, getCategoryFromProductName } from "../../../utils";
 
 // Registrar la fuente
 Font.register({
@@ -95,30 +95,41 @@ interface ProductSalesSummary {
 
 const calculateProductSalesSummary = (
   orders: ReportArray
-): ProductSalesSummary[] => {
-  const summary: { [productName: string]: ProductSalesSummary } = {};
+): { category: string; products: ProductSalesSummary[] }[] => {
+  const summary: { [category: string]: ProductSalesSummary[] } = {};
 
   orders.forEach((order) => {
     order.saleDetails.forEach((detail) => {
       const { product, quantity } = detail;
       const unitPrice = detail.unitPrice;
-
       const productName = product.name;
+      const category = getCategoryFromProductName(productName); // Función que asigna categoría
 
-      if (!summary[productName]) {
-        summary[productName] = {
-          productName: productName,
-          quantitySold: 0,
-          totalAmountSold: 0,
-        };
+      if (!summary[category]) {
+        summary[category] = [];
       }
 
-      summary[productName].quantitySold += quantity;
-      summary[productName].totalAmountSold += quantity * unitPrice;
+      const existingProduct = summary[category].find(
+        (item) => item.productName === productName
+      );
+
+      if (existingProduct) {
+        existingProduct.quantitySold += quantity;
+        existingProduct.totalAmountSold += quantity * unitPrice;
+      } else {
+        summary[category].push({
+          productName: productName,
+          quantitySold: quantity,
+          totalAmountSold: quantity * unitPrice,
+        });
+      }
     });
   });
 
-  return Object.values(summary);
+  return Object.entries(summary).map(([category, products]) => ({
+    category,
+    products,
+  }));
 };
 
 interface Props {
@@ -133,7 +144,12 @@ export const GeneratePdf = ({ ordenes, totalday }: Props) => {
   );
 
   const totalQuantitySold = productSalesSummary.reduce(
-    (sum, product) => sum + product.quantitySold,
+    (sum, categoryGroup) =>
+      sum +
+      categoryGroup.products.reduce(
+        (acc, product) => acc + product.quantitySold,
+        0
+      ),
     0
   );
 
@@ -155,25 +171,23 @@ export const GeneratePdf = ({ ordenes, totalday }: Props) => {
           </Text>
         </View>
 
-        {/* Encabezado de la tabla */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.column}>Producto</Text>
-          <Text style={styles.column}>Cantidad Vendida</Text>
-          <Text style={styles.column}>Total por Producto</Text>
-        </View>
-
-        {/* Detalle de ventas por producto */}
-        <View>
-          {productSalesSummary.map((product, index) => (
-            <View style={styles.section} key={index}>
-              <Text style={styles.column}>{product.productName}</Text>
-              <Text style={styles.column}>{product.quantitySold}</Text>
-              <Text style={styles.column}>
-                {formatCurrency(product.totalAmountSold)}
-              </Text>
+        {/* Detalle de ventas agrupadas por categoría */}
+        {productSalesSummary.map((categoryGroup, index) => (
+          <View key={index}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.column}>{categoryGroup.category}</Text>
             </View>
-          ))}
-        </View>
+            {categoryGroup.products.map((product, idx) => (
+              <View style={styles.section} key={idx}>
+                <Text style={styles.column}>{product.productName}</Text>
+                <Text style={styles.column}>{product.quantitySold}</Text>
+                <Text style={styles.column}>
+                  {formatCurrency(product.totalAmountSold)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        ))}
 
         {/* Pie de página */}
         <View style={styles.footer}>

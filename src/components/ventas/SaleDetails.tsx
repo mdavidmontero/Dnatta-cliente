@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { formatCurrency } from "../../utils";
+import React, { useMemo } from "react";
+import { formatCurrency, getCategoryFromProductName } from "../../utils";
 
 type ProductSalesSummary = {
   productName: string;
@@ -14,25 +14,36 @@ type SaleDetailsProps = {
 
 const calculateProductSalesSummary = (
   productSalesSummary: SaleDetailsProps["productSalesSummary"]
-): ProductSalesSummary[] => {
-  const summary: { [productName: string]: ProductSalesSummary } = {};
+): { category: string; products: ProductSalesSummary[] }[] => {
+  const summary: { [category: string]: ProductSalesSummary[] } = {};
 
   productSalesSummary.forEach((product) => {
-    const productName = product.productName;
+    const category = getCategoryFromProductName(product.productName);
 
-    if (!summary[productName]) {
-      summary[productName] = {
-        productName: productName,
-        quantitySold: 0,
-        totalAmountSold: 0,
-      };
+    if (!summary[category]) {
+      summary[category] = [];
     }
 
-    summary[productName].quantitySold += product.quantitySold;
-    summary[productName].totalAmountSold += product.totalAmountSold;
+    const existingProduct = summary[category].find(
+      (item) => item.productName === product.productName
+    );
+
+    if (existingProduct) {
+      existingProduct.quantitySold += product.quantitySold;
+      existingProduct.totalAmountSold += product.totalAmountSold;
+    } else {
+      summary[category].push({
+        productName: product.productName,
+        quantitySold: product.quantitySold,
+        totalAmountSold: product.totalAmountSold,
+      });
+    }
   });
 
-  return Object.values(summary);
+  return Object.entries(summary).map(([category, products]) => ({
+    category,
+    products,
+  }));
 };
 
 export function SaleDetails({
@@ -66,18 +77,30 @@ export function SaleDetails({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {groupedProductSales.map((product, index) => (
-                <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 font-semibold whitespace-nowrap">
-                    {product.productName}
-                  </td>
-                  <td className="px-4 py-2 text-center text-gray-600 whitespace-nowrap">
-                    {product.quantitySold}
-                  </td>
-                  <td className="px-4 py-2 text-gray-600 whitespace-nowrap">
-                    {formatCurrency(product.totalAmountSold)}
-                  </td>
-                </tr>
+              {groupedProductSales.map((categoryGroup, index) => (
+                <React.Fragment key={index}>
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="px-4 py-3 text-lg font-bold text-gray-800"
+                    >
+                      {categoryGroup.category}
+                    </td>
+                  </tr>
+                  {categoryGroup.products.map((product, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50">
+                      <td className="px-4 py-2 font-semibold whitespace-nowrap">
+                        {product.productName}
+                      </td>
+                      <td className="px-4 py-2 text-center text-gray-600 whitespace-nowrap">
+                        {product.quantitySold}
+                      </td>
+                      <td className="px-4 py-2 text-gray-600 whitespace-nowrap">
+                        {formatCurrency(product.totalAmountSold)}
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
