@@ -18,9 +18,7 @@ const calculateProductSalesSummary = (
   const summary: { [productName: string]: ProductSalesSummary } = {};
 
   productSalesSummary.forEach((product) => {
-    const productName = product.productName.startsWith("Cono")
-      ? "Cono (variedades)"
-      : product.productName;
+    const productName = product.productName;
 
     if (!summary[productName]) {
       summary[productName] = {
