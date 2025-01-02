@@ -10,6 +10,12 @@ export default function AdminSidebar() {
       allowedRoles: ["USER", "ADMIN"],
     },
     {
+      url: "/post-venta",
+      text: "Ventas",
+      blank: false,
+      allowedRoles: ["USER"],
+    },
+    {
       url: "/reports",
       text: "Reporte Diario",
       blank: false,

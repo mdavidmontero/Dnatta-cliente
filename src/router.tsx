@@ -34,6 +34,7 @@ import MoneyQuantityCashView from "./views/admin/cashMoney/MoneQuantityCash";
 import HomeReportCash from "./views/admin/cash/reports/HomeReportCash";
 import CashDetail from "./views/admin/cash/reports/CashDetail";
 import NotFoundLayout from "./layouts/NotFound404";
+import PostVentaView from "./views/admin/ventas/PostVentaView";
 
 export default function Router() {
   return (
@@ -64,6 +65,8 @@ export default function Router() {
             <Route path="/new-categories" element={<NewCategories />} />
             <Route path="/edit-categories/:id" element={<NewCategories />} />
           </Route>
+          {/* Ventas */}
+          <Route path="/post-venta" element={<PostVentaView />} />
           <Route element={<CajaLayout />}>
             <Route path="/cash-register" element={<HomeCashView />} />
             <Route path="/cash-new" element={<CashRegisterView />} />

@@ -63,3 +63,37 @@ export type GroupedReports = {
     reports: Report[];
   };
 };
+
+export const SaleSchema = z.object({
+  id: z.number(),
+  date: z.string().datetime(),
+  totalAmount: z.number(),
+  userId: z.number(),
+  pointId: z.number(),
+  saleDetails: z.array(
+    z.object({
+      id: z.number(),
+      saleId: z.number(),
+      productId: z.number(),
+      quantity: z.number(),
+      unitPrice: z.number(),
+      product: z.object({
+        id: z.number(),
+        name: z.string(),
+        price: z.number(),
+        image: z.string(),
+        estado: z.boolean(),
+        categoryId: z.number(),
+      }),
+    })
+  ),
+});
+
+export const PosVentaDaySchema = z.object({
+  sales: z.array(SaleSchema),
+  totalPages: z.number(),
+  currentPage: z.number(),
+  totalSales: z.number(),
+});
+
+export type PosVentaDay = z.infer<typeof PosVentaDaySchema>;

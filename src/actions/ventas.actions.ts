@@ -7,6 +7,7 @@ import {
   TotalAmountResponse,
 } from "../types";
 import { CashregisterSchema } from "../types/schemas/cash";
+import { PosVentaDaySchema } from "@/types/schemas/ventas";
 
 export const getProductByCategory = async (slug: string) => {
   try {
@@ -25,6 +26,42 @@ export const getProductByCategory = async (slug: string) => {
 export const createOrder = async (formData: SaleOrder) => {
   try {
     const { data } = await api.post("/ventas/create-order", formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+  }
+};
+
+export const getPostVentas = async (
+  page: number = 1,
+  limit: number = 10,
+  pointId: number
+) => {
+  try {
+    const { data } = await api.get(`/ventas/post-ventas/dia`, {
+      params: {
+        page: page,
+        limit: limit,
+        pointId: +pointId,
+      },
+    });
+    const response = PosVentaDaySchema.safeParse(data);
+    console.log(response.success);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
+    }
+  }
+};
+
+export const deleteVenta = async (id: number) => {
+  try {
+    const { data } = await api.delete(`/ventas/${id}`);
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
