@@ -34,6 +34,9 @@ export const getCategoryFromProductName = (productName: string): string => {
   };
 
   const lowerCaseName = productName.toLowerCase();
+  if (lowerCaseName.includes("brownie supreme")) {
+    return "Supremes";
+  }
   for (const key in categories) {
     if (lowerCaseName.startsWith(key)) {
       return categories[key];
@@ -93,7 +96,10 @@ export const calculateProductSalesSummary = (
       (sum, product) => sum + product.totalAmountSold,
       0
     ),
-    cantidad: products.length,
+    cantidad: products.reduce(
+      (cant, product) => cant + product.quantitySold,
+      0
+    ),
     products,
   }));
 };

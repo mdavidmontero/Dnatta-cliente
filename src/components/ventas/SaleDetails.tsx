@@ -46,7 +46,6 @@ export function SaleDetails({
             <tbody className="bg-white divide-y divide-gray-200">
               {groupedProductSales.map((categoryGroup, categoryIndex) => (
                 <React.Fragment key={categoryIndex}>
-                  {/* Nombre de la categoría */}
                   <tr>
                     <td
                       colSpan={3}
