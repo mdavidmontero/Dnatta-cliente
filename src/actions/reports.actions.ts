@@ -42,23 +42,13 @@ export const getReportDiarioTotal = async (fecha: string, pointId: number) => {
 };
 
 export const getReportMes = async (
-  anio: number,
-  mes: number | null,
+  from: string,
+  to: string,
   pointId: number
 ) => {
   try {
-    if (!anio || isNaN(Number(anio))) {
-      throw new Error(
-        "El parámetro 'anio' es obligatorio y debe ser un número."
-      );
-    }
-    if (!pointId || isNaN(Number(pointId))) {
-      throw new Error(
-        "El parámetro 'pointId' es obligatorio y debe ser un número."
-      );
-    }
     const { data } = await api.get(
-      `/reports/mes?anio=${anio}&mes=${mes ?? ""}&pointId=${pointId}`
+      `/reports/mes?from=${from}&to=${to}&pointId=${pointId}`
     );
     const response = ResponseMesSchema.safeParse(data);
     if (response.success) {
@@ -70,10 +60,6 @@ export const getReportMes = async (
         error.response.data.message || "Error al obtener los reportes";
       throw new Error(errorMessage);
     }
-
-    throw new Error(
-      error instanceof Error ? error.message : "Ocurrió un error inesperado."
-    );
   }
 };
 

@@ -29,7 +29,7 @@ export const getCategoryFromProductName = (productName: string): string => {
     adición: "Adiciones",
     mega: "MegaSupreme",
     banana: "Banana Split",
-    chococono: "Chococono",
+    chococono: "Conos",
     malteada: "Malteadas",
   };
 
@@ -40,5 +40,60 @@ export const getCategoryFromProductName = (productName: string): string => {
     }
   }
 
-  return "Otros"; // Default category
+  return "Otros";
+};
+
+type ProductSalesSummary = {
+  productName: string;
+  quantitySold: number;
+  totalAmountSold: number;
+};
+
+type SaleDetailsProps = {
+  productSalesSummary: ProductSalesSummary[];
+  totalQuantitySold: number;
+};
+
+export const calculateProductSalesSummary = (
+  productSalesSummary: SaleDetailsProps["productSalesSummary"]
+): {
+  category: string;
+  subtotal: number;
+  cantidad: number;
+  products: ProductSalesSummary[];
+}[] => {
+  const summary: { [category: string]: ProductSalesSummary[] } = {};
+
+  productSalesSummary.forEach((product) => {
+    const category = getCategoryFromProductName(product.productName);
+
+    if (!summary[category]) {
+      summary[category] = [];
+    }
+
+    const existingProduct = summary[category].find(
+      (item) => item.productName === product.productName
+    );
+
+    if (existingProduct) {
+      existingProduct.quantitySold += product.quantitySold;
+      existingProduct.totalAmountSold += product.totalAmountSold;
+    } else {
+      summary[category].push({
+        productName: product.productName,
+        quantitySold: product.quantitySold,
+        totalAmountSold: product.totalAmountSold,
+      });
+    }
+  });
+
+  return Object.entries(summary).map(([category, products]) => ({
+    category,
+    subtotal: products.reduce(
+      (sum, product) => sum + product.totalAmountSold,
+      0
+    ),
+    cantidad: products.length,
+    products,
+  }));
 };

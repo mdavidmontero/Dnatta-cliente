@@ -8,12 +8,18 @@ interface ModalReportesProps {
   isOpen: boolean;
   onClose: () => void;
   groupedReports: GroupedReports;
+  productSalesSummary: {
+    productName: string;
+    quantitySold: number;
+    totalAmountSold: number;
+  }[];
 }
 
 export default function ModalReportesMes({
   isOpen,
   onClose,
   groupedReports,
+  productSalesSummary,
 }: ModalReportesProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -50,7 +56,10 @@ export default function ModalReportesMes({
 
               {groupedReports && (
                 <PDFViewer style={{ width: "100%", height: "500px" }}>
-                  <SalesReportPDF groupedReports={groupedReports} />
+                  <SalesReportPDF
+                    groupedReports={groupedReports}
+                    productSalesSummary={productSalesSummary}
+                  />
                 </PDFViewer>
               )}
 
