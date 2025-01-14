@@ -88,7 +88,7 @@ export default function ModalMoney({
   const tabla = sales
     .map(
       (producto) =>
-        `${producto.name}    | ${producto.quantity}       | ${producto.subtotal}    |`
+        `${producto.name} - ${producto.quantity} - ${producto.subtotal}`
     )
     .join("\n");
 
@@ -108,7 +108,7 @@ export default function ModalMoney({
       {
         nombre: "EscribirTexto",
         argumentos: [
-          `FACTURA DE VENTA\nFECHA: ${new Date().toLocaleString()}\nVENDEDOR: ${
+          `FACTURA DE VENTA\nFECHA: ${new Date().toLocaleString()}\nATENTIDO POR: ${
             user?.name
           }`,
         ],
@@ -119,15 +119,13 @@ export default function ModalMoney({
       {
         nombre: "EscribirTexto",
         argumentos: [
-          `--------------+--------+--------+\nDESCRIPCIÓN   |CANTIDAD|Subtotal|\n--------------+--------+--------+\n${tabla}\n--------------+--------+--------+`,
+          `--------------+--------+--------+\nDESCRIPCION|CANTIDAD|SUBTOTAL|\n--------------+--------+--------+\n${tabla}\n--------------+--------+--------+`,
         ],
       },
       { nombre: "Feed", argumentos: [1] },
       {
         nombre: "EscribirTexto",
-        argumentos: [
-          `TOTAL         | ${amount}    |\n--------------+--------+--------+`,
-        ],
+        argumentos: [`TOTAL ${amount}`],
       },
       { nombre: "Feed", argumentos: [1] },
       { nombre: "EscribirTexto", argumentos: [`\nGracias por su compra`] },
