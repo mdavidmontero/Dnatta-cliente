@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useStore } from "@/store/store";
 import { userAuthStore } from "@/store/useAuthStore";
+import { useMutation } from "@tanstack/react-query";
 
 interface ModalMoneyProps {
   amount: number;
@@ -83,7 +84,6 @@ export default function ModalMoney({
   const bills = [5000, 10000, 20000, 50000, 100000];
   const sales = useStore((state) => state.order);
   const user = userAuthStore((state) => state.user);
-
   sales.map((sale) => sale.name);
   const tabla = sales
     .map(
@@ -134,17 +134,31 @@ export default function ModalMoney({
       { nombre: "Feed", argumentos: [1] },
     ],
   });
-
+  type Response = { ok: boolean; message: string };
   const printerTicked = async () => {
     try {
-      const { data } = await axios.post(
+      const { data } = await axios.post<Response>(
         "http://localhost:8000/imprimir",
         payload
       );
-      console.log(data);
+      if (data.ok) {
+        toast.success("Factura impresa");
+      }
     } catch (error) {
       console.log(error);
+      throw new Error("Error al imprimir");
     }
+  };
+
+  const mutationPrinter = useMutation({
+    mutationFn: printerTicked,
+    onError: (error) => {
+      toast.error(error.message || "Error al imprimir");
+    },
+  });
+
+  const printer = async () => {
+    mutationPrinter.mutate();
   };
 
   useEffect(() => {
@@ -303,7 +317,8 @@ export default function ModalMoney({
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row justify-center">
                     <button
-                      onClick={printerTicked}
+                      disabled={mutationPrinter.isPending}
+                      onClick={printer}
                       className="flex items-center px-4 py-2 space-x-2 transition duration-200 ease-in-out bg-white rounded-full shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       <PrinterIcon className="w-6 h-6 text-indigo-600" />
