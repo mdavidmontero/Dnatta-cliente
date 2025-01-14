@@ -1,12 +1,10 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
-
+import { Dispatch, Fragment, SetStateAction, useEffect } from "react";
+import axios from "axios";
 import { formatCurrency } from "../utils";
 import { Button } from "./ui/button";
 import { metodosDePago, paymentMethods, paymentMethodsCombinado } from "@/data";
 import { toast } from "sonner";
-import TickeSale from "./cash/TickerSale";
-import { PDFViewer } from "@react-pdf/renderer";
 import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useStore } from "@/store/store";
 import { userAuthStore } from "@/store/useAuthStore";
@@ -83,9 +81,71 @@ export default function ModalMoney({
   mutationPending,
 }: ModalMoneyProps) {
   const bills = [5000, 10000, 20000, 50000, 100000];
-  const [viewTicked, setViewTicked] = useState(false);
   const sales = useStore((state) => state.order);
   const user = userAuthStore((state) => state.user);
+
+  sales.map((sale) => sale.name);
+  const tabla = sales
+    .map(
+      (producto) =>
+        `${producto.name}    | ${producto.quantity}       | ${producto.subtotal}    |`
+    )
+    .join("\n");
+
+  const payload = JSON.stringify({
+    nombreImpresora: "POS-58",
+    serial: "",
+    operaciones: [
+      { nombre: "Iniciar", argumentos: [] },
+      { nombre: "Pulso", argumentos: [48, 60, 120] },
+      { nombre: "EstablecerTamañoFuente", argumentos: [1, 1] },
+      { nombre: "EstablecerEnfatizado", argumentos: [false] },
+      { nombre: "EstablecerAlineacion", argumentos: [1] },
+      { nombre: "EstablecerSubrayado", argumentos: [false] },
+      { nombre: "EstablecerImpresionAlReves", argumentos: [false] },
+      { nombre: "EstablecerImpresionBlancoYNegroInversa", argumentos: [false] },
+      { nombre: "EstablecerRotacionDe90Grados", argumentos: [false] },
+      {
+        nombre: "EscribirTexto",
+        argumentos: [
+          `FACTURA DE VENTA\nFECHA: ${new Date().toLocaleString()}\nVENDEDOR: ${
+            user?.name
+          }`,
+        ],
+      },
+      { nombre: "Feed", argumentos: [1] },
+      { nombre: "EscribirTexto", argumentos: ["RESUMEN DE COMPRA"] },
+      { nombre: "Feed", argumentos: [1] },
+      {
+        nombre: "EscribirTexto",
+        argumentos: [
+          `--------------+--------+--------+\nDESCRIPCIÓN   |CANTIDAD|Subtotal|\n--------------+--------+--------+\n${tabla}\n--------------+--------+--------+`,
+        ],
+      },
+      { nombre: "Feed", argumentos: [1] },
+      {
+        nombre: "EscribirTexto",
+        argumentos: [
+          `TOTAL         | ${amount}    |\n--------------+--------+--------+`,
+        ],
+      },
+      { nombre: "Feed", argumentos: [1] },
+      { nombre: "EscribirTexto", argumentos: [`\nGracias por su compra`] },
+      { nombre: "Feed", argumentos: [1] },
+    ],
+  });
+
+  const printerTicked = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8000/imprimir",
+        payload
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (paymentMethod === "efectivo" || paymentMethod === "transferencia") {
@@ -241,13 +301,19 @@ export default function ModalMoney({
                 </p>
 
                 <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={() => setViewTicked(!viewTicked)}
-                    className="self-end p-2 transition duration-200 bg-gray-100 rounded-full shadow-md hover:bg-gray-200"
-                  >
-                    <PrinterIcon className="w-6 h-6 text-indigo-600" />
-                  </button>
-                  {viewTicked && (
+                  <div className="flex flex-row justify-center">
+                    <button
+                      onClick={printerTicked}
+                      className="flex items-center px-4 py-2 space-x-2 transition duration-200 ease-in-out bg-white rounded-full shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <PrinterIcon className="w-6 h-6 text-indigo-600" />
+                      <span className="text-lg font-medium text-gray-800">
+                        Imprimir Factura
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* {viewTicked && (
                     <div className="w-full max-w-3xl mx-auto">
                       <PDFViewer
                         width="100%"
@@ -261,7 +327,7 @@ export default function ModalMoney({
                         />
                       </PDFViewer>
                     </div>
-                  )}
+                  )} */}
                   {paymentMethod === "efectivo" && (
                     <div className="flex flex-wrap items-center justify-center gap-6">
                       {bills.map((bill) => (
