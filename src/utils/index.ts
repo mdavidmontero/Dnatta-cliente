@@ -34,7 +34,7 @@ export const getCategoryFromProductName = (productName: string): string => {
   };
 
   const lowerCaseName = productName.toLowerCase();
-  if (lowerCaseName.includes("brownie supreme")) {
+  if (lowerCaseName.includes("supreme")) {
     return "Supremes";
   }
   for (const key in categories) {
