@@ -21,8 +21,6 @@ export function SaleDetails({
     [productSalesSummary]
   );
 
-  console.log(groupedProductSales);
-
   return (
     <div className="py-6 space-y-6 border-t border-gray-200">
       <h2 className="text-2xl font-bold text-center text-gray-800">
