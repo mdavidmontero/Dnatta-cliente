@@ -33,7 +33,7 @@ export const getCategoryFromProductName = (productName: string): string => {
     malteada: "Malteadas",
   };
 
-  const lowerCaseName = productName;
+  const lowerCaseName = productName.toLowerCase();
   if (lowerCaseName.includes("Supreme")) {
     return "Supremes";
   }
