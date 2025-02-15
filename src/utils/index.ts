@@ -21,19 +21,19 @@ export const formatDate = (date: string) => {
 
 export const getCategoryFromProductName = (productName: string): string => {
   const categories: Record<string, string> = {
-    cono: "Conos",
-    brownie: "Brownies",
-    sundae: "Sundaes",
-    supreme: "Supremes",
-    tarrina: "Tarrinas",
-    adición: "Adiciones",
-    mega: "MegaSupreme",
-    banana: "Banana Split",
-    chococono: "Conos",
-    malteada: "Malteadas",
+    Cono: "Conos",
+    Brownie: "Brownies",
+    Sundae: "Sundaes",
+    Supreme: "Supremes",
+    Tarrina: "Tarrinas",
+    Adición: "Adiciones",
+    Mega: "MegaSupreme",
+    Banana: "Banana Split",
+    Chococono: "Conos",
+    Malteada: "Malteadas",
   };
 
-  const lowerCaseName = productName.toLowerCase();
+  const lowerCaseName = productName;
   if (lowerCaseName.includes("Supreme")) {
     return "Supremes";
   }
