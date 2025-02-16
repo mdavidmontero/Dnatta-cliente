@@ -1,27 +1,33 @@
 import { ProductI } from "../../types";
 import { formatCurrency, getImagePath } from "../../utils";
 import AddProductButton from "./AddProdcutButton";
+
 type ProductCardProps = {
   product: ProductI;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
   const imagePath = getImagePath(product.image);
+
   return (
-    <div className="overflow-hidden bg-white border">
+    <div className="overflow-hidden bg-white border rounded">
       <img
-        width={400}
-        height={400}
         src={imagePath}
-        className="object-cover transition-all duration-200 ease-in-out hover:scale-110 "
+        className="object-cover w-full transition-transform duration-200 hover:scale-110"
         alt={`Imagen platillo ${product.name}`}
       />
-      <div className="p-5">
-        <h3 className="text-2xl font-bold">{product.name}</h3>
-        <p className="mt-5 font-bold text-4xl  text-[#FE9000]">
+
+      <div className="p-4">
+        <h3 className="text-lg font-bold sm:text-xl md:text-xl xl:text-2xl">
+          {product.name}
+        </h3>
+        <p className="mt-3 text-xl sm:text-2xl md:text-2xl xl:text-3xl font-bold text-[#FE9000]">
           {formatCurrency(product.price)}
         </p>
-        <AddProductButton product={product} />
+
+        <div className="mt-4">
+          <AddProductButton product={product} />
+        </div>
       </div>
     </div>
   );

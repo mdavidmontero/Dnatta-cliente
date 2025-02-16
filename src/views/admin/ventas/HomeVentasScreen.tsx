@@ -31,7 +31,6 @@ export default function HomeVentasScreen() {
 
   return (
     <div className="container px-4 mx-auto">
-     
       <div className="flex flex-col items-center justify-between gap-4 mb-8 md:flex-row">
         <Heading>Registra el Pedido a Continuación</Heading>
         <div className="flex items-center gap-2">
@@ -53,7 +52,6 @@ export default function HomeVentasScreen() {
         </div>
       </div>
 
-    
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
