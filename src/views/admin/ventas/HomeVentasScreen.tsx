@@ -13,10 +13,9 @@ export default function HomeVentasScreen() {
   const { data: products, isLoading } = useQuery({
     queryFn: () => getProductByCategory(slug!),
     queryKey: ["products", slug],
-    staleTime: 1000 * 60 * 5, // Caché de 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Filtrado en memoria usando useMemo para optimizar rendimiento
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     return products.filter((product) =>
@@ -32,6 +31,7 @@ export default function HomeVentasScreen() {
 
   return (
     <div className="container px-4 mx-auto">
+     
       <div className="flex flex-col items-center justify-between gap-4 mb-8 md:flex-row">
         <Heading>Registra el Pedido a Continuación</Heading>
         <div className="flex items-center gap-2">
@@ -40,17 +40,21 @@ export default function HomeVentasScreen() {
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 border rounded"
+            className="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FE9000] focus:border-transparent"
           />
           {searchTerm && (
-            <button onClick={handleClearSearch} className="text-red-600">
+            <button
+              onClick={handleClearSearch}
+              className="text-red-600 transition-colors hover:text-red-700"
+            >
               <ArchiveBoxXMarkIcon className="w-6 h-6" />
             </button>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

@@ -27,14 +27,14 @@ export const getCategoryFromProductName = (productName: string): string => {
     Supreme: "Supremes",
     Tarrina: "Tarrinas",
     Adición: "Adiciones",
-    Mega: "MegaSupreme",
+    Megahelado: "MegaHelados",
     Banana: "Banana Split",
     Chococono: "Conos",
     Malteada: "Malteadas",
   };
 
   const lowerCaseName = productName;
-  if (lowerCaseName.includes("Supreme")) {
+  if (lowerCaseName.includes("Supreme") || lowerCaseName.includes("supreme")) {
     return "Supremes";
   }
   for (const key in categories) {

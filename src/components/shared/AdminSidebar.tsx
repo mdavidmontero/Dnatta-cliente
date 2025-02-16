@@ -68,7 +68,6 @@ export default function AdminSidebar() {
 
   const user = userAuthStore((state) => state.user);
 
-  // Return early if user is not available
   if (!user) {
     return (
       <aside className="flex flex-col bg-white md:w-72 md:h-screen">
@@ -83,12 +82,11 @@ export default function AdminSidebar() {
 
   return (
     <aside className="flex flex-col bg-white md:w-72 md:h-screen">
-      {/* Fixed part: user image and name */}
       <div className="flex flex-col items-center flex-none p-5">
         <FotoPerfil />
         <p className="mt-5 font-bold text-center">{user.name}</p>
       </div>
-      {/* Scrollable navigation part */}
+
       <div className="flex-1 space-y-3 overflow-y-auto">
         <p className="mt-5 text-sm font-bold text-center text-gray-600 uppercase">
           Navegación

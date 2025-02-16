@@ -11,13 +11,14 @@ export default function OrderSidebar() {
     queryKey: ["categories"],
     refetchOnWindowFocus: false,
   });
+
   if (data)
     return (
-      <aside className="flex flex-col overflow-hidden bg-white md:w-72 md:h-screen">
-        <div className="relative flex flex-col items-center flex-none">
+      <aside className="flex flex-col h-screen overflow-hidden bg-white md:w-72">
+        <div className="relative items-center flex-none lg:flex-col lg:flex ">
           <FotoPerfil />
-          <p className="mt-5 font-bold text-center">{user?.name}</p>
         </div>
+        <p className="mt-5 font-bold text-center">{user?.name}</p>
         <nav className="flex-1 mt-5 overflow-y-auto">
           {data.map((category) => (
             <CategoryIcon key={category.id} category={category} />
