@@ -113,7 +113,11 @@ export default function ReportDayVendedora() {
       </div>
       <div className="gap-5 md:flex md:items-start">
         <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3">
-          <Calendar value={value} onChange={handleChange} />
+          <Calendar
+            value={value}
+            onChange={handleChange}
+            className="rounded-xl"
+          />
         </div>
         <div className="p-2 space-y-5 md:w-1/2 lg:w-2/3">
           <div className="flex flex-wrap items-center gap-4 mb-6">
