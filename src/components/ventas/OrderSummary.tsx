@@ -17,7 +17,7 @@ export default function OrderSummary() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("efectivo");
   const [selectedTransfer, setSelectedTransfer] = useState("otro");
-  const [cashAmount, setCashAmount] = useState(0);
+  const [cashAmount, setCashAmount] = useState("");
 
   const [sumaPagos, setSumaPagos] = useState(0);
   const [selecttrasferCombinado, setSelecttrasferCombinado] =
@@ -47,7 +47,7 @@ export default function OrderSummary() {
     setSelecttrasferCombinado("efectivo");
     setSelectedBill(0);
     setAmountPaid(0);
-    setCashAmount(0);
+    setCashAmount("");
     setSumaPagos(0);
   };
 

@@ -49,8 +49,8 @@ interface ModalMoneyProps {
   >;
   setSelecttrasferCombinado: React.Dispatch<React.SetStateAction<string>>;
   selecttrasferCombinado: string;
-  cashAmount: number;
-  setCashAmount: React.Dispatch<React.SetStateAction<number>>;
+  cashAmount: string;
+  setCashAmount: React.Dispatch<React.SetStateAction<string>>;
   sumaPagos: number;
   setSumaPagos: React.Dispatch<React.SetStateAction<number>>;
   mutationPending: boolean;
@@ -210,7 +210,7 @@ export default function ModalMoney({
 
   const addPayment = () => {
     const totalPaid =
-      cashAmount +
+      +cashAmount +
       Object.values(transferAmounts).reduce((acc, curr) => acc + curr, 0);
     const totalAmountPaid = totalPaid + sumaPagos;
 
@@ -228,7 +228,7 @@ export default function ModalMoney({
             ? "efectivo"
             : "transferencia") &&
         payment.transferPlatform === selecttrasferCombinado &&
-        payment.amount === cashAmount
+        payment.amount === +cashAmount
     );
 
     if (paymentExists) {
@@ -249,10 +249,10 @@ export default function ModalMoney({
             selecttrasferCombinado === "efectivo"
               ? "otro"
               : selecttrasferCombinado,
-          amount: cashAmount,
+          amount: +cashAmount,
         },
       ]);
-      setCashAmount(0);
+      setCashAmount("");
       setTransferAmounts({});
     }
   };
@@ -261,7 +261,7 @@ export default function ModalMoney({
     setPayments((prevState) => prevState.filter((_, i) => i !== index));
     const removedPayment = payments[index];
     const totalPaid =
-      cashAmount +
+      +cashAmount +
       Object.values(transferAmounts).reduce((acc, curr) => acc + curr, 0);
     const totalAmountPaid = totalPaid + sumaPagos - removedPayment.amount;
     setSumaPagos(totalAmountPaid);
@@ -436,9 +436,7 @@ export default function ModalMoney({
                           type="number"
                           id="cashAmount"
                           value={cashAmount}
-                          onChange={(e) =>
-                            setCashAmount(Number(e.target.value))
-                          }
+                          onChange={(e) => setCashAmount(e.target.value)}
                           className="block w-full p-4 mt-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
                         />
                         <Button
