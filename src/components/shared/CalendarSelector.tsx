@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CalendarIcon } from "lucide-react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -18,10 +18,10 @@ export type CalendarSelectorProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 export function CalendarSelector(props: CalendarSelectorProps) {
-  const { setDateSelected, className } = props;
+  const { setDateSelected } = props;
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 5),
+    from: new Date(new Date().setDate(new Date().getDate() - 5)),
+    to: new Date(),
   });
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function CalendarSelector(props: CalendarSelectorProps) {
   }, [date, setDateSelected]);
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid gap-2")}>
       <Popover>
         <PopoverTrigger asChild>
           <Button

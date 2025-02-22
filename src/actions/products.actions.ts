@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import api from "../lib/axios";
 import {
+  CategoriasProductosSchema,
   Product,
   ProductSchemaI,
   ProductsSchema,
@@ -111,6 +112,23 @@ export const updateEstado = async (id: Product["id"], estado: boolean) => {
       throw new Error(
         error.response.data.error || "Failed to update product status"
       );
+    }
+  }
+};
+
+export const searchProducts = async (searchTerm: string) => {
+  try {
+    const { data } = await api.get(`/products/products/search`, {
+      params: { searchTerm },
+    });
+    // console.log(data);
+    const response = CategoriasProductosSchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Failed to fetch products");
     }
   }
 };

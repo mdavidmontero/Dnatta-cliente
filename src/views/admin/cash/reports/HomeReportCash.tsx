@@ -37,7 +37,11 @@ export default function HomeReportCash() {
   if (data)
     return (
       <>
-        <Calendar value={value} onChange={handleChange} className="mb-4" />
+        <Calendar
+          value={value}
+          onChange={handleChange}
+          className="mb-4 rounded-lg"
+        />
         {data.length > 0 ? (
           <>
             <SidebarAdminCash data={data} />

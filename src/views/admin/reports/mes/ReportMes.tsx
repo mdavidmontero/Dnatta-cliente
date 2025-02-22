@@ -29,7 +29,7 @@ export default function ReportMonth() {
     from: Date | undefined;
     to: Date | undefined;
   }>({
-    from: new Date(),
+    from: addDays(new Date(), -5),
     to: addDays(new Date(), 5),
   });
 
