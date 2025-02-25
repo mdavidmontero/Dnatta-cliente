@@ -1,7 +1,18 @@
 import { userAuthStore } from "../../store/useAuthStore";
 import FotoPerfil from "./FotoPerfil";
 import Navegacion from "./Navegacion";
+
 export default function AdminSidebar() {
+  const user = userAuthStore((state) => state.user);
+
+  if (!user) {
+    return (
+      <aside className="flex flex-col bg-white md:w-72 md:h-screen">
+        <div className="p-5 text-center">Cargando...</div>
+      </aside>
+    );
+  }
+
   const navigation = [
     {
       url: "/products",
@@ -20,12 +31,6 @@ export default function AdminSidebar() {
       text: "Reporte Diario",
       blank: false,
       allowedRoles: ["USER"],
-    },
-    {
-      url: "/reports-dias/vendedora",
-      text: "Reporte Diario vendedora",
-      blank: false,
-      allowedRoles: ["ADMIN"],
     },
     {
       url: "/report-mes",
@@ -66,14 +71,13 @@ export default function AdminSidebar() {
     },
   ];
 
-  const user = userAuthStore((state) => state.user);
-
-  if (!user) {
-    return (
-      <aside className="flex flex-col bg-white md:w-72 md:h-screen">
-        <div className="p-5 text-center">Cargando...</div>
-      </aside>
-    );
+  if (user.role === "ADMIN" || user.id === 3) {
+    navigation.push({
+      url: "/reports-dias/vendedora",
+      text: "Reporte Diario vendedora",
+      blank: false,
+      allowedRoles: ["ADMIN", "USER"],
+    });
   }
 
   const filteredNavigation = navigation.filter((nav) =>
