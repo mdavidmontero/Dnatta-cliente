@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 export default function OrderSummary() {
   const saleDetails = useStore((state) => state.order);
   const clearOrder = useStore((state) => state.clearOrder);
+  const openCashDrawer = useStore((state) => state.openCashDrawer);
   const point = useStorePoint((state) => state.point);
   const user = userAuthStore((state) => state.user);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,7 +60,7 @@ export default function OrderSummary() {
     onSuccess: (data) => {
       resetPaymentState();
       toast.success(data);
-
+      openCashDrawer();
       clearOrder();
     },
   });

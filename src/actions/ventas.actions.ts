@@ -1,4 +1,4 @@
-import { isAxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import api from "../lib/axios";
 import {
   CashRegister,
@@ -166,5 +166,16 @@ export const getCashDayTotalAmount = async (
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error || "Failed to fetch products");
     }
+  }
+};
+
+export const openDrawerCash = async () => {
+  try {
+    const { data } = await axios.get<string>(
+      "http://localhost/printer/index.php"
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { OrderItem, ProductI } from "../types";
+import { openDrawerCash } from "@/actions/ventas.actions";
 
 interface Store {
   order: OrderItem[];
@@ -9,6 +10,7 @@ interface Store {
   removeItem: (id: ProductI["id"]) => void;
   filtro: (value: ProductI["name"]) => void;
   clearOrder: () => void;
+  openCashDrawer: () => Promise<void>;
 }
 
 export const useStore = create<Store>((set, get) => ({
@@ -84,5 +86,8 @@ export const useStore = create<Store>((set, get) => ({
     set(() => ({
       order: [],
     }));
+  },
+  openCashDrawer: async () => {
+    await openDrawerCash();
   },
 }));
