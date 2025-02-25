@@ -32,6 +32,16 @@ export default function AdminSidebar() {
       blank: false,
       allowedRoles: ["USER"],
     },
+    ...(user.role === "ADMIN" || user.id === 3
+      ? [
+          {
+            url: "/reports-dias/vendedora",
+            text: "Reporte Diario vendedora",
+            blank: false,
+            allowedRoles: ["ADMIN", "USER"],
+          },
+        ]
+      : []),
     {
       url: "/report-mes",
       text: "Reporte Mes",
@@ -70,15 +80,6 @@ export default function AdminSidebar() {
       allowedRoles: ["USER"],
     },
   ];
-
-  if (user.role === "ADMIN" || user.id === 3) {
-    navigation.push({
-      url: "/reports-dias/vendedora",
-      text: "Reporte Diario vendedora",
-      blank: false,
-      allowedRoles: ["ADMIN", "USER"],
-    });
-  }
 
   const filteredNavigation = navigation.filter((nav) =>
     nav.allowedRoles.includes(user.role)
