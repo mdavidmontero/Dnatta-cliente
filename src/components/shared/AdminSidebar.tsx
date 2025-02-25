@@ -25,7 +25,7 @@ export default function AdminSidebar() {
       url: "/reports-dias/vendedora",
       text: "Reporte Diario vendedora",
       blank: false,
-      allowedRoles: ["USER", "ADMIN"],
+      allowedRoles: ["ADMIN"],
     },
     {
       url: "/report-mes",
