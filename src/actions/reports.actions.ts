@@ -44,11 +44,12 @@ export const getReportDiarioTotal = async (fecha: string, pointId: number) => {
 export const getReportMes = async (
   from: string,
   to: string,
-  pointId: number
+  pointId: number,
+  userId: number
 ) => {
   try {
     const { data } = await api.get(
-      `/reports/mes?from=${from}&to=${to}&pointId=${pointId}`
+      `/reports/mes?from=${from}&to=${to}&pointId=${pointId}&userId=${userId}`
     );
     const response = ResponseMesSchema.safeParse(data);
     if (response.success) {

@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getReportMes } from "../../../../actions/reports.actions";
-import {
-  calculateProductSalesSummary,
-  formatCurrency,
-} from "../../../../utils";
+import { formatCurrency } from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesMes from "./ModalReportes";
@@ -22,6 +19,7 @@ import { CalendarSelector } from "@/components/shared/CalendarSelector";
 import { addDays } from "date-fns";
 import SalesExcelButton from "@/components/reports/mes/ReporExcelMes";
 import ButtonGenerateExcel from "@/components/shared/ButtonGenerateExcel";
+import { getUsers } from "@/actions/auth.actions";
 
 export default function ReportMonth() {
   const { data: user } = useAuth();
@@ -35,16 +33,18 @@ export default function ReportMonth() {
 
   const [point, setPoint] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userSelected, setUserSelected] = useState(0);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["reportMonth", dateSelected.from, dateSelected.to, point],
+    queryKey: ["reportMonth", dateSelected.from, dateSelected.to, point, user],
     queryFn: () =>
       getReportMes(
         dateSelected.from!.toISOString(),
         dateSelected.to!.toISOString(),
-        point
+        point,
+        +userSelected || 0
       ),
     enabled: false,
   });
@@ -53,6 +53,15 @@ export default function ReportMonth() {
     queryKey: ["points"],
     queryFn: getPoints,
   });
+  const usersData = useQuery({
+    queryKey: ["getUsersMes"],
+    queryFn: () => getUsers(),
+    enabled: true,
+  });
+
+  const userVendedoras = usersData?.data?.filter(
+    (user) => user.role !== "ADMIN"
+  );
 
   const handleFetchReports = () => {
     if (point === 0) {
@@ -116,17 +125,30 @@ export default function ReportMonth() {
       <div className="flex flex-wrap gap-4 mb-6">
         <CalendarSelector setDateSelected={setDateSelected} />
 
-        <Select
-          onValueChange={(value) => setPoint(Number(value))}
-          value={point.toString()}
-        >
+        <Select onValueChange={(value) => setPoint(+value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Seleccione un local" />
+            <SelectValue placeholder="Seleccione un punto" />
           </SelectTrigger>
           <SelectContent>
             {pointsData?.map((point) => (
               <SelectItem key={point.id} value={point.id.toString()}>
                 {point.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={(value) => setUserSelected(+value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un usuario" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key="0" value="0">
+              Todas
+            </SelectItem>
+            {userVendedoras?.map((user) => (
+              <SelectItem key={user.id} value={user.id.toString()}>
+                {user.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -198,37 +220,26 @@ export default function ReportMonth() {
                           </td>
                         </tr>
 
-                        {calculateProductSalesSummary(productSalesSummary).map(
-                          (categoryGroup) => (
-                            <React.Fragment key={categoryGroup.category}>
-                              <tr>
-                                <td
-                                  colSpan={5}
-                                  className="px-6 py-3 text-lg font-semibold text-gray-700 bg-gray-100"
-                                >
-                                  {categoryGroup.category}
-                                </td>
-                              </tr>
-
-                              {categoryGroup.products.map((product) => (
-                                <tr
-                                  key={product.productName}
-                                  className="border-b bg-gray-50"
-                                >
-                                  <td className="px-6 py-3 text-sm text-gray-600"></td>
-                                  <td className="px-6 py-3 text-sm text-gray-600">
-                                    {product.productName}
-                                  </td>
-                                  <td className="px-6 py-3 text-sm text-gray-600">
-                                    {product.quantitySold}
-                                  </td>
-                                  <td className="px-6 py-3 text-sm text-gray-600">
-                                    {formatCurrency(product.totalAmountSold)}
-                                  </td>
-                                </tr>
-                              ))}
-                            </React.Fragment>
-                          )
+                        {dailyReport.reports.flatMap((report) =>
+                          report.saleDetails.map((detail) => (
+                            <tr
+                              key={`${report.id}-${detail.product.id}`}
+                              className="border-b bg-gray-50"
+                            >
+                              <td className="px-6 py-3 text-sm text-gray-600"></td>
+                              <td className="px-6 py-3 text-sm text-gray-600">
+                                {detail.product.name}
+                              </td>
+                              <td className="px-6 py-3 text-sm text-gray-600">
+                                {detail.quantity}
+                              </td>
+                              <td className="px-6 py-3 text-sm text-gray-600">
+                                {formatCurrency(
+                                  detail.unitPrice * detail.quantity
+                                )}
+                              </td>
+                            </tr>
+                          ))
                         )}
                       </React.Fragment>
                     );
