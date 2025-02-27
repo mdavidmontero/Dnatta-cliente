@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getReportMes } from "../../../../actions/reports.actions";
-import { formatCurrency } from "../../../../utils";
+import {
+  calculateProductSalesSummary,
+  formatCurrency,
+} from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesMes from "./ModalReportes";
@@ -201,6 +204,19 @@ export default function ReportMonth() {
                     const vendedoras = new Set(
                       dailyReport.reports.map((report) => report.user.name)
                     );
+
+                    const productsForDate = dailyReport.reports.flatMap(
+                      (report) =>
+                        report.saleDetails.map((detail) => ({
+                          productName: detail.product.name,
+                          quantitySold: detail.quantity,
+                          totalAmountSold: detail.unitPrice * detail.quantity,
+                        }))
+                    );
+
+                    const groupedByCategory =
+                      calculateProductSalesSummary(productsForDate);
+
                     return (
                       <React.Fragment key={date}>
                         <tr className="bg-gray-50">
@@ -220,27 +236,38 @@ export default function ReportMonth() {
                           </td>
                         </tr>
 
-                        {dailyReport.reports.flatMap((report) =>
-                          report.saleDetails.map((detail) => (
-                            <tr
-                              key={`${report.id}-${detail.product.id}`}
-                              className="border-b bg-gray-50"
-                            >
-                              <td className="px-6 py-3 text-sm text-gray-600"></td>
-                              <td className="px-6 py-3 text-sm text-gray-600">
-                                {detail.product.name}
-                              </td>
-                              <td className="px-6 py-3 text-sm text-gray-600">
-                                {detail.quantity}
-                              </td>
-                              <td className="px-6 py-3 text-sm text-gray-600">
-                                {formatCurrency(
-                                  detail.unitPrice * detail.quantity
-                                )}
+                        {groupedByCategory.map((categoryGroup) => (
+                          <React.Fragment key={categoryGroup.category}>
+                            <tr>
+                              <td
+                                colSpan={4}
+                                className="px-6 py-3 text-base font-semibold text-gray-700 bg-gray-100"
+                              >
+                                {categoryGroup.category} -
+                                {formatCurrency(categoryGroup.subtotal)} -
+                                Cantidad: {categoryGroup.cantidad}
                               </td>
                             </tr>
-                          ))
-                        )}
+
+                            {categoryGroup.products.map((product) => (
+                              <tr
+                                key={product.productName}
+                                className="border-b bg-gray-50"
+                              >
+                                <td className="px-6 py-3 text-sm text-gray-600"></td>
+                                <td className="px-6 py-3 text-sm text-gray-600">
+                                  {product.productName}
+                                </td>
+                                <td className="px-6 py-3 text-sm text-gray-600">
+                                  {product.quantitySold}
+                                </td>
+                                <td className="px-6 py-3 text-sm text-gray-600">
+                                  {formatCurrency(product.totalAmountSold)}
+                                </td>
+                              </tr>
+                            ))}
+                          </React.Fragment>
+                        ))}
                       </React.Fragment>
                     );
                   })}
