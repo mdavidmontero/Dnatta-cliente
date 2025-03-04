@@ -14,8 +14,9 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function HomeReportCash() {
   const [value, setValue] = useState<Value>(new Date());
+
   const selectedDate = value instanceof Date ? startOfDay(value) : null;
-  const { data: user, isLoading: isLoadingUser } = useAuth();
+  const { data: user } = useAuth();
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;
     setValue(date || null);
@@ -30,30 +31,35 @@ export default function HomeReportCash() {
     enabled: !!selectedDate,
   });
 
-  if (isLoading && isLoadingUser) return "Cargando...";
   if (user?.role !== "ADMIN") return <Navigate to="/404" />;
   if (isError) return <Navigate to="/404" />;
 
-  if (data)
-    return (
-      <>
-        <Calendar
-          value={value}
-          onChange={handleChange}
-          className="mb-4 rounded-lg"
-        />
-        {data.length > 0 ? (
-          <>
-            <SidebarAdminCash data={data} />
-          </>
-        ) : (
-          <div>
-            <LottieAnimation animationData={animationData} />
-            <p className="text-center text-gray-500">
-              No hay datos disponibles para esta fecha.
-            </p>
-          </div>
+  return (
+    <>
+      <Calendar
+        value={value}
+        onChange={handleChange}
+        className="mb-4 rounded-lg"
+      />
+      <div>
+        {isLoading && (
+          <p className="text-lg text-center text-gray-500">Cargando...</p>
         )}
-      </>
-    );
+        {data ? (
+          data.length > 0 ? (
+            <>
+              <SidebarAdminCash data={data} />
+            </>
+          ) : (
+            <div>
+              <LottieAnimation animationData={animationData} />
+              <p className="text-center text-gray-500">
+                No hay datos disponibles para esta fecha.
+              </p>
+            </div>
+          )
+        ) : null}
+      </div>
+    </>
+  );
 }

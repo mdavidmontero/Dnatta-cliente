@@ -51,7 +51,7 @@ export default function CashTable({ cash }: CashTableProps) {
                     {formatDate(cash.date)}
                   </TableCell>
                   <TableCell className="py-4 text-sm text-center text-gray-900">
-                    {cash.closingAmount}
+                    {cash.totalventaHelados}
                   </TableCell>
                   <TableCell className="py-4 text-sm text-center text-gray-900">
                     {cash.totalAmount}

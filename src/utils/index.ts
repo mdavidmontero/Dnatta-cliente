@@ -1,3 +1,5 @@
+import { cashReportSchemaI } from "@/types/schemas/cash";
+
 export function formatCurrency(value: number) {
   return new Intl.NumberFormat("es-CO", {
     style: "currency",
@@ -102,4 +104,37 @@ export const calculateProductSalesSummary = (
     ),
     products,
   }));
+};
+
+export const calculateDataCashDay = (data: cashReportSchemaI[]) => {
+  const totals = data?.map((item) => {
+    const punto = item.point?.id;
+
+    let totalEfectivo = 0;
+    let totalTransferencia = 0;
+    const transferPlatformTotals: Record<string, number> = {};
+
+    item.point?.sales?.forEach((sale) => {
+      sale?.payments?.forEach((payment) => {
+        if (payment?.method === "efectivo") {
+          totalEfectivo += payment.amount || 0;
+        } else if (payment?.method === "transferencia") {
+          totalTransferencia += payment.amount || 0;
+          const platform = payment.transferPlatform || "otro";
+          if (!transferPlatformTotals[platform]) {
+            transferPlatformTotals[platform] = 0;
+          }
+          transferPlatformTotals[platform] += payment.amount || 0;
+        }
+      });
+    });
+
+    return {
+      totalEfectivo,
+      totalTransferencia,
+      transferPlatformTotals,
+      punto,
+    };
+  });
+  return totals;
 };

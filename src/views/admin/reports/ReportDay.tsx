@@ -8,7 +8,7 @@ import {
 } from "../../../actions/reports.actions";
 import { startOfDay } from "date-fns";
 import Spinner from "../../../components/shared/spinner/Spinner";
-import { formatCurrency } from "../../../utils";
+import { calculateDataCashDay, formatCurrency } from "../../../utils";
 import { SaleDetails } from "../../../components/ventas/SaleDetails";
 import { ReportArray } from "../../../types";
 import ModalReportes from "./ModalReportes";
@@ -17,6 +17,8 @@ import { useStorePoint } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ProfessionalExcelReport } from "@/components/reports/day/ReportExcel";
+
+import { reportsCash } from "@/actions/reportsCash.actions";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -36,6 +38,13 @@ export default function ReportDay() {
         ? getReportDiario(selectedDate.toISOString(), +user!.id, +point)
         : Promise.resolve([]),
     enabled: !!selectedDate,
+  });
+  const { data: datacash } = useQuery({
+    queryKey: ["reportscashdaypoint", selectedDate],
+    queryFn: () =>
+      selectedDate
+        ? reportsCash(selectedDate.toISOString())
+        : Promise.resolve([]),
   });
 
   const handleChange = (e: Value) => {
@@ -86,59 +95,61 @@ export default function ReportDay() {
   const totalAmountSoldTotal =
     reportetotal.data?.reduce((acc, curr) => acc + curr.totalAmount, 0) || 0;
 
-  if (data)
-    return (
-      <div className="p-6 bg-white rounded-lg shadow-lg">
-        <div className="flex flex-wrap justify-between gap-2 mb-6">
-          <Button
-            onClick={() =>
-              navigation(location.pathname + "?reportcashone=true")
-            }
-            className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
-          >
-            Ver en PDF
-          </Button>
-          <ProfessionalExcelReport
-            ordenes={reportetotal.data}
-            totalday={totalAmountSoldTotal}
+  const totalsMoney = datacash
+    ? calculateDataCashDay(datacash).find((item) => item.punto === point)
+    : undefined;
+
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-lg">
+      <div className="flex flex-wrap justify-between gap-2 mb-6">
+        <Button
+          onClick={() => navigation(location.pathname + "?reportcashone=true")}
+          className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
+        >
+          Ver en PDF
+        </Button>
+        <ProfessionalExcelReport
+          ordenes={reportetotal.data}
+          totalday={totalAmountSoldTotal}
+        />
+      </div>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-4xl font-extrabold text-gray-800">
+          Resumen de Ventas
+        </h1>
+      </div>
+      <div className="gap-5 md:flex md:items-start">
+        <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3 lg:sticky lg:top-10">
+          <Calendar
+            value={value}
+            onChange={handleChange}
+            className="rounded-xl"
           />
         </div>
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-4xl font-extrabold text-gray-800">
-            Resumen de Ventas
-          </h1>
-        </div>
-        <div className="gap-5 md:flex md:items-start">
-          <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3">
-            <Calendar
-              value={value}
-              onChange={handleChange}
-              className="rounded-xl"
-            />
-          </div>
-          <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
-            {isLoading && (
-              <div className="flex items-center justify-center h-60">
-                <Spinner />
-              </div>
-            )}
-            {isError && <p>Error al cargar los datos.</p>}
-            {!isLoading && !isError && (
-              <>
-                {selectedDate ? (
-                  <p className="text-lg font-semibold text-center text-gray-700">
-                    Ventas de la fecha:{" "}
-                    <span className="font-bold">
-                      {selectedDate.toLocaleDateString("es-ES")}
-                    </span>
-                  </p>
-                ) : (
-                  <p className="text-lg font-extrabold text-center text-gray-900">
-                    Selecciona una Fecha
-                  </p>
-                )}
-                <div className="space-y-5">
-                  {data.length > 0 ? (
+        <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
+          {isLoading && (
+            <div className="flex items-center justify-center h-60">
+              <Spinner />
+            </div>
+          )}
+          {isError && <p>Error al cargar los datos.</p>}
+          {!isLoading && !isError && (
+            <>
+              {selectedDate ? (
+                <p className="text-lg font-semibold text-center text-gray-700">
+                  Ventas de la fecha:{" "}
+                  <span className="font-bold">
+                    {selectedDate.toLocaleDateString("es-ES")}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-lg font-extrabold text-center text-gray-900">
+                  Selecciona una Fecha
+                </p>
+              )}
+              <div className="space-y-5">
+                {data ? (
+                  data.length > 0 ? (
                     <>
                       <p className="text-2xl font-bold text-right">
                         Total del día:
@@ -164,19 +175,56 @@ export default function ReportDay() {
                         productSalesSummary={productSalesSummaryTotal}
                         totalQuantitySold={totalQuantitySoldTotal}
                       />
+                      <div className="flex flex-col gap-4">
+                        <p className="text-lg font-bold">Total Dinero</p>
+                        {totalsMoney ? (
+                          <div className="mb-6">
+                            <p className="text-gray-700">
+                              <span className="font-bold">Total Efectivo:</span>
+                              {formatCurrency(totalsMoney.totalEfectivo)}
+                            </p>
+                            <p className="text-gray-700">
+                              <span className="font-bold">
+                                Total Transferencias:
+                              </span>
+                              {formatCurrency(totalsMoney.totalTransferencia)}
+                            </p>
+
+                            <ul className="pl-4 mt-2 text-gray-600 list-disc">
+                              {Object.entries(
+                                totalsMoney.transferPlatformTotals
+                              ).map(([platform, amount]) => (
+                                <li key={platform}>
+                                  <span className="font-medium">
+                                    {platform.toLocaleUpperCase()}:
+                                  </span>{" "}
+                                  {formatCurrency(amount)}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          <div className="mb-6">
+                            <h3 className="mb-2 text-lg font-semibold text-gray-700">
+                              No hay transferencias
+                            </h3>
+                          </div>
+                        )}
+                      </div>
                     </>
                   ) : (
                     <p className="text-lg font-extrabold text-center text-gray-900">
                       No hay ventas en este día
                     </p>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+                  )
+                ) : null}
+              </div>
+            </>
+          )}
         </div>
-
-        <ModalReportes data={data} totalAmountSold={totalAmountSold} />
       </div>
-    );
+
+      <ModalReportes data={data} totalAmountSold={totalAmountSold} />
+    </div>
+  );
 }
