@@ -48,7 +48,6 @@ export const getPostVentas = async (
       },
     });
     const response = PosVentaDaySchema.safeParse(data);
-    console.log(response.success);
     if (response.success) {
       return response.data;
     }

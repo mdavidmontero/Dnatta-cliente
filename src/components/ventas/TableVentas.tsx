@@ -25,16 +25,19 @@ export default function VentasTable({ ventas }: VentasTableProps) {
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="py-4 pl-6 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="py-4 pl-6 text-sm font-bold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Hora
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Total
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left text-gray-800 uppercase border-b-2">
                     Productos
                   </TableHead>
-                  <TableHead className="py-4 pr-6 text-sm font-semibold tracking-wider text-center text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                    Método de Pago
+                  </TableHead>
+                  <TableHead className="py-4 pr-6 text-sm font-bold tracking-wider text-center text-gray-800 uppercase border-b-2">
                     Acciones
                   </TableHead>
                 </TableRow>
@@ -48,14 +51,34 @@ export default function VentasTable({ ventas }: VentasTableProps) {
                     <TableCell className="py-4 pl-6 text-sm text-gray-900 whitespace-nowrap">
                       {new Date(venta.date).toLocaleTimeString()}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    <TableCell className="px-6 py-4 text-sm text-black whitespace-nowrap">
                       {formatCurrency(venta.totalAmount)}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    <TableCell className="px-6 py-4 text-sm text-black whitespace-nowrap">
                       {venta.saleDetails.map((detail) => (
                         <div key={detail.id}>
                           {detail.product.name} -{" "}
                           {formatCurrency(detail.unitPrice)} x {detail.quantity}
+                        </div>
+                      ))}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-black whitespace-nowrap">
+                      {venta.payments.map((payment) => (
+                        <div key={payment.id}>
+                          <p className="capitalize">
+                            {payment.method} - {payment.amount}
+                          </p>
+                          {payment.transferPlatform !== "otro" && (
+                            <div className="font-semibold">
+                              <p className="font-bold capitalize">
+                                Plataforma:{" "}
+                                <span className="font-normal">
+                                  {payment.transferPlatform}
+                                </span>
+                              </p>
+                            </div>
+                          )}
+                          {/* {formatCurrency(detail.unitPrice)} x {detail.quantity} */}
                         </div>
                       ))}
                     </TableCell>

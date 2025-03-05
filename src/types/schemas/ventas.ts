@@ -64,6 +64,14 @@ export type GroupedReports = {
   };
 };
 
+export const PaymentsSchema = z.object({
+  id: z.number(),
+  saleId: z.number(),
+  method: z.string(),
+  transferPlatform: z.string(),
+  amount: z.number(),
+});
+
 export const SaleSchema = z.object({
   id: z.number(),
   date: z.string().datetime(),
@@ -87,6 +95,7 @@ export const SaleSchema = z.object({
       }),
     })
   ),
+  payments: z.array(PaymentsSchema),
 });
 
 export const PosVentaDaySchema = z.object({
