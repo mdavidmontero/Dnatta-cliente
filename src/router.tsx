@@ -36,6 +36,7 @@ import CashDetail from "./views/admin/cash/reports/CashDetail";
 import NotFoundLayout from "./layouts/NotFound404";
 import PostVentaView from "./views/admin/ventas/PostVentaView";
 import HistoryVentasView from "./views/admin/ventas/HistoryVentasView";
+import HistoryDayView from "./views/admin/ventas/HistoryDayView";
 
 export default function Router() {
   return (
@@ -68,7 +69,11 @@ export default function Router() {
           </Route>
           {/* Ventas */}
           <Route path="/post-venta" element={<PostVentaView />} />
-          <Route path="/history-venta" element={<HistoryVentasView />} />
+          <Route
+            path="/history-venta-vendedora"
+            element={<HistoryVentasView />}
+          />
+          <Route path="/history-venta" element={<HistoryDayView />} />
           <Route element={<CajaLayout />}>
             <Route path="/cash-register" element={<HomeCashView />} />
             <Route path="/cash-new" element={<CashRegisterView />} />

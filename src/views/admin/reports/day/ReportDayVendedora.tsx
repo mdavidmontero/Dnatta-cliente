@@ -10,8 +10,6 @@ import { SaleDetails } from "../../../../components/ventas/SaleDetails";
 import { ReportArray } from "../../../../types";
 import { formatCurrency } from "../../../../utils";
 import ModalReportes from "../ModalReportes";
-import { getPoints } from "../../../../actions/point.actions";
-import { getUsers } from "../../../../actions/auth.actions";
 // import { useAuth } from "@/hook/useAuth";
 import {
   Select,
@@ -22,12 +20,14 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ProfessionalExcelReport } from "@/components/reports/day/ReportExcel";
+import { useVentas } from "@/hook/useVentas";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDayVendedora() {
   const navigate = useNavigate();
+  const { pointsData, userVendedoras } = useVentas();
   // const { data: userdata } = useAuth();
   const [value, setValue] = useState<Value>(new Date());
   const [point, setPoint] = useState(0);
@@ -44,21 +44,6 @@ export default function ReportDayVendedora() {
         : Promise.resolve([]),
     enabled: fetchData,
   });
-
-  const pointsData = useQuery({
-    queryKey: ["points"],
-    queryFn: () => getPoints(),
-    enabled: true,
-  });
-
-  const usersData = useQuery({
-    queryKey: ["getUsers"],
-    queryFn: () => getUsers(),
-    enabled: true,
-  });
-  const userVendedoras = usersData?.data?.filter(
-    (user) => user.role !== "ADMIN"
-  );
 
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;

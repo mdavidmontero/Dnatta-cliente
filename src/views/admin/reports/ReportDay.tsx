@@ -17,27 +17,37 @@ import { useStorePoint } from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ProfessionalExcelReport } from "@/components/reports/day/ReportExcel";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { reportsCash } from "@/actions/reportsCash.actions";
+import { useVentas } from "@/hook/useVentas";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function ReportDay() {
   const navigation = useNavigate();
+  const { pointsData } = useVentas();
   const [value, setValue] = useState<Value>(new Date());
   const user = userAuthStore((state) => state.user);
   const point = useStorePoint((state) => state.point);
+  const [pointUser, setPointUser] = useState(point);
 
   const selectedDate = value instanceof Date ? startOfDay(value) : null;
 
   const { data, isLoading, isError } = useQuery<ReportArray | undefined>({
-    queryKey: ["report", selectedDate],
+    queryKey: ["report", selectedDate, pointUser],
     queryFn: () =>
       selectedDate
-        ? getReportDiario(selectedDate.toISOString(), +user!.id, +point)
+        ? getReportDiario(selectedDate.toISOString(), +user!.id, +pointUser)
         : Promise.resolve([]),
-    enabled: !!selectedDate,
+    enabled: !!selectedDate || !!pointUser,
   });
   const { data: datacash } = useQuery({
     queryKey: ["reportscashdaypoint", selectedDate],
@@ -125,6 +135,20 @@ export default function ReportDay() {
             onChange={handleChange}
             className="rounded-xl"
           />
+        </div>
+        <div className="flex flex-wrap items-center gap-4 mb-6 ">
+          <Select onValueChange={(value) => setPointUser(+value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Seleccione un local" />
+            </SelectTrigger>
+            <SelectContent>
+              {pointsData.data?.map((point) => (
+                <SelectItem key={point.id} value={point.id.toString()}>
+                  {point.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
           {isLoading && (

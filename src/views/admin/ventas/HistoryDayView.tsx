@@ -1,11 +1,4 @@
 import { useState } from "react";
-import { getPostVentas } from "@/actions/ventas.actions";
-import CalendarShared, { Value } from "@/components/shared/CalendarShared";
-import Heading from "@/components/shared/Heading";
-import Spinner from "@/components/shared/spinner/Spinner";
-import { formatCurrency } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import { startOfDay } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -13,21 +6,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { useVentas } from "@/hook/useVentas";
+import { getPostVentas } from "@/actions/ventas.actions";
+import CalendarShared, { Value } from "@/components/shared/CalendarShared";
+import Heading from "@/components/shared/Heading";
+import Spinner from "@/components/shared/spinner/Spinner";
 import HistoryDetailSale from "@/components/ventas/HistoryDetailSale";
+import { userAuthStore } from "@/store/useAuthStore";
 import { useStorePoint } from "@/store/userStore";
+import { formatCurrency } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import { startOfDay } from "date-fns";
+import { useVentas } from "@/hook/useVentas";
 
-export default function HistoryVentasView() {
-  const { pointsData, userVendedoras } = useVentas();
-  const [value, setValue] = useState<Value>(new Date());
+export default function HistoryDayView() {
+  const { pointsData } = useVentas();
   const currentPage = 1;
   const limit = 500;
-  const point = useStorePoint((state) => state.point);
+  const [value, setValue] = useState<Value>(new Date());
+  const pointUserAuthenticated = useStorePoint((state) => state.point);
+  const [pointUser, setPointUser] = useState(pointUserAuthenticated);
+  const userselected = userAuthStore((state) => state.user);
 
-  const [pointUser, setPointUser] = useState(point);
-  const [userselected, setUserSelected] = useState(0);
-  const [fetchData, setFetchData] = useState(false);
   const handleChange = (e: Value) => {
     const date = Array.isArray(e) ? e[0] : e;
     setValue(date || null);
@@ -36,26 +35,17 @@ export default function HistoryVentasView() {
   const selectedDate = value instanceof Date ? startOfDay(value) : null;
 
   const { data, isLoading } = useQuery({
-    queryKey: ["ventashistoryday", selectedDate, pointUser || 0, userselected],
+    queryKey: ["ventashistorial", selectedDate, pointUser || 0, userselected],
     queryFn: () =>
       getPostVentas(
         selectedDate!.toISOString(),
         currentPage,
         limit,
         +pointUser,
-        +userselected
+        userselected!.id!
       ),
-
-    enabled: fetchData,
+    enabled: !!selectedDate || !!pointUser,
   });
-
-  const executeQuery = () => {
-    if (selectedDate && pointUser) {
-      setFetchData(true);
-    } else {
-      alert("Selecciona fecha, local antes de buscar.");
-    }
-  };
 
   const totalAmount = data?.sales.reduce(
     (acc, curr) => acc + curr.totalAmount,
@@ -64,7 +54,7 @@ export default function HistoryVentasView() {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
-      <Heading className="my-2 font-semibold">Ventas</Heading>
+      <Heading className="my-2 font-semibold">Detalle de Venta </Heading>
       <p className="my-2 text-lg">
         En esta sección aparecerán todas las ventas, utiliza el calendario para
         filtrar por fecha
@@ -82,29 +72,8 @@ export default function HistoryVentasView() {
             ))}
           </SelectContent>
         </Select>
-
-        <Select onValueChange={(value) => setUserSelected(+value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Seleccione un usuario" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem key="0" value="0">
-              Todas
-            </SelectItem>
-            {userVendedoras?.map((user) => (
-              <SelectItem key={user.id} value={user.id.toString()}>
-                {user.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Button
-          onClick={executeQuery}
-          className="w-full px-6 py-3 text-white transition-colors rounded-md bg-bg-primary md:w-auto hover:bg-[#44719e]"
-        >
-          Buscar
-        </Button>
       </div>
+
       <div className="gap-5 justify-evenly md:flex md:items-start">
         <CalendarShared handleChange={handleChange} value={value} />
 
@@ -128,7 +97,6 @@ export default function HistoryVentasView() {
               </p>
             </>
           )}
-
           {data && data.sales.length > 0 ? (
             data?.sales.map((sale) => <HistoryDetailSale sale={sale} />)
           ) : (

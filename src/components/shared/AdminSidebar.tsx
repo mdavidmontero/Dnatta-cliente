@@ -20,11 +20,22 @@ export default function AdminSidebar() {
       blank: false,
       allowedRoles: ["USER", "ADMIN"],
     },
+
+    ...(user.role === "ADMIN" || user.id === 3
+      ? [
+          {
+            url: "/history-venta-vendedora",
+            text: "Historial Ventas Vendedora",
+            blank: false,
+            allowedRoles: ["USER", "ADMIN"],
+          },
+        ]
+      : []),
     {
       url: "/history-venta",
-      text: "Historial Ventas",
+      text: "Detalle Venta",
       blank: false,
-      allowedRoles: ["USER", "ADMIN"],
+      allowedRoles: ["USER"],
     },
     {
       url: "/post-venta",
