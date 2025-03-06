@@ -7,12 +7,14 @@ import { useStorePoint } from "../store/userStore";
 import { MessagesPopover } from "@/views/admin/message/MessagesPopover";
 import { getTokensConfirmUsers } from "@/actions/auth.actions";
 import { Button } from "@/components/ui/button";
+import { userAuthStore } from "@/store/useAuthStore";
 
 export default function AppLayout() {
   const queryClient = useQueryClient();
   const navigation = useNavigate();
   const { data, isError, isLoading } = useAuth();
   const clearPoint = useStorePoint((state) => state.clearPoint);
+  const user = userAuthStore((state) => state.user);
   const handleLogout = () => {
     localStorage.removeItem("AUTH_TOKEN");
     clearPoint();
@@ -23,6 +25,8 @@ export default function AppLayout() {
     queryFn: getTokensConfirmUsers,
     queryKey: ["getTokensConfirmUsers"],
   });
+
+  const showPopover = user?.role === "ADMIN" || user!.id === 3;
 
   if (isLoading) return "Cargando...";
   if (isError) {
@@ -39,9 +43,7 @@ export default function AppLayout() {
 
             <main className="p-5 bg-bg-primary-bg md:flex-1 md:h-screen md:overflow-y-scroll">
               <div className="flex justify-end gap-5 py-2">
-                {data.role === "ADMIN" && (
-                  <MessagesPopover tokens={tokensConfirm} />
-                )}
+                {showPopover && <MessagesPopover tokens={tokensConfirm} />}
                 <Button
                   onClick={handleLogout}
                   className="w-full px-10 py-5 text-xl font-bold text-center text-white rounded-lg cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"
