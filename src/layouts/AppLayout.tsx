@@ -26,7 +26,7 @@ export default function AppLayout() {
     queryKey: ["getTokensConfirmUsers"],
   });
 
-  const showPopover = user?.role === "ADMIN" || user!.id === 3;
+  const showPopover = user?.role === "ADMIN" || user?.id === 3;
 
   if (isLoading) return "Cargando...";
   if (isError) {
