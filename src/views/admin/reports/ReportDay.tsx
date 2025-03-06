@@ -129,13 +129,13 @@ export default function ReportDay() {
         </h1>
       </div>
       <div className="gap-5 md:flex md:items-start">
-        <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3 lg:sticky lg:top-10">
-          <div className="flex flex-col gap-4">
+        <div className="flex justify-center w-full max-w-md p-5 bg-white border rounded-lg shadow-sm md:w-2/3 lg:w-1/3 lg:sticky lg:top-10">
+          <div className="flex flex-col w-full gap-4">
             <Select onValueChange={(value) => setPointUser(+value)}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full max-w-sm">
                 <SelectValue placeholder="Seleccione un local" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="w-full max-w-sm">
                 {pointsData.data?.map((point) => (
                   <SelectItem key={point.id} value={point.id.toString()}>
                     {point.name}
@@ -146,7 +146,7 @@ export default function ReportDay() {
             <Calendar
               value={value}
               onChange={handleChange}
-              className="rounded-xl"
+              className="w-full max-w-sm rounded-xl"
             />
           </div>
         </div>
