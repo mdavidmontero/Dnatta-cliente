@@ -130,26 +130,27 @@ export default function ReportDay() {
       </div>
       <div className="gap-5 md:flex md:items-start">
         <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3 lg:sticky lg:top-10">
-          <Calendar
-            value={value}
-            onChange={handleChange}
-            className="rounded-xl"
-          />
+          <div className="flex flex-col gap-4">
+            <Select onValueChange={(value) => setPointUser(+value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Seleccione un local" />
+              </SelectTrigger>
+              <SelectContent>
+                {pointsData.data?.map((point) => (
+                  <SelectItem key={point.id} value={point.id.toString()}>
+                    {point.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Calendar
+              value={value}
+              onChange={handleChange}
+              className="rounded-xl"
+            />
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-4 mb-6 ">
-          <Select onValueChange={(value) => setPointUser(+value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Seleccione un local" />
-            </SelectTrigger>
-            <SelectContent>
-              {pointsData.data?.map((point) => (
-                <SelectItem key={point.id} value={point.id.toString()}>
-                  {point.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+
         <div className="p-5 space-y-5 md:w-1/2 lg:w-2/3">
           {isLoading && (
             <div className="flex items-center justify-center h-60">
