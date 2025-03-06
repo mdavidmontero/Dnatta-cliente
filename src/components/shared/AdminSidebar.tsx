@@ -21,6 +21,12 @@ export default function AdminSidebar() {
       allowedRoles: ["USER", "ADMIN"],
     },
     {
+      url: "/history-venta",
+      text: "Historial Ventas",
+      blank: false,
+      allowedRoles: ["USER", "ADMIN"],
+    },
+    {
       url: "/post-venta",
       text: "Ventas",
       blank: false,

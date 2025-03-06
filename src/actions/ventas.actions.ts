@@ -35,16 +35,20 @@ export const createOrder = async (formData: SaleOrder) => {
 };
 
 export const getPostVentas = async (
+  fecha: string,
   page: number = 1,
   limit: number = 10,
-  pointId: number
+  pointId: number,
+  userId: number
 ) => {
   try {
     const { data } = await api.get(`/ventas/post-ventas/dia`, {
       params: {
+        fecha: fecha,
         page: page,
         limit: limit,
         pointId: +pointId,
+        userId: +userId,
       },
     });
     const response = PosVentaDaySchema.safeParse(data);

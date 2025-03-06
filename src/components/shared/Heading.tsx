@@ -1,3 +1,8 @@
-export default function Heading({ children }: { children: React.ReactNode }) {
-  return <h1 className="my-10 text-2xl">{children}</h1>;
+interface HeadingProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export default function Heading({ children, className }: HeadingProps) {
+  return <h1 className={`text-2xl my-10 ${className}`}>{children}</h1>;
 }

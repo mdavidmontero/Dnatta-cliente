@@ -121,7 +121,7 @@ export const searchProducts = async (searchTerm: string) => {
     const { data } = await api.get(`/products/products/search`, {
       params: { searchTerm },
     });
-    // console.log(data);
+
     const response = CategoriasProductosSchema.safeParse(data);
     if (response.success) {
       return response.data;

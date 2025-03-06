@@ -89,6 +89,7 @@ export default function ReportDayVendedora() {
       alert("Selecciona fecha, local y usuario antes de buscar.");
     }
   };
+
   // if (userdata?.role !== "ADMIN") return <Navigate to="/404" />;
 
   return (
