@@ -97,6 +97,7 @@ export const SaleSchema = z.object({
   ),
   payments: z.array(PaymentsSchema),
 });
+export type SaleTypeSchema = z.infer<typeof SaleSchema>;
 
 export const PosVentaDaySchema = z.object({
   sales: z.array(SaleSchema),

@@ -8,7 +8,7 @@ interface Props {
 }
 export default function CalendarShared({ value, handleChange }: Props) {
   return (
-    <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3 lg:sticky lg:top-20">
+    <div className="flex justify-center p-5 bg-white border rounded-lg shadow-sm md:w-1/2 lg:w-1/3 lg:sticky lg:top-10">
       <Calendar
         value={value}
         onChange={handleChange}

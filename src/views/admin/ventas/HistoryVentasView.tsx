@@ -80,7 +80,7 @@ export default function HistoryVentasView() {
         En esta sección aparecerán todas las ventas, utiliza el calendario para
         filtrar por fecha
       </p>
-      <div className="flex flex-wrap items-center gap-4 mb-6 lg:sticky lg:top-5 ">
+      <div className="flex flex-wrap items-center gap-4 mb-6 ">
         <Select onValueChange={(value) => setPointUser(+value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Seleccione un local" />
