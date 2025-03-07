@@ -297,30 +297,23 @@ export default function ModalMoney({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg p-6 bg-white shadow-xl rounded-3xl ring-2 ring-indigo-600">
+              <Dialog.Panel className="w-full max-w-lg p-6 shadow-xl bg-slate-50 rounded-3xl ring-2 ring-indigo-600">
                 <Dialog.Title
                   as="h3"
-                  className="mb-6 text-3xl font-extrabold text-gray-900"
+                  className="mb-2 text-3xl font-extrabold text-gray-900"
                 >
                   Confirmar Venta
                 </Dialog.Title>
-
-                <p className="mb-6 text-lg text-gray-700">
-                  Completa los campos y crea{" "}
-                  <span className="font-semibold text-indigo-600">
-                    una nueva venta
-                  </span>
-                </p>
 
                 <div className="flex flex-col space-y-4">
                   <div className="flex flex-row justify-center">
                     <button
                       disabled={mutationPrinter.isPending}
                       onClick={printer}
-                      className="flex items-center px-4 py-2 space-x-2 transition duration-200 ease-in-out bg-white rounded-full shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex items-center px-4 py-2 space-x-2 transition duration-200 ease-in-out bg-white rounded-full shadow-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <PrinterIcon className="w-6 h-6 text-indigo-600" />
-                      <span className="text-lg font-medium text-gray-800">
+                      <PrinterIcon className="w-4 h-4 text-indigo-600" />
+                      <span className="text-base font-medium text-gray-800">
                         Imprimir Factura
                       </span>
                     </button>
@@ -342,23 +335,25 @@ export default function ModalMoney({
                     </div>
                   )} */}
                   {paymentMethod === "efectivo" && (
-                    <div className="flex flex-wrap items-center justify-center gap-6">
+                    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 lg:gap-4">
                       {bills.map((bill) => (
                         <button
                           key={bill}
-                          className={`p-4 rounded-lg shadow-lg transition transform hover:scale-105 focus:outline-none ${
+                          className={`p-3 rounded-lg shadow-lg transition transform hover:scale-110 focus:outline-none ${
                             selectedBill === bill
                               ? "bg-indigo-600 text-white"
                               : "bg-white"
                           }`}
                           onClick={() => handleBillSelection(bill)}
                         >
+                          <p className="text-sm font-bold sm:text-base lg:hidden">
+                            {bill}
+                          </p>
+
                           <img
                             src={`/billetes/${bill}.jpg`}
                             alt={`Billete de ${bill}`}
-                            className="w-auto h-20 mx-auto"
-                            width={200}
-                            height={200}
+                            className="hidden w-auto h-20 mx-auto sm:h-12 lg:block"
                           />
                         </button>
                       ))}
@@ -376,7 +371,7 @@ export default function ModalMoney({
                       value={paymentMethod}
                       onChange={(e) => setPaymentMethod(e.target.value)}
                       name="payment-method"
-                      className="block w-full p-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
+                      className="block w-full p-2 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
                     >
                       {metodosDePago.map((method) => (
                         <option key={method.id} value={method.id}>
@@ -398,7 +393,7 @@ export default function ModalMoney({
                         value={selectedTransfer}
                         onChange={(e) => setSelectedTransfer(e.target.value)}
                         name="transfer-method"
-                        className="block w-full p-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full p-2 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
                       >
                         {paymentMethods.map((method, index) => (
                           <option value={method.id} key={index}>
@@ -424,7 +419,7 @@ export default function ModalMoney({
                             setSelecttrasferCombinado(e.target.value)
                           }
                           name="transferAmount"
-                          className="block w-full p-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
+                          className="block w-full p-2 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
                         >
                           {paymentMethodsCombinado.map((method, index) => (
                             <option value={method.id} key={index}>
@@ -437,7 +432,7 @@ export default function ModalMoney({
                           id="cashAmount"
                           value={cashAmount}
                           onChange={(e) => setCashAmount(e.target.value)}
-                          className="block w-full p-4 mt-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
+                          className="block w-full p-2 mt-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
                         />
                         <Button
                           onClick={addPayment}
@@ -446,14 +441,14 @@ export default function ModalMoney({
                           Agregar Pago
                         </Button>
 
-                        <div className="mt-6">
-                          <p className="text-lg font-semibold">
+                        <div className="mt-2">
+                          <p className="text-base font-bold">
                             Total a pagar:{" "}
                             <span className="font-normal text-gray-800">
                               {formatCurrency(amount)}
                             </span>
                           </p>
-                          <p className="mt-2 text-lg font-semibold">
+                          <p className="mt-2 text-base font-bold">
                             Total pagado:{" "}
                             <span className="font-normal text-gray-800">
                               {formatCurrency(sumaPagos)}
@@ -462,14 +457,14 @@ export default function ModalMoney({
                         </div>
 
                         {payments.length > 0 && (
-                          <div className="mt-6">
-                            <p className="text-lg font-semibold">
+                          <div className="mt-2">
+                            <p className="text-base font-semibold text-start">
                               Pagos Agregados:
                             </p>
                             {payments.map((payment, index) => (
                               <div
                                 key={index}
-                                className="flex items-center justify-between p-4 mt-4 border-2 border-gray-300 rounded-lg shadow-md bg-gray-50"
+                                className="flex items-center justify-between p-2 mt-2 border-2 border-gray-300 rounded-lg shadow-md bg-gray-50"
                               >
                                 <span>
                                   {payment.method} - {payment.transferPlatform}:{" "}
@@ -491,14 +486,14 @@ export default function ModalMoney({
 
                   {paymentMethod === "efectivo" && (
                     <div>
-                      <p className="mt-4 text-lg font-semibold">
+                      <p className="text-base font-bold ">
                         Total a pagar:{" "}
                         <span className="font-normal">
                           {formatCurrency(amount)}
                         </span>
                       </p>
                       {selectedBill > 0 && (
-                        <p className="mt-4 text-lg font-semibold">
+                        <p className="text-base font-bold">
                           Cambio a devolver: $
                           <span className="font-normal">
                             {calculateChange(amount).toLocaleString()}
@@ -509,7 +504,7 @@ export default function ModalMoney({
                   )}
                 </div>
 
-                <div className="flex gap-4 mt-8">
+                <div className="flex gap-4 mt-4">
                   <Button
                     onClick={() => setIsModalOpen(false)}
                     className="w-full p-4 text-white bg-red-600 rounded-lg hover:bg-red-800"
