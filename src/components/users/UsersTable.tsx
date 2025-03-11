@@ -89,7 +89,11 @@ export default function UsersTable({ users }: UsersTableProps) {
                           alt="imagen user"
                         />
                       ) : (
-                        <img src="/no-image.png" alt="No imagen" />
+                        <img
+                          src="/no-image.png"
+                          className="object-cover rounded w-14 h-14"
+                          alt="No imagen"
+                        />
                       )}
                     </TableCell>
                     <TableCell className="py-4 pr-6 text-sm font-medium text-center whitespace-nowrap">
