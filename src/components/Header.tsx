@@ -3,12 +3,15 @@ import { LogoHome } from "./Logo";
 
 export default function Header() {
   return (
-    <header className="py-4  lg:py-0 bg-btn-secondary">
-      <div className="flex flex-col items-center px-4 mx-auto space-y-4 max-w-7xl md:flex-row md:justify-between md:space-y-0">
-        <div className="flex justify-center w-full md:w-1/4">
+    <header className="py-4 shadow-md bg-btn-secondary">
+      <div className="container flex flex-col items-center px-4 mx-auto space-y-4 md:flex-row md:justify-between md:space-y-0">
+        {/* Logo */}
+        <div className="flex justify-center w-full md:w-auto">
           <LogoHome />
         </div>
-        <nav className="flex items-center justify-center w-full md:w-3/4 md:justify-end">
+
+        {/* Navegación */}
+        <nav className="w-full md:w-auto">
           <HomeNavigation />
         </nav>
       </div>

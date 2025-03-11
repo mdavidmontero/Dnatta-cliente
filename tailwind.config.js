@@ -8,10 +8,13 @@ export default {
   theme: {
     extend: {
       backgroundSize: {
-        "home-xl": "48%",
+        "home-xl": "40% auto", // Ocupa la mitad del ancho y ajusta la altura automáticamente
       },
       backgroundImage: {
-        home: "url('/bg.jpg')",
+        home: "url('/bgd.png')", // Asegúrate de que la ruta de la imagen sea correcta
+      },
+      backgroundPosition: {
+        "home-position": "right center", // Posiciona la imagen a la derecha y centrada verticalmente
       },
       colors: {
         "bg-primary": "#3C6997",

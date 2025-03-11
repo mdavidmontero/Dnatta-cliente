@@ -13,7 +13,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="overflow-hidden bg-white border rounded">
       <img
         src={imagePath}
-        className="object-cover w-full "
+        className="w-full h-full bject-contain"
         alt={`Imagen platillo ${product.name}`}
       />
 

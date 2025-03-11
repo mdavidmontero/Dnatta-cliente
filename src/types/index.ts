@@ -1,3 +1,4 @@
+import { LucideProps } from "lucide-react";
 import { z } from "zod";
 
 export const authSchema = z.object({
@@ -240,3 +241,11 @@ export const TotalAmountResponse = z.object({
     totalAmount: z.number(),
   }),
 });
+
+export type Feature = {
+  name: string;
+  Icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
+  description: string;
+};

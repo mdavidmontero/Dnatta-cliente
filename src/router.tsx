@@ -37,12 +37,23 @@ import NotFoundLayout from "./layouts/NotFound404";
 import PostVentaView from "./views/admin/ventas/PostVentaView";
 import HistoryVentasView from "./views/admin/ventas/HistoryVentasView";
 import HistoryDayView from "./views/admin/ventas/HistoryDayView";
+import NosotrosView from "./views/home/NosotrosView";
+import HomeLayout from "./layouts/HomeLayout";
+import Contact from "./views/home/Contact";
+import ProductsHome from "./views/home/ProductsHome";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomeView />} />
+        <Route element={<HomeLayout />}>
+          <Route path="/" element={<HomeView />} />
+          <Route path="/nosotros" element={<NosotrosView />} />
+          <Route path="/contacto" element={<Contact />} />
+          <Route path="/productos" element={<ProductsHome />} />
+        </Route>
+
+        <Route path="/nosotros" element={<NosotrosView />} />
         <Route element={<AuthLayout />}>
           <Route path="/auth/login" element={<LoginView />} />
           <Route path="/auth/register" element={<RegisterView />} />
