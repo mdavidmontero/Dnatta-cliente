@@ -56,6 +56,8 @@ export const UserGet = z.object({
 export const userSchemaget = z.array(UserGet);
 export type UserGet = z.infer<typeof UserGet>;
 
+export type UsersAllSchema = z.infer<typeof UserGet>;
+
 export const userSchema = authSchema
   .pick({
     name: true,

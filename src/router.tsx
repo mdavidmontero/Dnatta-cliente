@@ -41,6 +41,7 @@ import NosotrosView from "./views/home/NosotrosView";
 import HomeLayout from "./layouts/HomeLayout";
 import Contact from "./views/home/Contact";
 import ProductsHome from "./views/home/ProductsHome";
+import HomeUsers from "./views/admin/users/HomeUsers";
 
 export default function Router() {
   return (
@@ -101,6 +102,7 @@ export default function Router() {
           <Route path="/cash-detail/:id" element={<CashDetail />} />
           {/* <Route path="/profile" element={<ProfileView />} /> */}
           <Route path="/points" element={<PointsViews />} />
+          <Route path="/usuarios" element={<HomeUsers />} />
           {/* <Route path="/points/:id" element={<ProductView />} /> */}
           <Route path="/new-point" element={<PointsView />} />
           <Route path="/edit-point/:id" element={<PointsView />} />

@@ -72,7 +72,7 @@ export default function NosotrosView() {
                 />
               </div>
               <CardContent className="p-6 text-center">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h3 className="text-xl font-bold text-gray-900 capitalize dark:text-white">
                   {member.name}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400">

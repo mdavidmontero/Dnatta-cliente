@@ -8,11 +8,11 @@ const NAVIGATION_LINKS = [
 
   {
     name: "Sobre Nosotros",
-    link: "/about-us",
+    link: "/nosotros",
   },
   {
     name: "Contáctanos",
-    link: "/contact-us",
+    link: "/contacto",
   },
 ];
 export default function Footer() {

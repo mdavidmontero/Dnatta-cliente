@@ -26,6 +26,10 @@ export default function AppLayout() {
     queryKey: ["getTokensConfirmUsers"],
   });
 
+  const tokenConfirmFilter = tokensConfirm?.filter(
+    (token) => token.token !== ""
+  );
+
   const showPopover = user?.role === "ADMIN" || user?.id === 3;
 
   if (isLoading) return "Cargando...";
@@ -43,7 +47,7 @@ export default function AppLayout() {
 
             <main className="p-5 bg-bg-primary-bg md:flex-1 md:h-screen md:overflow-y-scroll">
               <div className="flex justify-end gap-5 py-2">
-                {showPopover && <MessagesPopover tokens={tokensConfirm} />}
+                {showPopover && <MessagesPopover tokens={tokenConfirmFilter} />}
                 <Button
                   onClick={handleLogout}
                   className="w-full px-10 py-5 text-xl font-bold text-center text-white rounded-lg cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"

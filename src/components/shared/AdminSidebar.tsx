@@ -90,6 +90,17 @@ export default function AdminSidebar() {
       allowedRoles: ["USER", "ADMIN"],
     },
     { url: "/points", text: "Puntos", blank: false, allowedRoles: ["ADMIN"] },
+    ...(user.role === "ADMIN" || user.id === 3
+      ? [
+          {
+            url: "/usuarios",
+            text: "Usuarios",
+            blank: false,
+            allowedRoles: ["ADMIN", "USER"],
+          },
+        ]
+      : []),
+
     {
       url: "/cash-register",
       text: "Caja",

@@ -132,6 +132,33 @@ export async function getUsers() {
   }
 }
 
+export async function getUsersAll() {
+  try {
+    const { data } = await api("/auth/usersall");
+    const response = userSchemaget.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function updateUserStatus(userId: number, status: boolean) {
+  try {
+    const { data } = await api.patch<string>("/auth/userstatus", {
+      userId,
+      status,
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+  }
+}
+
 export async function updateProfile(formData: User) {
   try {
     const { data } = await api.patch<string>("/auth/update-profile", formData);
