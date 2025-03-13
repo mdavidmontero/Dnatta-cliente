@@ -199,6 +199,9 @@ export default function ModalMoney({
 
   const calculateVuelto = (amountDue: number, amountPaid: number) => {
     const difference = amountPaid - amountDue;
+    if (amountPaid > amountDue) {
+      return 0;
+    }
 
     return Math.round(difference);
   };
