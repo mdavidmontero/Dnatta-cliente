@@ -9,6 +9,7 @@ import { PrinterIcon } from "@heroicons/react/24/outline";
 import { useStore } from "@/store/store";
 import { userAuthStore } from "@/store/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
+import CardTotal from "./ventas/CardTotal";
 
 interface ModalMoneyProps {
   amount: number;
@@ -81,7 +82,7 @@ export default function ModalMoney({
   setSumaPagos,
   mutationPending,
 }: ModalMoneyProps) {
-  const bills = [5000, 10000, 20000, 50000, 100000];
+  // const bills = [5000, 10000, 20000, 50000, 100000];
   const sales = useStore((state) => state.order);
   const user = userAuthStore((state) => state.user);
   sales.map((sale) => sale.name);
@@ -194,6 +195,12 @@ export default function ModalMoney({
       return amountPaid - amountDue;
     }
     return 0;
+  };
+
+  const calculateVuelto = (amountDue: number, amountPaid: number) => {
+    const difference = amountPaid - amountDue;
+
+    return Math.round(difference);
   };
 
   const validarCantidad = (amount: number) => {
@@ -319,22 +326,7 @@ export default function ModalMoney({
                     </button>
                   </div>
 
-                  {/* {viewTicked && (
-                    <div className="w-full max-w-3xl mx-auto">
-                      <PDFViewer
-                        width="100%"
-                        height="380px"
-                        className="rounded-lg shadow-lg"
-                      >
-                        <TickeSale
-                          sale={sales}
-                          paymentMethod={paymentMethod}
-                          user={user}
-                        />
-                      </PDFViewer>
-                    </div>
-                  )} */}
-                  {paymentMethod === "efectivo" && (
+                  {/* {paymentMethod === "efectivo" && (
                     <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 lg:gap-4">
                       {bills.map((bill) => (
                         <button
@@ -358,12 +350,15 @@ export default function ModalMoney({
                         </button>
                       ))}
                     </div>
+                  )} */}
+                  {paymentMethod === "efectivo" && (
+                    <CardTotal handleBillSelection={handleBillSelection} />
                   )}
 
                   <div className="mt-4">
                     <label
                       htmlFor="payment-method"
-                      className="block mb-2 text-sm font-semibold text-gray-700"
+                      className="block mb-2 text-base font-semibold text-gray-700"
                     >
                       Método de pago:
                     </label>
@@ -486,19 +481,29 @@ export default function ModalMoney({
 
                   {paymentMethod === "efectivo" && (
                     <div>
-                      <p className="text-base font-bold ">
-                        Total a pagar:{" "}
+                      <p className="text-lg font-bold ">
+                        Total:{" "}
                         <span className="font-normal">
                           {formatCurrency(amount)}
                         </span>
                       </p>
                       {selectedBill > 0 && (
-                        <p className="text-base font-bold">
-                          Cambio a devolver: $
-                          <span className="font-normal">
-                            {calculateChange(amount).toLocaleString()}
-                          </span>
-                        </p>
+                        <>
+                          <p className="text-lg font-bold">
+                            Vuelto:
+                            <span className="font-normal">
+                              {formatCurrency(+calculateChange(amount))}
+                            </span>
+                          </p>
+                          <p className="text-lg font-bold">
+                            Restante:
+                            <span className="font-normal">
+                              {formatCurrency(
+                                calculateVuelto(amount, selectedBill)
+                              )}
+                            </span>
+                          </p>
+                        </>
                       )}
                     </div>
                   )}
