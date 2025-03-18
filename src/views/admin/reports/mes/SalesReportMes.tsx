@@ -24,153 +24,176 @@ const styles = StyleSheet.create({
   page: {
     padding: 30,
     fontFamily: "Helvetica",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#FFFFFF",
   },
   header: {
     marginBottom: 20,
     textAlign: "center",
-    paddingBottom: 10,
-    borderBottom: "2px solid #ccc",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#000000",
   },
   subtitle: {
-    fontSize: 12,
-    color: "#555",
-    marginBottom: 10,
-  },
-  section: {
-    marginBottom: 25,
-  },
-  sectionHeader: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    fontWeight: "bold",
-    fontSize: 12,
-    padding: 8,
-    backgroundColor: "#f4f4f4",
-    borderBottom: "1px solid #ddd",
-    textTransform: "uppercase",
-    color: "#333",
-  },
-  sectionContent: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 8,
     fontSize: 10,
-    borderBottom: "1px solid #eee",
+    color: "#555",
+    marginBottom: 15,
+  },
+  dayHeader: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    fontSize: 10,
+    marginBottom: 10,
+    paddingBottom: 5,
+    borderBottom: "1px solid #000000",
   },
   tableHeader: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    fontSize: 10,
     fontWeight: "bold",
-    fontSize: 11,
-    padding: 8,
-    backgroundColor: "#e0e0e0",
-    borderBottom: "2px solid #ccc",
-    color: "#333",
+    padding: 5,
+    borderBottom: "1px solid #000000",
   },
   tableRow: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 8,
+    fontSize: 9,
+    padding: 5,
+    borderBottom: "1px solid #DDDDDD",
+  },
+  categoryRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     fontSize: 10,
-    borderBottom: "1px solid #ddd",
+    fontWeight: "bold", // Negrita para categorías
+    padding: 5,
+    marginTop: 10,
   },
-  tableCell: {
-    width: "33%",
-    textAlign: "center",
-    padding: 4,
-  },
-  categoryName: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 15,
-    marginBottom: 5,
-    color: "#444",
-  },
-  productDetails: {
+  totalRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
     fontSize: 10,
+    fontWeight: "bold", // Negrita para subtotales
+    padding: 5,
+    marginTop: 5,
+  },
+  cell: {
+    width: "25%",
+    textAlign: "left",
+  },
+  cellRight: {
+    width: "25%",
+    textAlign: "right",
+  },
+  separator: {
+    borderBottom: "1px solid #000000",
+    marginVertical: 10,
   },
 });
 
 interface SalesReportPDFProps {
   groupedReports: GroupedReports;
-  productSalesSummary: {
-    productName: string;
-    quantitySold: number;
-    totalAmountSold: number;
-  }[];
 }
 
-export const SalesReportPDF = ({
-  groupedReports,
-  productSalesSummary,
-}: SalesReportPDFProps) => {
+export const SalesReportPDF = ({ groupedReports }: SalesReportPDFProps) => {
+  // Ordenar las fechas
+  const sortedDates = Object.keys(groupedReports).sort((a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  });
+
   return (
     <Document>
       <Page style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.title}>Reporte de Ventas</Text>
+          <Text style={styles.title}>Reporte de Ventas Mensual</Text>
           <Text style={styles.subtitle}>
-            Fecha: {new Date().toLocaleDateString("es-ES")}
+            Generado el: {new Date().toLocaleDateString("es-ES")}
           </Text>
         </View>
 
-        {Object.keys(groupedReports).map((date) => {
+        {sortedDates.map((date, index) => {
           const dailyReport = groupedReports[date];
 
-          return (
-            <View style={styles.section} key={date}>
-              <Text style={styles.subtitle}>Fecha: {date}</Text>
+          // Obtener todas las vendedoras únicas del día
+          const vendedoras = [
+            ...new Set(dailyReport.reports.map((report) => report.user.name)),
+          ].join(", ");
 
-              <View style={styles.sectionHeader}>
-                <Text style={{ width: "50%" }}>Monto Total:</Text>
-                <Text style={{ width: "50%" }}>
-                  {formatCurrency(dailyReport.totalAmount)}
+          // Calcular los productos vendidos por categoría
+          const productsForDate = dailyReport.reports.flatMap((report) =>
+            report.saleDetails.map((detail) => ({
+              productName: detail.product.name,
+              quantitySold: detail.quantity,
+              totalAmountSold: detail.unitPrice * detail.quantity,
+              category: detail.product.categoryId, // Usar categoryId o category según tu esquema
+            }))
+          );
+
+          const categorySummary = calculateProductSalesSummary(productsForDate);
+
+          return (
+            <View key={date}>
+              {/* Encabezado del día */}
+              <View style={styles.dayHeader}>
+                <Text style={styles.cell}>Fecha: {date}</Text>
+                <Text style={styles.cellRight}>
+                  Monto Total: {formatCurrency(dailyReport.totalAmount)}
                 </Text>
+                <Text style={styles.cellRight}>Vendedoras: {vendedoras}</Text>
               </View>
 
-              {/* Información de la vendedora */}
-              {dailyReport.reports.length > 0 && (
-                <View style={styles.sectionContent}>
-                  <Text style={{ width: "50%" }}>Vendedora:</Text>
-                  <Text style={{ width: "50%" }}>
-                    {dailyReport.reports[0].user.name}
-                  </Text>
-                </View>
-              )}
-
               {/* Tabla de productos vendidos */}
-              {calculateProductSalesSummary(productSalesSummary).map(
-                (categoryGroup) => (
-                  <View key={categoryGroup.category}>
-                    <Text style={styles.categoryName}>
-                      {categoryGroup.category}
-                    </Text>
+              <View style={styles.tableHeader}>
+                <Text style={styles.cell}>Categoría</Text>
+                <Text style={styles.cell}>Producto</Text>
+                <Text style={styles.cellRight}>Cantidad</Text>
+                <Text style={styles.cellRight}>Total Vendido</Text>
+              </View>
 
-                    {categoryGroup.products.map((product) => (
-                      <View style={styles.tableRow} key={product.productName}>
-                        <Text style={styles.tableCell}>
-                          {product.productName}
-                        </Text>
-                        <Text style={styles.tableCell}>
-                          {product.quantitySold}
-                        </Text>
-                        <Text style={styles.tableCell}>
-                          {formatCurrency(product.totalAmountSold)}
-                        </Text>
-                      </View>
-                    ))}
+              {categorySummary.map((categoryGroup) => (
+                <View key={categoryGroup.category}>
+                  {/* Nombre de la categoría */}
+                  <View style={styles.categoryRow}>
+                    <Text style={styles.cell}>{categoryGroup.category}</Text>
+                    <Text style={styles.cellRight}></Text>
+                    <Text style={styles.cellRight}></Text>
+                    <Text style={styles.cellRight}></Text>
                   </View>
-                )
+
+                  {/* Productos de la categoría */}
+                  {categoryGroup.products.map((product) => (
+                    <View style={styles.tableRow} key={product.productName}>
+                      <Text style={styles.cell}></Text>
+                      <Text style={styles.cell}>{product.productName}</Text>
+                      <Text style={styles.cellRight}>
+                        {product.quantitySold}
+                      </Text>
+                      <Text style={styles.cellRight}>
+                        {formatCurrency(product.totalAmountSold)}
+                      </Text>
+                    </View>
+                  ))}
+
+                  {/* Subtotal de la categoría */}
+                  <View style={styles.totalRow}>
+                    <Text style={styles.cellRight}>Subtotal:</Text>
+                    <Text style={styles.cellRight}>
+                      {formatCurrency(categoryGroup.subtotal)}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+
+              {/* Separador entre días (excepto después del último día) */}
+              {index < sortedDates.length - 1 && (
+                <View style={styles.separator} />
               )}
             </View>
           );

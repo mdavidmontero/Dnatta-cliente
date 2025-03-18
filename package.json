@@ -31,6 +31,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
+    "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",

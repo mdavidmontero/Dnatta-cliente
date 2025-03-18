@@ -23,11 +23,13 @@ export function SaleDetails({
 
   return (
     <div className="py-6 space-y-6 border-t border-gray-200">
-      <h2 className="text-2xl font-bold text-center text-gray-800">
-        Resumen de Productos Vendidos
-      </h2>
+      {totalQuantitySold > 0 && (
+        <h2 className="text-2xl font-bold text-center text-gray-800">
+          Resumen de Productos Vendidos
+        </h2>
+      )}
 
-      {groupedProductSales.length > 0 ? (
+      {groupedProductSales.length > 0 && (
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
@@ -86,15 +88,10 @@ export function SaleDetails({
             </tbody>
           </table>
 
-          {/* Total general */}
           <div className="mt-4 text-lg font-semibold text-right text-gray-800">
             Total Cantidad Vendida: {totalQuantitySold}
           </div>
         </div>
-      ) : (
-        <p className="text-lg font-semibold text-center text-gray-500">
-          No hay ventas registradas para este producto.
-        </p>
       )}
     </div>
   );

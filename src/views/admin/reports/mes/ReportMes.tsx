@@ -7,7 +7,6 @@ import {
 } from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
-import ModalReportesMes from "./ModalReportes";
 import { useAuth } from "@/hook/useAuth";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,9 @@ import { addDays } from "date-fns";
 import SalesExcelButton from "@/components/reports/mes/ReporExcelMes";
 import ButtonGenerateExcel from "@/components/shared/ButtonGenerateExcel";
 import { getUsers } from "@/actions/auth.actions";
+import { SaleDetails } from "@/components/ventas/SaleDetails";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import SalesReportPDF from "./SalesReportMes";
 
 export default function ReportMonth() {
   const { data: user } = useAuth();
@@ -35,10 +37,8 @@ export default function ReportMonth() {
   });
 
   const [point, setPoint] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [userSelected, setUserSelected] = useState(0);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["reportMonth", dateSelected.from, dateSelected.to, point, user],
@@ -100,22 +100,35 @@ export default function ReportMonth() {
     {}
   );
 
+  const sortedDates = Object.keys(groupedReports).sort((a, b) => {
+    return new Date(a).getTime() - new Date(b).getTime();
+  });
+
   const totalSalesYear = data?.totalAmount?._sum?.totalAmount || 0;
+  const totalQuantitySold = productSalesSummary.reduce(
+    (acc, product) => acc + product.quantitySold,
+    0
+  );
 
   if (user?.role !== "ADMIN") return <Navigate to="/404" />;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <div className="flex flex-wrap justify-between gap-2 mb-6">
-        <Button
-          onClick={openModal}
-          className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer"
+        <PDFDownloadLink
+          document={<SalesReportPDF groupedReports={groupedReports} />}
+          fileName={`Reporte de ${
+            new Date().getMonth() + 1
+          } de ${new Date().getFullYear()}`}
         >
-          Ver en PDF
-        </Button>
+          <Button className="bg-[#3C6997] rounded-lg text-white w-full lg:w-auto text-xl px-10 py-2 text-center font-bold cursor-pointer">
+            Generar PDF
+          </Button>
+        </PDFDownloadLink>
+
         <SalesExcelButton
           groupedReports={groupedReports}
-          productSalesSummary={productSalesSummary}
+          totalSalesYear={totalSalesYear}
         />
       </div>
 
@@ -179,8 +192,16 @@ export default function ReportMonth() {
             </span>
           </p>
 
+          <SaleDetails
+            productSalesSummary={productSalesSummary}
+            totalQuantitySold={totalQuantitySold}
+          />
+
           <div className="overflow-x-auto">
-            {Object.keys(groupedReports).length ? (
+            <h2 className="my-4 text-2xl font-bold text-center">
+              Detallado de Ventas
+            </h2>
+            {sortedDates.length ? (
               <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-xl">
                 <thead>
                   <tr className="text-gray-700 bg-gray-100">
@@ -199,7 +220,7 @@ export default function ReportMonth() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.keys(groupedReports).map((date) => {
+                  {sortedDates.map((date) => {
                     const dailyReport = groupedReports[date];
                     const vendedoras = new Set(
                       dailyReport.reports.map((report) => report.user.name)
@@ -281,13 +302,6 @@ export default function ReportMonth() {
           </div>
         </div>
       )}
-
-      <ModalReportesMes
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        groupedReports={groupedReports}
-        productSalesSummary={productSalesSummary}
-      />
     </div>
   );
 }
