@@ -8,11 +8,13 @@ import CashFormRegister from "../../../components/cash/CashFormRegister";
 import { userAuthStore } from "../../../store/useAuthStore";
 import { useStorePoint } from "../../../store/userStore";
 import { cashRegister } from "../../../actions/ventas.actions";
+import { useNavigate } from "react-router-dom";
 
 export default function CashRegisterView() {
   const user = userAuthStore((state) => state.user);
   const point = useStorePoint((state) => state.point);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const useCreateRegisterCash = useMutation({
     mutationFn: cashRegister,
@@ -48,6 +50,7 @@ export default function CashRegisterView() {
       userId: parseInt(user!.id.toString()),
       pointId: +point,
     };
+    navigate(-1);
 
     useCreateRegisterCash.mutate(data);
   };

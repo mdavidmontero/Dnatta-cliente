@@ -1,6 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStorePoint } from "../../../store/userStore";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { CashRegister } from "../../../types";
 import { useForm } from "react-hook-form";
 import { userAuthStore } from "../../../store/useAuthStore";
@@ -17,10 +17,10 @@ import { getAllMovementsCashDay } from "../../../actions/movements.actions";
 export default function CashEditView() {
   const point = useStorePoint((state) => state.point);
   const user = userAuthStore((state) => state.user);
+  const navigation = useNavigate();
   const queryClient = useQueryClient();
   const params = useParams();
   const cashId = params.id;
-  const [closed, setClosed] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryFn: () => getCashDay(+cashId!),
@@ -74,17 +74,7 @@ export default function CashEditView() {
         baseAmount: data.baseAmount,
       });
     }
-  }, [data, dataTotalDay.data, reset]);
-
-  const handleCloseCash = () => {
-    const confirmClose = window.confirm(
-      "¿Estás seguro de que deseas cerrar la caja?"
-    );
-    if (confirmClose) {
-      setClosed(true);
-      toast.success("Caja cerrada correctamente");
-    }
-  };
+  }, [data, dataTotalDay.data, reset, totalCompras]);
 
   const updateCashMutation = useMutation({
     mutationFn: cashClosed,
@@ -95,17 +85,19 @@ export default function CashEditView() {
       toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
       queryClient.invalidateQueries({ queryKey: ["cashgetDay"] });
-
       reset();
+      navigation(-1);
     },
   });
 
   const handleCashClosed = (formData: CashRegister) => {
-    const dataClosed = {
-      ...formData,
-      isClosed: closed,
-    };
-    updateCashMutation.mutate({ cashId: +cashId!, formData: dataClosed });
+    if (confirm("¿Está seguro que desea cerrar la caja?")) {
+      const dataClosed = {
+        ...formData,
+        isClosed: true,
+      };
+      updateCashMutation.mutate({ cashId: +cashId!, formData: dataClosed });
+    }
   };
 
   if (isLoading) return "Cargando...";
@@ -211,17 +203,10 @@ export default function CashEditView() {
           </div>
           <div className="flex justify-between my-5 space-x-4">
             <button
-              type="button"
-              onClick={handleCloseCash}
-              className="w-full py-3 font-bold text-white bg-red-600 rounded-md cursor-pointer hover:bg-red-800"
-            >
-              Cerrar Caja
-            </button>
-            <button
               type="submit"
               className="w-full py-3 font-bold text-white bg-indigo-600 rounded-md cursor-pointer hover:bg-indigo-800"
             >
-              Guardar Cambios
+              Cerrar Caja
             </button>
           </div>
         </form>

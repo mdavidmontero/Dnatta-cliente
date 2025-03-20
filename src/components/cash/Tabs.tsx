@@ -2,7 +2,7 @@ import { NewspaperIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const tabs = [
-  { name: "Gestion de Caja", href: "/cash-register", icon: NewspaperIcon },
+  { name: "Gestión de Caja", href: "/cash-register", icon: NewspaperIcon },
   {
     name: "Registro Movimientos",
     href: "/register-movements",

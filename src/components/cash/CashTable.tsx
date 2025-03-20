@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Cash } from "../../types/schemas/cash";
-import { formatDate } from "../../utils";
+import { formatCurrency, formatDate } from "../../utils";
 import {
   Table,
   TableCaption,
@@ -17,29 +17,30 @@ type CashTableProps = {
 
 export default function CashTable({ cash }: CashTableProps) {
   return (
-    <div className="px-4 mt-20 sm:px-6 lg:px-8">
+    <div className="px-4 mt-10 sm:px-6 lg:px-8">
       <div className="flow-root mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full overflow-hidden bg-white border border-gray-200 rounded-lg shadow-lg">
             <Table>
-              <TableCaption>
-                Aquí se encuentran las ventas de helados y montos acumulados del
-                día.
+              <TableCaption className="text-lg">
+                Estado de Caja: <b>{cash.isClosed ? "Cerrada" : "Abierta"}</b>
               </TableCaption>
-              <TableHeader>
+              <TableHeader className="bg-gray-300">
                 <TableRow>
-                  <TableHead className="py-3 text-sm font-semibold text-center text-gray-700 border-b-2 border-gray-300">
+                  <TableHead className="py-3 text-sm font-bold text-center text-gray-800 border-b-2 border-gray-300">
                     Fecha
                   </TableHead>
-                  <TableHead className="py-3 text-sm font-semibold text-center text-gray-700 border-b-2 border-gray-300">
+                  <TableHead className="py-3 text-sm font-bold text-center text-gray-800 border-b-2 border-gray-300">
                     Total Venta Helados
                   </TableHead>
-                  <TableHead className="py-3 text-sm font-semibold text-center text-gray-700 border-b-2 border-gray-300">
+                  <TableHead className="py-3 text-sm font-bold text-center text-gray-800 border-b-2 border-gray-300">
                     Monto Acumulado Día
                   </TableHead>
-                  <TableHead className="py-3 text-sm font-semibold text-center text-gray-700 border-b-2 border-gray-300">
-                    Acción
-                  </TableHead>
+                  {!cash.isClosed && (
+                    <TableHead className="py-3 text-sm font-bold text-center text-gray-800 border-b-2 border-gray-300">
+                      Acción
+                    </TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -51,19 +52,23 @@ export default function CashTable({ cash }: CashTableProps) {
                     {formatDate(cash.date)}
                   </TableCell>
                   <TableCell className="py-4 text-sm text-center text-gray-900">
-                    {cash.totalventaHelados}
+                    {formatCurrency(cash.totalventaHelados)}
                   </TableCell>
                   <TableCell className="py-4 text-sm text-center text-gray-900">
-                    {cash.totalAmount}
+                    {formatCurrency(cash.totalAmount)}
                   </TableCell>
-                  <TableCell className="py-4 text-sm text-center">
-                    <Link
-                      to={`/cash-edit/${cash.id}/edit`}
-                      className="inline-block text-indigo-600 transition-colors duration-300 hover:text-indigo-800"
-                    >
-                      Editar
-                    </Link>
-                  </TableCell>
+                  {!cash.isClosed && (
+                    <>
+                      <TableCell className="py-4 text-sm text-center">
+                        <Link
+                          to={`/cash-edit/${cash.id}/edit`}
+                          className="inline-block w-full p-2 font-bold text-white transition-colors duration-300 rounded bg-bg-primary hover:bg-[#355575]"
+                        >
+                          Editar
+                        </Link>
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               </TableBody>
             </Table>

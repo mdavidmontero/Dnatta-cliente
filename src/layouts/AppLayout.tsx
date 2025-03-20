@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import AdminSidebar from "../components/shared/AdminSidebar";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import { useAuth } from "../hook/useAuth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStorePoint } from "../store/userStore";
@@ -8,23 +8,49 @@ import { MessagesPopover } from "@/views/admin/message/MessagesPopover";
 import { getTokensConfirmUsers } from "@/actions/auth.actions";
 import { Button } from "@/components/ui/button";
 import { userAuthStore } from "@/store/useAuthStore";
+import { statusCashRegisterOneClosed } from "@/actions/ventas.actions";
 
 export default function AppLayout() {
   const queryClient = useQueryClient();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const { data, isError, isLoading } = useAuth();
   const clearPoint = useStorePoint((state) => state.clearPoint);
+  const point = useStorePoint((state) => state.point);
   const user = userAuthStore((state) => state.user);
-  const handleLogout = () => {
-    localStorage.removeItem("AUTH_TOKEN");
-    clearPoint();
-    navigation("/", { replace: true });
-    queryClient.clear();
-  };
+
+  const { data: statusCash } = useQuery({
+    queryFn: () => statusCashRegisterOneClosed(+user!.id, +point),
+    queryKey: ["cashregister"],
+    enabled: user?.role === "USER",
+  });
+
   const { data: tokensConfirm } = useQuery({
     queryFn: getTokensConfirmUsers,
     queryKey: ["getTokensConfirmUsers"],
   });
+
+  const handleLogout = () => {
+    if (user?.role === "ADMIN") {
+      performLogout();
+      return;
+    }
+
+    if (user?.role === "USER") {
+      if (!statusCash || statusCash.isClosed) {
+        performLogout();
+      } else {
+        // Si la caja está abierta, mostrar error
+        toast.error("Debes cerrar la caja antes de cerrar sesión");
+      }
+    }
+  };
+
+  const performLogout = () => {
+    localStorage.removeItem("AUTH_TOKEN");
+    clearPoint();
+    navigate("/", { replace: true });
+    queryClient.clear();
+  };
 
   const tokenConfirmFilter = tokensConfirm?.filter(
     (token) => token.token !== ""
@@ -36,6 +62,7 @@ export default function AppLayout() {
   if (isError) {
     return <Navigate to="/" />;
   }
+
   if (data)
     return (
       <>
