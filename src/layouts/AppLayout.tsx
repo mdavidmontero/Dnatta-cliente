@@ -9,6 +9,7 @@ import { getTokensConfirmUsers } from "@/actions/auth.actions";
 import { Button } from "@/components/ui/button";
 import { userAuthStore } from "@/store/useAuthStore";
 import { statusCashRegisterOneClosed } from "@/actions/ventas.actions";
+import { getPoint } from "@/actions/point.actions";
 
 export default function AppLayout() {
   const queryClient = useQueryClient();
@@ -21,6 +22,12 @@ export default function AppLayout() {
   const { data: statusCash } = useQuery({
     queryFn: () => statusCashRegisterOneClosed(+user!.id, +point),
     queryKey: ["cashregister"],
+    enabled: user?.role === "USER",
+  });
+
+  const pointsSelect = useQuery({
+    queryKey: ["getpointSelect"],
+    queryFn: () => getPoint(point),
     enabled: user?.role === "USER",
   });
 
@@ -39,7 +46,6 @@ export default function AppLayout() {
       if (!statusCash || statusCash.isClosed) {
         performLogout();
       } else {
-        // Si la caja está abierta, mostrar error
         toast.error("Debes cerrar la caja antes de cerrar sesión");
       }
     }
@@ -73,21 +79,42 @@ export default function AppLayout() {
             </aside>
 
             <main className="p-5 bg-bg-primary-bg md:flex-1 md:h-screen md:overflow-y-scroll">
-              <div className="flex justify-end gap-5 py-2">
-                {showPopover && <MessagesPopover tokens={tokenConfirmFilter} />}
-                <Button
-                  onClick={handleLogout}
-                  className="w-full px-10 py-5 text-xl font-bold text-center text-white rounded-lg cursor-pointer bg-bg-violeta hover:bg-bg-violeta-hover lg:w-auto"
+              <div
+                className={`flex flex-col gap-4 py-2  ${
+                  user?.role === "USER" &&
+                  "md:justify-between md:items-center md:flex-row"
+                }`}
+              >
+                {user?.role === "USER" && (
+                  <p className="text-lg font-bold text-gray-800">
+                    Punto de Venta: {pointsSelect.data?.name}
+                  </p>
+                )}
+
+                <div
+                  className={`flex items-center  gap-4 ${
+                    user?.role !== "USER" && "justify-end"
+                  }`}
                 >
-                  Cerrar Sesión
-                </Button>
+                  {showPopover && (
+                    <MessagesPopover tokens={tokenConfirmFilter} />
+                  )}
+
+                  <Button
+                    onClick={handleLogout}
+                    className="px-6 py-3 text-lg font-bold text-white transition-colors duration-300 rounded-lg bg-bg-violeta hover:bg-bg-violeta-hover"
+                  >
+                    Cerrar Sesión
+                  </Button>
+                </div>
               </div>
 
               <Outlet />
             </main>
           </div>
+
+          <Toaster position={"top-right"} />
         </div>
-        <Toaster position={"top-right"} />
       </>
     );
 }
