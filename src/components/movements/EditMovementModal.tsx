@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MovementForm from "./MovementForm";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { Movement, RegisterFormMovement } from "../../types/schemas/movements";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateMovementByCash } from "../../actions/movements.actions";
@@ -19,13 +19,9 @@ export default function EditMovementModal({
 }: EditMovementModalProps) {
   const location = useLocation();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<RegisterFormMovement>({
+  const methods = useForm<RegisterFormMovement>({
     defaultValues: {
       nit: data.nit,
       name: data.name,
@@ -43,7 +39,7 @@ export default function EditMovementModal({
       queryClient.invalidateQueries({ queryKey: ["cashdaymovements"] });
       queryClient.invalidateQueries({ queryKey: ["movement"] });
       toast.success(data);
-      reset();
+      methods.reset();
       navigate(location.pathname, { replace: true });
     },
     onError: (error) => {
@@ -56,15 +52,14 @@ export default function EditMovementModal({
       ...formData,
       amount: +formData.amount,
     };
-    const data = {
+    const payload = {
       id: movementId,
       formData: adjustData,
     };
 
-    useUpdateMutation.mutate(data);
+    useUpdateMutation.mutate(payload);
   };
 
-  const navigate = useNavigate();
   return (
     <>
       <Transition appear show={true} as={Fragment}>
@@ -98,7 +93,7 @@ export default function EditMovementModal({
               >
                 <Dialog.Panel className="w-full max-w-4xl p-16 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                   <Dialog.Title as="h3" className="my-2 text-2xl font-black">
-                    Nuevo Movimiento
+                    Editar Movimiento
                   </Dialog.Title>
 
                   <p className="text-xl font-bold">
@@ -106,19 +101,21 @@ export default function EditMovementModal({
                     <span className="text-bg-primary"> {data.name}</span>
                   </p>
 
-                  <form
-                    className="mt-10 space-y-3"
-                    onSubmit={handleSubmit(handleUpdateMovement)}
-                    noValidate
-                  >
-                    <MovementForm register={register} errors={errors} />
+                  <FormProvider {...methods}>
+                    <form
+                      className="mt-10 space-y-3"
+                      onSubmit={methods.handleSubmit(handleUpdateMovement)}
+                      noValidate
+                    >
+                      <MovementForm />
 
-                    <input
-                      type="submit"
-                      className="w-full p-3 font-bold text-white uppercase transition-colors rounded-lg cursor-pointer bg-bg-primary hover:bg-bg-secondary"
-                      value="Guardar Cambios"
-                    />
-                  </form>
+                      <input
+                        type="submit"
+                        className="w-full p-3 font-bold text-white uppercase transition-colors rounded-lg cursor-pointer bg-bg-primary hover:bg-bg-secondary"
+                        value="Guardar Cambios"
+                      />
+                    </form>
+                  </FormProvider>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -18,7 +18,7 @@ interface Props {
 export function MessagesPopover({ tokens }: Props) {
   return (
     <Popover>
-      <PopoverTrigger className="relative flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full hover:bg-gray-200">
+      <PopoverTrigger className="relative flex items-center justify-center w-10 h-10 bg-white rounded-full hover:bg-gray-200">
         <ChatBubbleLeftEllipsisIcon className="w-6 h-6 text-gray-700" />
         {tokens && tokens.length > 0 && (
           <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-xs text-white bg-red-600 rounded-full">

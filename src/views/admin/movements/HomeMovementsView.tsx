@@ -56,7 +56,7 @@ export default function HomeMovementsView() {
                 <Heading>Registro de Movimientos</Heading>
                 <button
                   onClick={() => navigate(location.pathname + "?movement=true")}
-                  className="w-full px-6 py-3 text-xl font-bold text-center text-white transition-all duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 lg:w-auto"
+                  className="w-full px-6 py-2 text-xl font-bold text-center text-white transition-all duration-300 bg-indigo-600 rounded-md hover:bg-indigo-700 lg:w-auto"
                 >
                   Nuevo Movimiento
                 </button>

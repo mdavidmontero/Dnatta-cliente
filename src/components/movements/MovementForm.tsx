@@ -1,71 +1,92 @@
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form"; // Importar useFormContext
 import { RegisterFormMovement } from "../../types/schemas/movements";
 import ErrorMessage from "../ErrorMessage";
+import {
+  Building,
+  User,
+  ClipboardList,
+  DollarSign,
+  FileText,
+  ArrowDownCircle,
+  ArrowUpCircle,
+} from "lucide-react";
 
-interface MovementFormProps {
-  register: UseFormRegister<RegisterFormMovement>;
-  errors: FieldErrors<RegisterFormMovement>;
-}
+export default function MovementForm() {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<RegisterFormMovement>(); // Usar useFormContext
+  const tipo = useWatch({ name: "tipo" }); // Observar el campo "tipo"
 
-export default function MovementForm({ register, errors }: MovementFormProps) {
   return (
-    <>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="nit">
-          NIT
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {/* NIT */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <Building className="w-5 h-5 text-indigo-600" />
+          <span>NIT</span>
         </label>
         <input
           id="nit"
           type="text"
-          placeholder="nit ej: 843746483"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          placeholder="Ej: 843746483"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("nit", {
-            required: "El nit es obligatorio",
+            required: "El NIT es obligatorio",
           })}
         />
         {errors.nit && <ErrorMessage>{errors.nit.message}</ErrorMessage>}
       </div>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="nit">
-          Nombre
+
+      {/* Nombre */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <User className="w-5 h-5 text-indigo-600" />
+          <span>Nombre</span>
         </label>
         <input
           id="name"
           type="text"
-          placeholder="nombre ej: Mi futuro"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          placeholder="Ej: Mi Futuro"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("name", {
             required: "El nombre es obligatorio",
           })}
         />
         {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
       </div>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="nit">
-          Concepto
+
+      {/* Concepto */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <ClipboardList className="w-5 h-5 text-indigo-600" />
+          <span>Concepto</span>
         </label>
         <input
           id="concept"
           type="text"
-          placeholder="concepto ej: compra de producto"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          placeholder="Ej: Compra de producto"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("concept", {
-            required: "El nombre es obligatorio",
+            required: "El concepto es obligatorio",
           })}
         />
         {errors.concept && (
           <ErrorMessage>{errors.concept.message}</ErrorMessage>
         )}
       </div>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="nit">
-          Monto
+
+      {/* Monto */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <DollarSign className="w-5 h-5 text-indigo-600" />
+          <span>Monto</span>
         </label>
         <input
           id="amount"
           type="number"
-          placeholder="concepto ej: compra de producto"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          placeholder="Ej: 100.000"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("amount", {
             required: "El monto es obligatorio",
             min: {
@@ -76,28 +97,38 @@ export default function MovementForm({ register, errors }: MovementFormProps) {
         />
         {errors.amount && <ErrorMessage>{errors.amount.message}</ErrorMessage>}
       </div>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="nit">
-          Detalle
+
+      {/* Detalle */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          <FileText className="w-5 h-5 text-indigo-600" />
+          <span>Detalle</span>
         </label>
         <input
           id="detail"
           type="text"
-          placeholder="descripción del movimiento"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          placeholder="Descripción del movimiento"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("detail", {
             required: "El detalle es obligatorio",
           })}
         />
         {errors.detail && <ErrorMessage>{errors.detail.message}</ErrorMessage>}
       </div>
-      <div className="flex flex-col gap-5">
-        <label className="font-black text-slate-800" htmlFor="tipo">
-          Tipo de movimiento
+
+      {/* Tipo de movimiento */}
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+          {tipo === "entrada" ? (
+            <ArrowDownCircle className="w-5 h-5 text-green-600" />
+          ) : (
+            <ArrowUpCircle className="w-5 h-5 text-red-600" />
+          )}
+          <span>Tipo de movimiento</span>
         </label>
         <select
           id="tipo"
-          className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           {...register("tipo", {
             required: "El tipo es obligatorio",
           })}
@@ -107,6 +138,6 @@ export default function MovementForm({ register, errors }: MovementFormProps) {
         </select>
         {errors.tipo && <ErrorMessage>{errors.tipo.message}</ErrorMessage>}
       </div>
-    </>
+    </div>
   );
 }

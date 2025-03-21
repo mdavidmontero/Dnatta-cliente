@@ -9,21 +9,26 @@ export default function CategoryIcon({ category }: CategoryIconProps) {
   const params = useParams();
 
   return (
-    <Link to={`/ventas/${category.slug}`} className="text-xl font-bold">
+    <Link
+      to={`/ventas/${category.slug}`}
+      className="block text-gray-700 transition-colors duration-300 hover:bg-[#EDF3FB]"
+    >
       <div
-        className={`${
-          category.slug === params.slug ? "bg-[#BBCFC3]" : ""
-        } flex items-center gap-4 w-full border-t border-gray-300 p-3 last-of-type:border-b`}
+        className={`flex items-center gap-4 p-4 ${
+          category.slug === params.slug
+            ? "bg-[#EDF3FB] border-l-4 border-[#3182CE]"
+            : "border-l-4 border-transparent"
+        }`}
       >
-        <div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-10 lg:h-10 xl:w-16 xl:h-16">
+        <div className="w-12 h-12">
           <img
             src={`/categories/icon_${category.slug}.png`}
-            alt="Imagen Categoria"
+            alt={`Icono de ${category.name}`}
             className="object-cover w-full h-full"
           />
         </div>
 
-        <span className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl">
+        <span className="text-sm font-medium sm:text-base">
           {category.name}
         </span>
       </div>

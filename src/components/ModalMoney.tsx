@@ -174,7 +174,7 @@ export default function ModalMoney({
       setSumaPagos(0);
       setPayments([]);
     }
-  }, [paymentMethod, selectedTransfer, amount, setPayments]);
+  }, [paymentMethod, selectedTransfer, amount, setPayments, setSumaPagos]);
 
   // useEffect(() => {
   //   if (paymentMethod === "combinado") {

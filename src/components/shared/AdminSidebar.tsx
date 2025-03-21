@@ -114,13 +114,13 @@ export default function AdminSidebar() {
   );
 
   return (
-    <aside className="flex flex-col bg-white md:w-72 md:h-screen">
+    <aside className="flex flex-col bg-white md:w-72 md:h-screen border-r border-[#CBD5E0] shadow-sm overflow-y-auto scrollbar-thin scrollbar-thumb-[#CBD5E0] scrollbar-track-[#EDF3FB]">
       <div className="flex flex-col items-center flex-none p-5">
         <FotoPerfil />
-        <p className="mt-5 font-bold text-center">{user.name}</p>
+        <p className="mt-5 font-bold text-center text-gray-800">{user.name}</p>
       </div>
 
-      <div className="flex-1 space-y-3 overflow-y-auto">
+      <div className="flex-1 p-4 space-y-3">
         <p className="mt-5 text-sm font-bold text-center text-gray-600 uppercase">
           Navegación
         </p>

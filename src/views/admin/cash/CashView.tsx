@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { CashRegister } from "../../../types";
 import { toast } from "sonner";
-
 import GoBackButton from "../../../components/ui/GoBackButton";
 import CashFormRegister from "../../../components/cash/CashFormRegister";
 import { userAuthStore } from "../../../store/useAuthStore";
@@ -27,6 +26,7 @@ export default function CashRegisterView() {
       reset();
     },
   });
+
   const {
     register,
     handleSubmit,
@@ -51,31 +51,36 @@ export default function CashRegisterView() {
       pointId: +point,
     };
     navigate(-1);
-
     useCreateRegisterCash.mutate(data);
   };
 
   return (
     <>
       <GoBackButton />
-      <div className="max-w-3xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md">
-        <legend className="text-2xl font-bold text-center text-slate-800">
-          Apertura de Caja
-        </legend>
+      <div className="max-w-4xl px-6 py-8 mx-auto mt-10 bg-white rounded-lg shadow-xl">
+        <div className="pb-6 border-b-2 border-gray-200">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-gray-800">
+              Apertura de Caja
+            </span>
+          </div>
+        </div>
+
         <form
-          className="space-y-5"
+          className="mt-6"
           noValidate
           onSubmit={handleSubmit(handlePointAction)}
         >
-          {/* <CashFormRegister register={register} errors={errors} /> */}
           <CashFormRegister register={register} errors={errors} />
 
-          <input
-            // disabled={useupdatePointMutation.isPending}
-            type="submit"
-            className="w-full p-3 mt-5 font-bold text-white bg-indigo-600 cursor-pointer disabled:opacity-50 hover:bg-indigo-800"
-            value={"Abrir Caja"}
-          />
+          <div className="flex items-center justify-center mt-8">
+            <button
+              type="submit"
+              className="flex items-center justify-center w-1/3 px-4 py-2 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Abrir Caja
+            </button>
+          </div>
         </form>
       </div>
     </>

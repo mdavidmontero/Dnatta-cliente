@@ -6,7 +6,7 @@ export default function FotoPerfil() {
 
   return (
     <div className="flex justify-center mt-5">
-      <div className="relative w-20 h-20 sm:w-10 sm:h-10 lg:w-16 lg:h-16 xl:w-36 xl:h-36">
+      <div className="relative w-20 h-20 sm:w-10 sm:h-10 lg:w-16 lg:h-16 xl:w-28 xl:h-28">
         {imagen ? (
           <img
             alt="Foto de perfil"

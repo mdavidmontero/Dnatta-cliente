@@ -14,9 +14,9 @@ export default function VentasLayout() {
   if (data)
     return (
       <>
-        <div className="md:flex">
+        <div className="md:flex ">
           <OrderSidebar />
-          <main className="p-5 md:flex-1 md:h-screen md:overflow-y-scroll">
+          <main className="p-5 md:flex-1 md:h-screen border-r border-gray-300 md:overflow-y-scroll scrollbar-thin scrollbar-thumb-[#CBD5E0] scrollbar-track-[#EDF3FB]">
             <Outlet />
           </main>
           <OrderSummary />

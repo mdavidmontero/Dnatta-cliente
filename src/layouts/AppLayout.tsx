@@ -72,13 +72,13 @@ export default function AppLayout() {
   if (data)
     return (
       <>
-        <div className="bg-bg-primary-bg">
+        <div className="bg-[#F7FAFC] min-h-screen">
           <div className="md:flex">
-            <aside className="bg-white md:w-72 md:h-screen">
+            <aside className="bg-white md:w-72 md:h-screen border-r border-[#CBD5E0]">
               <AdminSidebar />
             </aside>
 
-            <main className="p-5 bg-bg-primary-bg md:flex-1 md:h-screen md:overflow-y-scroll">
+            <main className="p-5 bg-[#EDF3FB] md:flex-1 md:h-screen md:overflow-y-scroll">
               <div
                 className={`flex flex-col gap-4 py-2  ${
                   user?.role === "USER" &&

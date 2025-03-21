@@ -24,20 +24,20 @@ export default function ProductTable({ products }: ProductTableProps) {
           <div className="inline-block min-w-full overflow-hidden align-middle bg-white rounded-lg shadow-md">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="py-4 pl-6 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                <TableRow className="bg-gray-100">
+                  <TableHead className="py-4 pl-6 text-sm font-bold tracking-wider text-left uppercase border-b-2">
                     Producto
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left uppercase border-b-2">
                     Estado
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left uppercase border-b-2">
                     Precio
                   </TableHead>
-                  <TableHead className="px-6 py-4 text-sm font-semibold tracking-wider text-left text-gray-800 uppercase border-b-2">
+                  <TableHead className="px-6 py-4 text-sm font-bold tracking-wider text-left uppercase border-b-2">
                     Categoría
                   </TableHead>
-                  <TableHead className="py-4 pr-6 text-sm font-semibold tracking-wider text-center text-gray-800 uppercase border-b-2">
+                  <TableHead className="py-4 pr-6 text-sm font-bold tracking-wider text-center uppercase border-b-2">
                     Acciones
                   </TableHead>
                 </TableRow>
@@ -46,7 +46,7 @@ export default function ProductTable({ products }: ProductTableProps) {
                 {products.map((product) => (
                   <TableRow
                     key={product.id}
-                    className="transition-all duration-200 ease-in-out hover:bg-gray-50"
+                    className="transition-all duration-200 ease-in-out hover:bg-gray-100"
                   >
                     <TableCell className="py-4 pl-6 text-sm font-medium text-gray-900 whitespace-nowrap">
                       {product.name}

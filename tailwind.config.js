@@ -1,5 +1,6 @@
 import forms from "@tailwindcss/forms";
 import animate from "tailwindcss-animate";
+import scrollbar from "tailwind-scrollbar";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -31,5 +32,5 @@ export default {
       },
     },
   },
-  plugins: [forms, animate],
+  plugins: [forms, animate, scrollbar],
 };

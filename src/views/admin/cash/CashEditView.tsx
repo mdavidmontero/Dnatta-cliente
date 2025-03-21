@@ -16,6 +16,15 @@ import {
   getAllMovementsCashDay,
   getMoneyCashDay,
 } from "../../../actions/movements.actions";
+import { formatDate } from "@/utils";
+import {
+  Wallet,
+  Coins,
+  ShoppingCart,
+  Calendar,
+  Clock,
+  User,
+} from "lucide-react"; // Importar iconos de Lucide
 
 export default function CashEditView() {
   const point = useStorePoint((state) => state.point);
@@ -117,35 +126,43 @@ export default function CashEditView() {
 
   if (data)
     return (
-      <div className="max-w-4xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md">
-        <div className="items-center mb-4 border-b-2">
-          <label className="font-black text-slate-800">
-            Estado Caja:
-            <span className="ml-2 font-normal">
-              {data?.isClosed ? "Cerrada" : "Abierta"}
+      <div className="max-w-4xl px-6 py-8 mx-auto mt-10 bg-white rounded-lg shadow-xl">
+        {/* Encabezado */}
+        <div className="pb-6 border-b-2 border-gray-200">
+          <div className="flex items-center gap-3">
+            <Wallet className="w-8 h-8 text-indigo-600" />
+            <span className="text-2xl font-bold text-gray-800">
+              Cierre de Caja
             </span>
-          </label>
+          </div>
+          <div className="flex items-center gap-2 mt-3 text-sm text-gray-600">
+            <Calendar className="w-4 h-4" />
+            <span>Periodo: {formatDate(data?.date)}</span>
+            <Clock className="w-4 h-4 ml-2" />
+            <span>
+              {new Date(data.date).toLocaleTimeString()} -{" "}
+              {new Date().toLocaleDateString() +
+                " " +
+                new Date().toLocaleTimeString()}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+            <User className="w-4 h-4" />
+            <span>Vendedora: {user?.name}</span>
+          </div>
         </div>
-        <form onSubmit={handleSubmit(handleCashClosed)}>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+
+        {/* Formulario */}
+        <form onSubmit={handleSubmit(handleCashClosed)} className="mt-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {/* Base del día */}
             <div className="space-y-2">
-              <label className="font-bold text-slate-800" htmlFor="date">
-                Fecha:
-                <span className="ml-2 font-normal">
-                  {new Date().toLocaleDateString()}
-                </span>
-              </label>
-            </div>
-            <div className="space-y-2">
-              <label className="font-bold text-slate-800">
-                Vendedor: <span className="font-normal">{user?.name}</span>
-              </label>
-            </div>
-            <div className="space-y-2">
-              <label className="text-slate-800" htmlFor="name">
-                Base del día
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Coins className="w-5 h-5 text-indigo-600" />
+                <span>Base del día</span>
               </label>
               <input
+                disabled={data.baseAmount > 0}
                 id="baseAmount"
                 type="number"
                 {...register("baseAmount", {
@@ -155,16 +172,19 @@ export default function CashEditView() {
                     message: "El monto base debe ser mayor a 1000",
                   },
                 })}
-                className="w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
-                placeholder="Nombre Producto"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Monto base"
               />
               {errors.baseAmount && (
                 <ErrorMessage>{errors.baseAmount.message}</ErrorMessage>
               )}
             </div>
+
+            {/* Monto Venta Helados */}
             <div className="space-y-2">
-              <label className="font-bold text-slate-800" htmlFor="closing">
-                Monto Venta Helados
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <ShoppingCart className="w-5 h-5 text-indigo-600" />
+                <span>Monto Venta Helados</span>
               </label>
               <input
                 id="totalventa"
@@ -172,16 +192,19 @@ export default function CashEditView() {
                 {...register("totalventaHelados", {
                   required: "El monto de venta es obligatorio",
                 })}
-                className="block w-full p-3 rounded-md bg-slate-100"
-                placeholder="600.000"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Monto de venta"
               />
               {errors.totalventaHelados && (
                 <ErrorMessage>{errors.totalventaHelados.message}</ErrorMessage>
               )}
             </div>
+
+            {/* Total Gasto Compras */}
             <div className="space-y-2">
-              <label className="font-bold text-slate-800" htmlFor="totalamount">
-                Total Gasto Compras:
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <ShoppingCart className="w-5 h-5 text-indigo-600" />
+                <span>Total Gasto Compras</span>
               </label>
               <input
                 id="closing"
@@ -189,16 +212,19 @@ export default function CashEditView() {
                 {...register("closingAmount", {
                   required: "El Monto de compras es obligatorio",
                 })}
-                className="block w-full p-3 rounded-md bg-slate-100"
-                placeholder="600.000"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Monto de compras"
               />
               {errors.closingAmount && (
                 <ErrorMessage>{errors.closingAmount.message}</ErrorMessage>
               )}
             </div>
+
+            {/* Total Acumulado día */}
             <div className="space-y-2">
-              <label className="font-bold text-slate-800" htmlFor="totalamount">
-                Total Acumulado día:
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <Coins className="w-5 h-5 text-indigo-600" />
+                <span>Total Acumulado día</span>
               </label>
               <input
                 id="totalamount"
@@ -206,19 +232,22 @@ export default function CashEditView() {
                 {...register("totalAmount", {
                   required: "El total Acumulado del día es obligatorio",
                 })}
-                className="block w-full p-3 rounded-md bg-slate-100"
-                placeholder="600.000"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Total acumulado"
               />
               {errors.totalAmount && (
                 <ErrorMessage>{errors.totalAmount.message}</ErrorMessage>
               )}
             </div>
           </div>
-          <div className="flex justify-between my-5 space-x-4">
+
+          {/* Botón de Cerrar Caja */}
+          <div className="flex items-center justify-center mt-8">
             <button
               type="submit"
-              className="w-full py-3 font-bold text-white bg-indigo-600 rounded-md cursor-pointer hover:bg-indigo-800"
+              className="flex items-center justify-center w-1/3 px-4 py-2 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
+              <Wallet className="w-5 h-5 mr-2" />
               Cerrar Caja
             </button>
           </div>

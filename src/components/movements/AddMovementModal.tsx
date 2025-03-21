@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MovementForm from "./MovementForm";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form"; // Importar FormProvider
 import { RegisterFormMovement } from "../../types/schemas/movements";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createMovement } from "../../actions/movements.actions";
@@ -34,20 +34,15 @@ export default function AddMovementModal() {
     cashRegisterId: 0,
     concept: "",
   };
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({ defaultValues: initialValues });
 
+  const methods = useForm({ defaultValues: initialValues });
   const useCreateMutation = useMutation({
     mutationFn: createMovement,
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["cashdaymovements"] });
       navigate(location.pathname, { replace: true });
-      reset();
+      methods.reset();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -65,6 +60,7 @@ export default function AddMovementModal() {
   };
 
   const navigate = useNavigate();
+
   return (
     <>
       <Transition appear show={show} as={Fragment}>
@@ -106,19 +102,20 @@ export default function AddMovementModal() {
                     <span className="text-bg-primary"> un movimiento</span>
                   </p>
 
-                  <form
-                    className="mt-10 space-y-3"
-                    onSubmit={handleSubmit(handleCreateMovement)}
-                    noValidate
-                  >
-                    <MovementForm register={register} errors={errors} />
-
-                    <input
-                      type="submit"
-                      className="w-full p-3 font-bold text-white uppercase transition-colors rounded-lg cursor-pointer bg-bg-primary hover:bg-bg-secondary"
-                      value="Registrar Movimiento"
-                    />
-                  </form>
+                  <FormProvider {...methods}>
+                    <form
+                      className="mt-10 space-y-3"
+                      onSubmit={methods.handleSubmit(handleCreateMovement)}
+                      noValidate
+                    >
+                      <MovementForm />
+                      <input
+                        type="submit"
+                        className="w-full p-3 font-bold text-white uppercase transition-colors rounded-lg cursor-pointer bg-bg-primary"
+                        value="Registrar Movimiento"
+                      />
+                    </form>
+                  </FormProvider>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

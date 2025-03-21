@@ -31,7 +31,7 @@ const EditEstado = ({ productos, estado }: EditEstadoProps) => {
       onClick={handleEstado}
       className={
         estado
-          ? "bg-blue-500 hover:bg-blue-600 p-3 text-white font-bold rounded-md"
+          ? "bg-blue-600 hover:bg-blue-700 p-3 text-white font-bold rounded-md"
           : " bg-red-500 font-bold p-3 text-white rounded-md"
       }
     >
