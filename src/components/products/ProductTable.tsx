@@ -21,7 +21,7 @@ export default function ProductTable({ products }: ProductTableProps) {
     <div className="px-4 mt-20 sm:px-6 lg:px-8">
       <div className="flow-root mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full overflow-hidden align-middle bg-white rounded-lg shadow-md">
+          <div className="inline-block min-w-full overflow-hidden align-middle bg-white rounded-lg shadow-lg">
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-100">

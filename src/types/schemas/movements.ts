@@ -22,11 +22,11 @@ export const MovementSchemaI = z.array(MovementSchema);
 // Definir el esquema para las denominaciones
 export const denominationSchema = z.object({
   denomination: z.string(),
-  quantity: z.number().min(1, "La cantidad debe ser mayor que 0"),
+  quantity: z.number().min(0, "La cantidad debe ser mayor que 0"),
   cashRegisterId: z.number().min(1, "El ID de la caja es obligatorio"),
   totalDenomination: z
     .number()
-    .min(1, "El total de la denominacion es obligatorio"),
+    .min(0, "El total de la denominacion es obligatorio"),
 });
 
 // Esquema principal para el formulario de movimiento
