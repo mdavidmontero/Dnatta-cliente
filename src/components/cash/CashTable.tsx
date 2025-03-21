@@ -64,7 +64,7 @@ export default function CashTable({ cash }: CashTableProps) {
                           to={`/cash-edit/${cash.id}/edit`}
                           className="inline-block w-full p-2 font-bold text-white transition-colors duration-300 rounded bg-bg-primary hover:bg-[#355575]"
                         >
-                          Editar
+                          Cerrar Caja
                         </Link>
                       </TableCell>
                     </>

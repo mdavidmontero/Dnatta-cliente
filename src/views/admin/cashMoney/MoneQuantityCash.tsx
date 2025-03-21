@@ -28,6 +28,7 @@ export default function MoneyQuantityCashView() {
     queryKey: ["cashmoneyday"],
     enabled: !!data?.id,
   });
+
   const totalBilletes = useMemo(() => {
     if (!moneyCashday || moneyCashday.length === 0) return 0;
     return moneyCashday.reduce(

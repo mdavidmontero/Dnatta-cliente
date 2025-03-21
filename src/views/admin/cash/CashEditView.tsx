@@ -12,7 +12,10 @@ import {
   getCashDayTotalAmount,
 } from "../../../actions/ventas.actions";
 import { toast } from "sonner";
-import { getAllMovementsCashDay } from "../../../actions/movements.actions";
+import {
+  getAllMovementsCashDay,
+  getMoneyCashDay,
+} from "../../../actions/movements.actions";
 
 export default function CashEditView() {
   const point = useStorePoint((state) => state.point);
@@ -35,6 +38,10 @@ export default function CashEditView() {
     queryFn: () => getAllMovementsCashDay(+cashId!),
     queryKey: ["cashdaymovements"],
     enabled: !!cashId,
+  });
+  const { data: moneyCashday } = useQuery({
+    queryFn: () => getMoneyCashDay(+data!.id),
+    queryKey: ["cashmoneyday"],
   });
 
   const totalCompras = useMemo(() => {
@@ -96,6 +103,12 @@ export default function CashEditView() {
         ...formData,
         isClosed: true,
       };
+      if (moneyCashday?.length === 0) {
+        toast.error(
+          "No puedes cerrar caja, Asegurate de haber registrado el dinero en caja"
+        );
+        return;
+      }
       updateCashMutation.mutate({ cashId: +cashId!, formData: dataClosed });
     }
   };
