@@ -135,8 +135,8 @@ export default function EditMoneyDay({ moneyId }: EditMoneyDayProps) {
                     {...register("quantity", {
                       required: "La cantidad es obligatoria",
                       min: {
-                        value: 1,
-                        message: "La cantidad debe ser mayor que 0",
+                        value: 0,
+                        message: "La cantidad no puede estar vacia",
                       },
                     })}
                     className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
