@@ -222,6 +222,7 @@ export default function ReportMonth() {
                 <tbody>
                   {sortedDates.map((date) => {
                     const dailyReport = groupedReports[date];
+                    if (dailyReport.reports.length === 0) return null;
                     const vendedoras = new Set(
                       dailyReport.reports.map((report) => report.user.name)
                     );
