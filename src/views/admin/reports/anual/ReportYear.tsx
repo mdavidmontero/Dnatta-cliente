@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../../../utils";
 import { getPoints } from "../../../../actions/point.actions";
 import { getReportsAnual } from "../../../../actions/reports.actions";
 import { GroupedReports, Report } from "../../../../types/schemas/ventas";
 import ModalReportesAnual from "./ModalReportes";
-import { useAuth } from "@/hook/useAuth";
 import {
   Select,
   SelectContent,
@@ -15,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { ChartAreaLinear } from "@/components/reports/ChartKpiSales";
 
 export default function ReportYear() {
   const [selectedYear, setSelectedYear] = useState<number>(
@@ -22,7 +21,6 @@ export default function ReportYear() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [point, setPoint] = useState<number>(0);
-  const { data: user } = useAuth();
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getReportsAnual(selectedYear, point),
@@ -65,10 +63,6 @@ export default function ReportYear() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  if (user?.role !== "ADMIN") return <Navigate to="/404" />;
-
-  if (isLoading)
-    return <div className="py-4 text-xl text-center">Cargando reportes...</div>;
   if (isError)
     return (
       <div className="py-4 text-xl text-center text-red-600">
@@ -87,7 +81,7 @@ export default function ReportYear() {
     );
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full p-6 bg-white rounded-lg ">
       <div className="flex justify-end mb-6">
         <Button
           onClick={openModal}
@@ -136,16 +130,33 @@ export default function ReportYear() {
         </Select>
       </div>
       <div className="space-y-6">
-        <p className="text-lg font-semibold text-gray-700">
-          Venta Total del Año:{" "}
-          <span className="text-xl font-bold">
-            {formatCurrency(totalSalesYear)}
-          </span>
-        </p>
-
-        <div className="space-y-4">
-          {Object.keys(groupedReports).length ? (
-            Object.keys(groupedReports).map((month) => {
+        {isLoading ? (
+          <div className="py-4 text-xl text-center">Cargando reportes...</div>
+        ) : isError ? (
+          <div className="py-4 text-xl text-center text-red-600">
+            Error al cargar los reportes.
+          </div>
+        ) : reports.length === 0 ? (
+          <p className="flex flex-col items-center justify-center gap-2 text-xl text-gray-500">
+            <svg
+              className="w-12 h-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9.75 9.75h.008v.008H9.75V9.75zM14.25 9.75h.008v.008H14.25V9.75zM7.5 16.5h9m-11.25 3h13.5A2.25 2.25 0 0021 17.25V6.75A2.25 2.25 0 0018.75 4.5h-13.5A2.25 2.25 0 003 6.75v10.5A2.25 2.25 0 005.25 19.5z"
+              />
+            </svg>
+            No hay reportes disponibles para este año
+          </p>
+        ) : (
+          <>
+            {reports.length > 0 && <ChartAreaLinear reports={groupedReports} />}
+            {Object.keys(groupedReports).map((month) => {
               const monthlyReport = groupedReports[month];
               return (
                 <div
@@ -163,14 +174,11 @@ export default function ReportYear() {
                   </p>
                 </div>
               );
-            })
-          ) : (
-            <p className="text-xl text-center text-gray-700">
-              No hay reportes para este año
-            </p>
-          )}
-        </div>
+            })}
+          </>
+        )}
       </div>
+
       {isModalOpen && (
         <ModalReportesAnual
           isOpen={isModalOpen}

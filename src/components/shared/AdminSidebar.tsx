@@ -67,9 +67,9 @@ export default function AdminSidebar() {
     },
     {
       url: "/report-anual",
-      text: "Reporte Anual",
+      text: "KPI - Reporte Anual",
       blank: false,
-      allowedRoles: ["ADMIN"],
+      allowedRoles: ["ADMIN", "USER"],
     },
     {
       url: "/ventas/conosencillo",
