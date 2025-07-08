@@ -64,10 +64,14 @@ export const getReportMes = async (
   }
 };
 
-export const getReportsAnual = async (anio: number, pointId: number) => {
+export const getReportsAnual = async (
+  anio: number,
+  pointId: number,
+  userId: number
+) => {
   try {
     const { data } = await api.get(
-      `/reports/anual?anio=${anio}&pointId=${pointId}`
+      `/reports/anual?anio=${anio}&userId=${userId}&pointId=${pointId}`
     );
     const response = ResponseMesSchema.safeParse(data);
     if (response.success) {

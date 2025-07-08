@@ -14,18 +14,22 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChartAreaLinear } from "@/components/reports/ChartKpiSales";
+import { useVentas } from "@/hook/useVentas";
 
 export default function ReportYear() {
+  const { userVendedoras } = useVentas();
   const [selectedYear, setSelectedYear] = useState<number>(
     new Date().getFullYear()
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [point, setPoint] = useState<number>(0);
+  const [user, setUser] = useState(0);
+  const [fetchData, setFetchData] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryFn: () => getReportsAnual(selectedYear, point),
-    queryKey: ["reportYear", selectedYear, point],
-    enabled: point !== 0,
+    queryFn: () => getReportsAnual(selectedYear, point, user || 0),
+    queryKey: ["reportYear", selectedYear, point, user],
+    enabled: point !== 0 && user !== 0,
   });
 
   const {
@@ -39,6 +43,14 @@ export default function ReportYear() {
 
   const handleYearChange = (year: number) => {
     setSelectedYear(year);
+  };
+
+  const executeQuery = () => {
+    if (selectedYear && point) {
+      setFetchData(true);
+    } else {
+      alert("Selecciona fecha, local y usuario antes de buscar.");
+    }
   };
 
   const reports = data?.reports || [];
@@ -128,6 +140,27 @@ export default function ReportYear() {
             ))}
           </SelectContent>
         </Select>
+        <Select onValueChange={(value) => setUser(+value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Seleccione un usuario" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key="0" value="0">
+              Todas
+            </SelectItem>
+            {userVendedoras?.map((user) => (
+              <SelectItem key={user.id} value={user.id.toString()}>
+                {user.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          onClick={executeQuery}
+          className="w-full px-6 py-3 text-white transition-colors rounded-md bg-bg-primary md:w-auto hover:bg-[#44719e]"
+        >
+          Buscar
+        </Button>
       </div>
       <div className="space-y-6">
         {isLoading ? (
