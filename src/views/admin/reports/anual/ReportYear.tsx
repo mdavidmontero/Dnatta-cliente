@@ -29,7 +29,7 @@ export default function ReportYear() {
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getReportsAnual(selectedYear, point, user || 0),
     queryKey: ["reportYear", selectedYear, point, user],
-    enabled: point !== 0 && user !== 0,
+    enabled: fetchData,
   });
 
   const {
