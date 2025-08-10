@@ -9,6 +9,7 @@ import { useStorePoint } from "../../store/userStore";
 import ModalMoney from "../ModalMoney";
 import { useMutation } from "@tanstack/react-query";
 import OpenDrawerCash from "../shared/OpenDrawerCash";
+import ButtonConfirmOrder from "./ButtonConfirm";
 
 export default function OrderSummary() {
   const saleDetails = useStore((state) => state.order);
@@ -66,10 +67,7 @@ export default function OrderSummary() {
     },
   });
 
-  const handleCreateOrder = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
+  const handleCreateOrder = () => {
     const orderData = {
       totalAmount,
       payments,
@@ -78,6 +76,7 @@ export default function OrderSummary() {
       pointId: +point,
     };
     mutationCreateOrder.mutate(orderData);
+    setIsModalOpen(false);
   };
 
   return (
@@ -96,41 +95,35 @@ export default function OrderSummary() {
               Total a Pagar: {""}
               <span className="font-bold">{formatCurrency(totalAmount)}</span>
             </p>
-
-            <button
-              className="w-full p-3 mt-5 font-bold text-white uppercase bg-indigo-600 rounded cursor-pointer hover:bg-indigo-800 disabled:opacity-50"
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Confirmar Pago
-            </button>
+            <ButtonConfirmOrder>
+              <ModalMoney
+                amount={totalAmount}
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
+                selectedTransfer={selectedTransfer}
+                setSelectedTransfer={setSelectedTransfer}
+                handleCreateOrder={handleCreateOrder}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedBill={setSelectedBill}
+                selectedBill={selectedBill}
+                amountPaid={amountPaid}
+                setAmountPaid={setAmountPaid}
+                transferAmounts={transferAmounts}
+                setTransferAmounts={setTransferAmounts}
+                payments={payments}
+                setPayments={setPayments}
+                setSelecttrasferCombinado={setSelecttrasferCombinado}
+                selecttrasferCombinado={selecttrasferCombinado}
+                cashAmount={cashAmount}
+                setCashAmount={setCashAmount}
+                sumaPagos={sumaPagos}
+                setSumaPagos={setSumaPagos}
+                mutationPending={mutationCreateOrder.isPending}
+              />
+            </ButtonConfirmOrder>
           </div>
         )}
-        <ModalMoney
-          amount={totalAmount}
-          paymentMethod={paymentMethod}
-          setPaymentMethod={setPaymentMethod}
-          selectedTransfer={selectedTransfer}
-          setSelectedTransfer={setSelectedTransfer}
-          handleCreateOrder={handleCreateOrder}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          setSelectedBill={setSelectedBill}
-          selectedBill={selectedBill}
-          amountPaid={amountPaid}
-          setAmountPaid={setAmountPaid}
-          transferAmounts={transferAmounts}
-          setTransferAmounts={setTransferAmounts}
-          payments={payments}
-          setPayments={setPayments}
-          setSelecttrasferCombinado={setSelecttrasferCombinado}
-          selecttrasferCombinado={selecttrasferCombinado}
-          cashAmount={cashAmount}
-          setCashAmount={setCashAmount}
-          sumaPagos={sumaPagos}
-          setSumaPagos={setSumaPagos}
-          mutationPending={mutationCreateOrder.isPending}
-        />
       </aside>
       <OpenDrawerCash />
     </>
