@@ -8,7 +8,6 @@ export default function HomeUsers() {
     queryKey: ["usersAll"],
     queryFn: getUsersAll,
   });
-  console.log(data);
 
   return (
     <div className="container px-4 py-4 mx-auto">
