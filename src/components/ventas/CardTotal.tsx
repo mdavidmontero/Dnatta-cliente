@@ -37,6 +37,7 @@ export default function CardTotal({ handleBillSelection }: Props) {
         onChange={handleChange}
         inputMode="numeric"
         placeholder="0"
+        autoFocus
       />
     </Card>
   );

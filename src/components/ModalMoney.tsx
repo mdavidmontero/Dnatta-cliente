@@ -366,6 +366,7 @@ export default function ModalMoney({
                   value={cashAmount}
                   onChange={(e) => setCashAmount(e.target.value)}
                   className="block w-full p-2 mt-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
+                  autoFocus
                 />
                 <Button
                   type="button"
