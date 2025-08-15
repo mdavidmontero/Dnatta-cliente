@@ -17,7 +17,7 @@ export default function ButtonConfirmOrder({
   const [openDialog, setOpenDialog] = useState(false);
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog} modal>
       <DialogTrigger asChild>
         <Button
           size="lg"
@@ -34,7 +34,9 @@ export default function ButtonConfirmOrder({
             Confirmación de Pago
           </DialogTitle>
         </DialogHeader>
-        {children}
+        <div className="max-h-[calc(100dvh-10rem)] overflow-y-auto">
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

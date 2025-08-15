@@ -303,6 +303,7 @@ export default function ModalMoney({
               Método de pago:
             </label>
             <select
+              id="payment-method"
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
               name="payment-method"
@@ -349,6 +350,7 @@ export default function ModalMoney({
                   Monto de Transferencia:
                 </label>
                 <select
+                  id="transferAmount"
                   value={selecttrasferCombinado}
                   onChange={(e) => setSelecttrasferCombinado(e.target.value)}
                   name="transferAmount"
@@ -366,7 +368,6 @@ export default function ModalMoney({
                   value={cashAmount}
                   onChange={(e) => setCashAmount(e.target.value)}
                   className="block w-full p-2 mt-4 text-sm font-medium text-gray-900 bg-white border-2 border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-indigo-500"
-                  autoFocus
                 />
                 <Button
                   type="button"
