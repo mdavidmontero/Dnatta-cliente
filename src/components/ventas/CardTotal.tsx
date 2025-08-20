@@ -30,14 +30,19 @@ export default function CardTotal({ handleBillSelection }: Props) {
 
   return (
     <Card className="w-full max-w-sm p-4 mx-auto text-center">
-      <h2 className="p-2 font-bold text-orange-600 text-start">Efectivo</h2>
+      <label
+        htmlFor="efectivo"
+        className="p-2 font-bold text-orange-600 text-start"
+      >
+        Efectivo
+      </label>
       <Input
+        id="efectivo"
         className="p-5 mb-4 text-2xl font-bold text-center bg-gray-200 rounded-md sm:text-xl md:text-2xl lg:text-2xl"
         value={value}
         onChange={handleChange}
         inputMode="numeric"
         placeholder="0"
-        autoFocus
       />
     </Card>
   );
