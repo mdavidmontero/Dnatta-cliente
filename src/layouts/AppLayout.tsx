@@ -1,5 +1,6 @@
+"use client";
+
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
-import AdminSidebar from "../components/shared/AdminSidebar";
 import { toast, Toaster } from "sonner";
 import { useAuth } from "../hook/useAuth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +11,12 @@ import { Button } from "@/components/ui/button";
 import { userAuthStore } from "@/store/useAuthStore";
 import { statusCashRegisterOneClosed } from "@/actions/ventas.actions";
 import { getPoint } from "@/actions/point.actions";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import AdminSidebarShared from "@/components/shared/Sidebar";
 
 export default function AppLayout() {
   const queryClient = useQueryClient();
@@ -72,34 +79,21 @@ export default function AppLayout() {
   if (data)
     return (
       <>
-        <div className="bg-[#F7FAFC] min-h-screen">
-          <div className="md:flex">
-            <aside className="bg-white md:w-72 md:h-screen border-r border-[#CBD5E0]">
-              <AdminSidebar />
-            </aside>
-
-            <main className="p-5 bg-[#EDF3FB] md:flex-1 md:h-screen md:overflow-y-scroll">
-              <div
-                className={`flex flex-col gap-4 py-2  ${
-                  user?.role === "USER" &&
-                  "md:justify-between md:items-center md:flex-row"
-                }`}
-              >
-                {user?.role === "USER" && (
-                  <p className="text-lg font-bold text-gray-800">
-                    Punto de Venta: {pointsSelect.data?.name}
-                  </p>
-                )}
-
-                <div
-                  className={`flex items-center  gap-4 ${
-                    user?.role !== "USER" && "justify-end"
-                  }`}
-                >
+        <SidebarProvider defaultOpen={false}>
+          <AdminSidebarShared variant="inset" />
+          <SidebarInset>
+            <div className="bg-[#EDF3FB] min-h-screen">
+              <header className="flex items-center h-16 gap-2 px-4 border-b shrink-0 -z-30">
+                <SidebarTrigger className="-ml-1" />
+                <div className="flex items-center justify-end flex-1 gap-4">
+                  {user?.role === "USER" && (
+                    <p className="text-lg font-bold text-gray-800">
+                      Punto de Venta: {pointsSelect.data?.name}
+                    </p>
+                  )}
                   {showPopover && (
                     <MessagesPopover tokens={tokenConfirmFilter} />
                   )}
-
                   <Button
                     onClick={handleLogout}
                     className="px-6 py-3 text-lg font-bold text-white transition-colors duration-300 rounded-lg bg-bg-violeta hover:bg-bg-violeta-hover"
@@ -107,14 +101,14 @@ export default function AppLayout() {
                     Cerrar Sesión
                   </Button>
                 </div>
-              </div>
-
-              <Outlet />
-            </main>
-          </div>
-
+              </header>
+              <main className="flex-1 p-6">
+                <Outlet />
+              </main>
+            </div>
+          </SidebarInset>
           <Toaster position={"top-right"} />
-        </div>
+        </SidebarProvider>
       </>
     );
 }

@@ -42,6 +42,7 @@ import HomeLayout from "./layouts/HomeLayout";
 import Contact from "./views/home/Contact";
 import ProductsHome from "./views/home/ProductsHome";
 import HomeUsers from "./views/admin/users/HomeUsers";
+import EditProductView from "./views/admin/products/EditProductView";
 
 export default function Router() {
   return (
@@ -73,8 +74,9 @@ export default function Router() {
         <Route element={<AppLayout />}>
           <Route element={<Gestionlayout />}>
             <Route path="/products" element={<ProductView />} />
+
             <Route path="/new-product" element={<NewProductForm />} />
-            <Route path="/edit-product/:id" element={<NewProductForm />} />
+            <Route path="/edit-product/:id" element={<EditProductView />} />
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/new-categories" element={<NewCategories />} />
             <Route path="/edit-categories/:id" element={<NewCategories />} />

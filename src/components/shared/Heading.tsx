@@ -4,5 +4,7 @@ interface HeadingProps {
 }
 
 export default function Heading({ children, className }: HeadingProps) {
-  return <h1 className={`text-2xl my-10 ${className}`}>{children}</h1>;
+  return (
+    <h1 className={`text-2xl my-10 font-bold ${className}`}>{children}</h1>
+  );
 }

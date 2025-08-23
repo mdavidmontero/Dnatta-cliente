@@ -9,13 +9,13 @@ export default {
   theme: {
     extend: {
       backgroundSize: {
-        "home-xl": "40% auto", // Ocupa la mitad del ancho y ajusta la altura automáticamente
+        "home-xl": "40% auto",
       },
       backgroundImage: {
-        home: "url('/bgd.png')", // Asegúrate de que la ruta de la imagen sea correcta
+        home: "url('/bgd.png')",
       },
       backgroundPosition: {
-        "home-position": "right center", // Posiciona la imagen a la derecha y centrada verticalmente
+        "home-position": "right center",
       },
       colors: {
         "bg-primary": "#3C6997",
@@ -24,6 +24,16 @@ export default {
         "bg-violeta-hover": "#902450",
         "btn-primary": "#D4774B",
         "btn-secondary": "#BBCFC3",
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

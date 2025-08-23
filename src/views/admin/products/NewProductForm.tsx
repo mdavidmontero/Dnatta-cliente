@@ -1,31 +1,19 @@
+// NewProductForm.tsx
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNewProductForm } from "../../../types";
-import {
-  createProduct,
-  editProduct,
-  getProduct,
-  uploadImage,
-} from "../../../actions/products.actions";
+import { createProduct, uploadImage } from "../../../actions/products.actions";
 import { toast } from "sonner";
 import ProductForm from "../../../components/products/ProductForm";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
 import Spinner from "../../../components/shared/spinner/Spinner";
 import GoBackButton from "../../../components/ui/GoBackButton";
-import { getImagePath } from "../../../utils";
+import { getCategories } from "@/actions/categories.actions";
+import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function NewProductForm() {
-  const params = useParams();
-  const productId = +params.id!;
-
-  const queryClient = useQueryClient(); // Accedemos al cliente de React Query
-
-  const { data, isLoading } = useQuery({
-    queryFn: () => getProduct(productId),
-    queryKey: ["product", productId],
-    enabled: !!productId,
-  });
+  const queryClient = useQueryClient();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const {
     register,
@@ -42,117 +30,139 @@ export default function NewProductForm() {
     },
   });
 
-  useEffect(() => {
-    if (data) {
-      reset({
-        name: data.name,
-        price: data.price,
-        categoryId: data.categoryId,
-        estado: data.estado,
-        image: data.image,
-      });
-    }
-  }, [data, reset]);
+  const { data: categories } = useQuery({
+    queryFn: getCategories,
+    queryKey: ["categories"],
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const usecreateProductMutation = useMutation({
+  const createProductMutation = useMutation({
     mutationFn: createProduct,
     onError: (error) => {
       toast.error(error.message);
     },
     onSuccess: (data) => {
-      toast.success(data);
-      reset();
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
 
-  const useupdateProductMutation = useMutation({
-    mutationFn: editProduct,
-    onError: (error) => {
-      toast.error(error.message);
-    },
-    onSuccess: (data) => {
-      toast.success(data);
-      reset();
-    },
-  });
-
-  const mutationImage = useMutation({
+  const uploadImageMutation = useMutation({
     mutationFn: uploadImage,
-    onError: (error) => {
-      toast.error(error.message);
-    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["product", productId] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
+
+  const previewUrl = useMemo(
+    () => (selectedImage ? URL.createObjectURL(selectedImage) : null),
+    [selectedImage]
+  );
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      mutationImage.mutate({ productId: +productId, file: e.target.files[0] });
-    }
+    const f = e.target.files?.[0] || null;
+    setSelectedImage(f);
   };
 
   const handleProductAction = async (formData: useNewProductForm) => {
-    const adjustedFormData = {
-      ...formData,
-      categoryId: +formData.categoryId,
-      price: +formData.price,
-    };
-    if (productId) {
-      const data = {
-        productId,
-        formData: adjustedFormData,
-      };
-      useupdateProductMutation.mutate(data);
-    } else {
-      usecreateProductMutation.mutate(adjustedFormData);
+    try {
+      const payload = { ...formData, price: +formData.price };
+      const created = await createProductMutation.mutateAsync(payload);
+
+      const newId = created?.id;
+      if (!newId) {
+        toast.error("No se recibió el ID del producto creado.");
+        return;
+      }
+
+      // 2) Subir imagen si hay archivo
+      if (selectedImage) {
+        await uploadImageMutation.mutateAsync({
+          productId: newId,
+          file: selectedImage,
+        });
+      }
+
+      toast.success("Producto registrado correctamente");
+      // Limpiar UI
+      reset();
+      setSelectedImage(null);
+
+      // Revalidar listados
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  if (isLoading) {
-    return <p>Cargando...</p>;
-  }
+  if (!categories) return null;
+
+  const isSubmitting =
+    createProductMutation.isPending || uploadImageMutation.isPending;
 
   return (
     <>
       <GoBackButton />
       <div className="max-w-3xl px-5 py-10 mx-auto mt-10 bg-white rounded-md shadow-md">
         <legend className="text-2xl font-bold text-center text-slate-800">
-          {productId ? "Editar Producto" : "Crear Producto"}
+          Crear Producto
         </legend>
+
         <form
           className="space-y-5"
           noValidate
           onSubmit={handleSubmit(handleProductAction)}
         >
           <ProductForm
+            categories={categories}
             register={register}
             errors={errors}
             handleChange={handleChange}
           />
 
-          {mutationImage.isPending ? (
+          {uploadImageMutation.isPending ? (
             <div className="flex justify-center my-3">
               <Spinner />
             </div>
           ) : (
             <div className="flex justify-center my-3">
-              {data && data.image ? (
-                <img
-                  src={getImagePath(data.image)}
-                  alt="Imagen de producto"
-                  className="object-contain w-56 h-56 rounded-xl"
-                />
+              {previewUrl ? (
+                <div className="flex flex-col items-center">
+                  <img
+                    src={previewUrl}
+                    alt="Vista previa"
+                    className="object-contain w-56 h-56 rounded-xl"
+                  />
+                  <Button
+                    type="button"
+                    className="w-full mt-2"
+                    onClick={() => setSelectedImage(null)}
+                  >
+                    Eliminar Imagen
+                  </Button>
+                </div>
               ) : (
-                <span className="text-gray-500">Sin imagen disponible</span>
+                <span className="text-gray-500">Sin imagen seleccionada</span>
               )}
             </div>
           )}
+
           <input
-            disabled={mutationImage.isPending}
+            disabled={isSubmitting}
             type="submit"
             className="w-full p-3 mt-5 font-bold text-white bg-indigo-600 cursor-pointer disabled:opacity-50 hover:bg-indigo-800"
-            value={productId ? "Guardar Cambios" : "Registrar Producto"}
+            value={
+              createProductMutation.isPending
+                ? "Creando..."
+                : uploadImageMutation.isPending
+                ? "Subiendo imagen..."
+                : "Registrar Producto"
+            }
           />
         </form>
       </div>

@@ -1,24 +1,20 @@
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-import { useNewProductForm } from "../../types";
-import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "../../actions/categories.actions";
+import { Categories, useNewProductForm } from "../../types";
 import ErrorMessage from "../ErrorMessage";
 
 interface ProductFormProps {
   register: UseFormRegister<useNewProductForm>;
   errors: FieldErrors<useNewProductForm>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  categories: Categories[];
 }
 
 export default function ProductForm({
   register,
   errors,
   handleChange,
+  categories,
 }: ProductFormProps) {
-  const { data } = useQuery({
-    queryFn: getCategories,
-    queryKey: ["categories"],
-  });
   return (
     <>
       <div className="space-y-2">
@@ -43,9 +39,10 @@ export default function ProductForm({
         </label>
         <input
           id="price"
-          {...register("price", {
-            required: "El precio es obligatorio",
-          })}
+          type="number"
+          inputMode="decimal"
+          step="0.01"
+          {...register("price", { required: "El precio es obligatorio" })}
           className="block w-full p-3 border-none rounded-lg bg-slate-100 placeholder-slate-400"
           placeholder="Precio Producto"
         />
@@ -61,10 +58,14 @@ export default function ProductForm({
           id="categoryId"
           {...register("categoryId", {
             required: "La categoría es obligatoria",
+            // opcional: convierte a number, y si queda vacío => undefined para que falle 'required'
+            setValueAs: (v) => (v === "" ? undefined : Number(v)),
           })}
         >
-          <option value="">-- Seleccione --</option>
-          {data?.map((category) => (
+          <option value={0} disabled>
+            -- Seleccione --
+          </option>
+          {categories?.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
             </option>

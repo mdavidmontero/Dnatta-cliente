@@ -6,16 +6,18 @@ import { getProducts } from "../../../actions/products.actions";
 import SearchInput from "../../../components/shared/SearchInput";
 import Heading from "../../../components/shared/Heading";
 import ButtonNavigate from "../../../components/shared/ButtonNavigate";
+import Spinner from "@/components/shared/spinner/Spinner";
 
 export default function ProductView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const limit = 10;
 
-  const { data, isLoading, isError, isFetching, isPlaceholderData } = useQuery({
+  const { data, isLoading, isError, isPlaceholderData } = useQuery({
     queryKey: ["products", currentPage, searchTerm],
     queryFn: () => getProducts(currentPage, limit, searchTerm),
     placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5,
   });
 
   const handlePageChange = (page: number) => {
@@ -29,7 +31,9 @@ export default function ProductView() {
 
   if (isLoading)
     return (
-      <div className="py-4 text-xl text-center">Cargando productos...</div>
+      <div className="flex justify-center my-3">
+        <Spinner />
+      </div>
     );
   if (isError)
     return (
@@ -53,18 +57,12 @@ export default function ProductView() {
 
       <ProductTable products={data?.products || []} />
 
-      <div className="mt-6">
-        <PaginacionShared
-          currentPage={currentPage}
-          totalPages={data?.totalPages || 1}
-          onPageChange={handlePageChange}
-          isPlaceholderData={isPlaceholderData}
-        />
-      </div>
-
-      {isFetching && (
-        <div className="mt-4 text-center text-gray-500">Cargando más...</div>
-      )}
+      <PaginacionShared
+        currentPage={currentPage}
+        totalPages={data?.totalPages || 1}
+        onPageChange={handlePageChange}
+        isPlaceholderData={isPlaceholderData}
+      />
     </div>
   );
 }

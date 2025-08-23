@@ -81,7 +81,7 @@ export default function OrderSummary() {
 
   return (
     <>
-      <aside className="p-5 lg:h-screen lg:overflow-y-scroll md:w-64 lg:w-64 scrollbar-thin scrollbar-thumb-[#CBD5E0] scrollbar-track-[#EDF3FB]">
+      <aside className="p-5 h-[100dvh] bg-gray-100  border-l-2 border-l-gray-200 overflow-y-auto md:w-64 lg:w-64 scrollbar-thin scrollbar-thumb-[#CBD5E0] scrollbar-track-[#EDF3FB]">
         <h1 className="text-4xl font-black text-center">Pedido</h1>
         {saleDetails.length === 0 ? (
           <p className="my-10 text-center">El Pedido esta vacio</p>

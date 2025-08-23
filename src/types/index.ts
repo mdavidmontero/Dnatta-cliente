@@ -116,6 +116,11 @@ export type useNewProductForm = Pick<
   "name" | "price" | "image" | "estado" | "categoryId"
 >;
 
+export type useEditProductForm = Pick<
+  Product,
+  "name" | "price" | "image" | "estado" | "categoryId" | "id"
+>;
+
 export const PointSchema = z.object({
   id: z.number(),
   name: z.string(),

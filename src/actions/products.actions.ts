@@ -30,15 +30,16 @@ export const getProducts = async (
 
 export const createProduct = async (formData: useNewProductForm) => {
   try {
-    const { data } = await api.post<string>(
+    const { data } = await api.post<{ id: number; message?: string }>(
       "/products/create-product",
       formData
     );
-    return data;
+    return data; // { id, message? }
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.error || "Failed to fetch products");
+      throw new Error(error.response.data.error || "Failed to create product");
     }
+    throw new Error("Unexpected error during product creation");
   }
 };
 
@@ -68,10 +69,9 @@ export const uploadImage = async ({
   productId: number;
   file: File;
 }) => {
+  const formData = new FormData();
+  formData.append("file", file);
   try {
-    const formData = new FormData();
-    formData.append("file", file);
-
     const {
       data: { image },
     }: { data: { image: string } } = await api.post(
