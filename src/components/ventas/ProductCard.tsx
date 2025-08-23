@@ -1,6 +1,4 @@
 import { ProductI } from "../../types";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatCurrency, getImagePath } from "../../utils";
 import { Card } from "../ui/card";
 import AddProductButton from "./AddProdcutButton";
@@ -12,12 +10,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="flex flex-col h-full transition border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
-      {/* Imagen pegada arriba */}
-      <div className="w-full aspect-[3/4] bg-white flex items-center justify-center overflow-hidden rounded-t-lg">
-        <LazyLoadImage
+      <div className="flex items-center justify-center w-full overflow-hidden bg-white rounded-t-lg">
+        <img
           src={imagePath}
           alt={`Imagen platillo ${product.name}`}
-          effect="blur"
           className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
         />
         <div className="image-overlay" />
@@ -32,7 +28,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           {formatCurrency(product.price)}
         </p>
 
-        {/* Botón abajo */}
         <div className="mt-auto">
           <AddProductButton product={product} />
         </div>

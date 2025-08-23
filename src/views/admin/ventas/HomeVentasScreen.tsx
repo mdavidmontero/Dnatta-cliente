@@ -9,10 +9,13 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 export default function HomeVentasScreen() {
   const { slug } = useParams();
 
-  const { data: products, isLoading } = useQuery({
+  const { data: products = [], isLoading } = useQuery({
     queryFn: () => getProductByCategory(slug!),
     queryKey: ["products", slug],
     staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     retry: false,
   });
 
